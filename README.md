@@ -1,4 +1,4 @@
-# 🛡️ Permission Management System
+# 🛡️ PrinterApp
 
 A comprehensive **ASP.NET Core MVC** application for managing users, roles, and hierarchical permissions with multi-language support (English & Arabic).
 
