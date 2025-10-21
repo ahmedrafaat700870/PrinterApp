@@ -1,0 +1,58 @@
+﻿@model UserRoleViewModel
+
+@{
+    ViewData["Title"] = "Assign Role";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👤 Assign Role to User</h2>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>User: @Model.FullName</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="AssignRole" method="post">
+                <input type="hidden" name="userId" value="@Model.UserId" />
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Email</label>
+                    <input type="text" class="form-control-custom" value="@Model.Email" readonly />
+                </div>
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Current Role</label>
+                    <input type="text" class="form-control-custom" value="@Model.Role" readonly />
+                </div>
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Select New Role</label>
+                    <select name="role" class="form-control-custom" required>
+                        <option value="">-- Select Role --</option>
+                        @foreach (var role in Model.AvailableRoles)
+                        {
+                            <option value="@role" selected="@(role == Model.Role)">@role</option>
+                        }
+                    </select>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <div class="alert-custom alert-info-custom">
+                        <strong>⚠️ Note:</strong> Changing user role will affect their access to different parts of the system.
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        ← Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

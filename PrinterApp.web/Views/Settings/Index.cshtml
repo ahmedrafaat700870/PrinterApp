@@ -1,0 +1,117 @@
+﻿@model SettingsViewModel
+@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResources> Localizer
+
+@{
+    ViewData["Title"] = Localizer["SystemSettings"];
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>⚙️ @Localizer["SystemSettings"]</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <form asp-action="Index" method="post">
+        <div class="card-custom">
+            <div class="card-header-custom">
+                <h2>@Localizer["GeneralSettings"]</h2>
+            </div>
+            <div class="card-body-custom">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="ApplicationName" class="form-label-custom">@Localizer["ApplicationName"]</label>
+                    <input asp-for="ApplicationName" class="form-control-custom" />
+                    <span asp-validation-for="ApplicationName" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="DefaultLanguage" class="form-label-custom">@Localizer["Language"]</label>
+                    <select asp-for="DefaultLanguage" class="form-control-custom">
+                        <option value="en">@Localizer["English"]</option>
+                        <option value="ar">@Localizer["Arabic"]</option>
+                    </select>
+                    <span asp-validation-for="DefaultLanguage" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Theme" class="form-label-custom">@Localizer["Theme"]</label>
+                    <select asp-for="Theme" class="form-control-custom">
+                        <option value="light">@Localizer["Light"]</option>
+                        <option value="dark">@Localizer["Dark"]</option>
+                    </select>
+                    <span asp-validation-for="Theme" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="ItemsPerPage" class="form-label-custom">Items Per Page</label>
+                    <input asp-for="ItemsPerPage" type="number" class="form-control-custom" min="5" max="100" />
+                    <span asp-validation-for="ItemsPerPage" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="SessionTimeout" class="form-label-custom">Session Timeout (minutes)</label>
+                    <input asp-for="SessionTimeout" type="number" class="form-control-custom" min="5" max="1440" />
+                    <span asp-validation-for="SessionTimeout" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="DateFormat" class="form-label-custom">Date Format</label>
+                    <select asp-for="DateFormat" class="form-control-custom">
+                        <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+                        <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                        <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                    </select>
+                    <span asp-validation-for="DateFormat" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="TimeFormat" class="form-label-custom">Time Format</label>
+                    <select asp-for="TimeFormat" class="form-control-custom">
+                        <option value="HH:mm">24 Hour (HH:mm)</option>
+                        <option value="hh:mm tt">12 Hour (hh:mm AM/PM)</option>
+                    </select>
+                    <span asp-validation-for="TimeFormat" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="EnableEmailNotifications" type="checkbox" class="form-check-input-custom" id="emailNotifications" />
+                    <label for="emailNotifications" class="form-check-label-custom">
+                        Enable Email Notifications
+                    </label>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Localizer["SaveChanges"]
+                    </button>
+                    <a asp-controller="Home" asp-action="Index" class="btn-secondary-custom">
+                        @Localizer["Cancel"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

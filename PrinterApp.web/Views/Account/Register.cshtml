@@ -1,0 +1,81 @@
+﻿@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Permission App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h2>📝 Register</h2>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Create your account to get started</p>
+            </div>
+            <div class="auth-card-body">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <form asp-action="Register" method="post">
+                    <div class="form-group-custom">
+                        <label asp-for="FirstName" class="form-label-custom">First Name</label>
+                        <input asp-for="FirstName" class="form-control-custom" placeholder="Enter your first name" />
+                        <span asp-validation-for="FirstName" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="LastName" class="form-label-custom">Last Name</label>
+                        <input asp-for="LastName" class="form-control-custom" placeholder="Enter your last name" />
+                        <span asp-validation-for="LastName" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Email" class="form-label-custom">Email Address</label>
+                        <input asp-for="Email" class="form-control-custom" placeholder="Enter your email" />
+                        <span asp-validation-for="Email" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Password" class="form-label-custom">Password</label>
+                        <input asp-for="Password" class="form-control-custom" placeholder="Enter your password" />
+                        <span asp-validation-for="Password" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="ConfirmPassword" class="form-label-custom">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control-custom" placeholder="Confirm your password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger-custom"></span>
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom btn-block-custom">Register</button>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: var(--medium-gray);">
+                            Already have an account?
+                            <a asp-action="Login" class="btn-link-custom" style="display: inline;">Login here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

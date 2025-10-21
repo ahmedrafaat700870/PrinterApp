@@ -1,0 +1,88 @@
+﻿/* RTL Styles for Arabic */
+body {
+    direction: rtl;
+    text-align: right;
+}
+
+.navbar-nav {
+    margin-right: 0 !important;
+    margin-left: auto !important;
+}
+
+.navbar-brand {
+    margin-right: 0 !important;
+    margin-left: 1rem !important;
+}
+
+.btn-primary-custom,
+.btn-secondary-custom,
+.btn-success-custom,
+.btn-warning-custom,
+.btn-danger-custom,
+.btn-info-custom {
+    text-align: center;
+}
+
+.action-buttons {
+    flex-direction: row-reverse;
+}
+
+.form-check-custom {
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+.form-check-input-custom {
+    float: right;
+    margin-right: -1.5rem;
+    margin-left: 0;
+}
+
+.table-custom th,
+.table-custom td {
+    text-align: right;
+}
+
+.page-header {
+    flex-direction: row-reverse;
+}
+
+.card-header-custom {
+    text-align: right;
+}
+
+.empty-state {
+    text-align: center;
+}
+
+/* Navbar Toggle */
+.navbar-toggler {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+    text-align: right;
+}
+
+/* Alerts */
+.alert-custom {
+    text-align: right;
+}
+
+/* Badges */
+.badge {
+    margin-right: 0;
+    margin-left: 5px;
+}
+
+/* Custom adjustments */
+.language-switcher {
+    flex-direction: row-reverse;
+}
+
+.nav-item {
+    margin-left: 0;
+    margin-right: 0.5rem;
+}

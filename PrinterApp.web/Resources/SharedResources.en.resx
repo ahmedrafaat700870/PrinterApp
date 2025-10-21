@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="Permissions" xml:space="preserve">
+    <value>Permissions</value>
+  </data>
+	<data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+	<data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+	<data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+	<data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+	<data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+	<data name="PermissionsManagement" xml:space="preserve">
+    <value>Permissions Management</value>
+  </data>
+	<data name="CreateNewPermission" xml:space="preserve">
+    <value>Create New Permission</value>
+  </data>
+	<data name="PermissionName" xml:space="preserve">
+    <value>Permission Name</value>
+  </data>
+	<data name="PermissionCode" xml:space="preserve">
+    <value>Permission Code</value>
+  </data>
+	<data name="Description" xml:space="preserve">
+    <value>Description</value>
+  </data>
+	<data name="CreatedDate" xml:space="preserve">
+    <value>Created Date</value>
+  </data>
+	<data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+	<data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+	<data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+	<data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+	<data name="ManageRoles" xml:space="preserve">
+    <value>Manage Roles</value>
+  </data>
+	<data name="AddRole" xml:space="preserve">
+    <value>Add Role</value>
+  </data>
+	<data name="RoleName" xml:space="preserve">
+    <value>Role Name</value>
+  </data>
+	<data name="UserManagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
+	<data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+	<data name="CurrentRole" xml:space="preserve">
+    <value>Current Role</value>
+  </data>
+	<data name="ChangeRole" xml:space="preserve">
+    <value>Change Role</value>
+  </data>
+	<data name="ManagePermissions" xml:space="preserve">
+    <value>Manage Permissions</value>
+  </data>
+	<data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+	<data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+	<data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+	<data name="View" xml:space="preserve">
+    <value>View</value>
+  </data>
+	<data name="Manage" xml:space="preserve">
+    <value>Manage</value>
+  </data>
+	<data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+	<data name="English" xml:space="preserve">
+    <value>English</value>
+  </data>
+	<data name="Arabic" xml:space="preserve">
+    <value>Arabic</value>
+  </data>
+	<data name="SystemSettings" xml:space="preserve">
+    <value>System Settings</value>
+  </data>
+	<data name="GeneralSettings" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
+	<data name="ApplicationName" xml:space="preserve">
+    <value>Application Name</value>
+  </data>
+	<data name="Theme" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+	<data name="Light" xml:space="preserve">
+    <value>Light</value>
+  </data>
+	<data name="Dark" xml:space="preserve">
+    <value>Dark</value>
+  </data>
+	<data name="SaveChanges" xml:space="preserve">
+    <value>Save Changes</value>
+  </data>
+	<data name="SuccessMessage" xml:space="preserve">
+    <value>Operation completed successfully</value>
+  </data>
+	<data name="ErrorMessage" xml:space="preserve">
+    <value>An error occurred</value>
+  </data>
+	<data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
+  </data>
+	<data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
+  </data>
+	<data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+	<data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+	<data name="RememberMe" xml:space="preserve">
+    <value>Remember Me</value>
+  </data>
+</root>

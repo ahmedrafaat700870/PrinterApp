@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card" style="max-width: 550px;">
+            <div class="auth-card-header" style="background: linear-gradient(135deg, var(--error-color), #E57373);">
+                <h2>🚫 Access Denied</h2>
+            </div>
+            <div class="auth-card-body" style="text-align: center; padding: 40px;">
+                <div style="font-size: 80px; margin-bottom: 20px;">🔒</div>
+                <h3 style="color: var(--text-primary); margin-bottom: 15px;">
+                    You don't have permission to access this page
+                </h3>
+                <p style="color: var(--medium-gray); margin-bottom: 30px;">
+                    Please contact your administrator if you believe you should have access to this resource.
+                </p>
+                <div class="action-buttons" style="justify-content: center;">
+                    <a href="javascript:history.back()" class="btn-secondary-custom">
+                        ← Go Back
+                    </a>
+                    <a asp-controller="Home" asp-action="Index" class="btn-primary-custom">
+                        🏠 Home Page
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

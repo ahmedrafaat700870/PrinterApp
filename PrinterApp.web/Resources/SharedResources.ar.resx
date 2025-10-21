@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+	<data name="Permissions" xml:space="preserve">
+    <value>الصلاحيات</value>
+  </data>
+	<data name="Users" xml:space="preserve">
+    <value>المستخدمين</value>
+  </data>
+	<data name="Settings" xml:space="preserve">
+    <value>الإعدادات</value>
+  </data>
+	<data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+	<data name="Register" xml:space="preserve">
+    <value>تسجيل جديد</value>
+  </data>
+	<data name="Welcome" xml:space="preserve">
+    <value>مرحباً</value>
+  </data>
+	<data name="PermissionsManagement" xml:space="preserve">
+    <value>إدارة الصلاحيات</value>
+  </data>
+	<data name="CreateNewPermission" xml:space="preserve">
+    <value>إنشاء صلاحية جديدة</value>
+  </data>
+	<data name="PermissionName" xml:space="preserve">
+    <value>اسم الصلاحية</value>
+  </data>
+	<data name="PermissionCode" xml:space="preserve">
+    <value>كود الصلاحية</value>
+  </data>
+	<data name="Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+	<data name="CreatedDate" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+	<data name="Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+	<data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+	<data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+	<data name="Roles" xml:space="preserve">
+    <value>الأدوار</value>
+  </data>
+	<data name="ManageRoles" xml:space="preserve">
+    <value>إدارة الأدوار</value>
+  </data>
+	<data name="AddRole" xml:space="preserve">
+    <value>إضافة دور</value>
+  </data>
+	<data name="RoleName" xml:space="preserve">
+    <value>اسم الدور</value>
+  </data>
+	<data name="UserManagement" xml:space="preserve">
+    <value>إدارة المستخدمين</value>
+  </data>
+	<data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+	<data name="FullName" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+	<data name="CurrentRole" xml:space="preserve">
+    <value>الدور الحالي</value>
+  </data>
+	<data name="ChangeRole" xml:space="preserve">
+    <value>تغيير الدور</value>
+  </data>
+	<data name="ManagePermissions" xml:space="preserve">
+    <value>إدارة الصلاحيات</value>
+  </data>
+	<data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+	<data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+	<data name="Back" xml:space="preserve">
+    <value>رجوع</value>
+  </data>
+	<data name="Create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+	<data name="View" xml:space="preserve">
+    <value>عرض</value>
+  </data>
+	<data name="Manage" xml:space="preserve">
+    <value>إدارة</value>
+  </data>
+	<data name="Language" xml:space="preserve">
+    <value>اللغة</value>
+  </data>
+	<data name="English" xml:space="preserve">
+    <value>إنجليزي</value>
+  </data>
+	<data name="Arabic" xml:space="preserve">
+    <value>عربي</value>
+  </data>
+	<data name="SystemSettings" xml:space="preserve">
+    <value>إعدادات النظام</value>
+  </data>
+	<data name="GeneralSettings" xml:space="preserve">
+    <value>الإعدادات العامة</value>
+  </data>
+	<data name="ApplicationName" xml:space="preserve">
+    <value>اسم التطبيق</value>
+  </data>
+	<data name="Theme" xml:space="preserve">
+    <value>المظهر</value>
+  </data>
+	<data name="Light" xml:space="preserve">
+    <value>فاتح</value>
+  </data>
+	<data name="Dark" xml:space="preserve">
+    <value>داكن</value>
+  </data>
+	<data name="SaveChanges" xml:space="preserve">
+    <value>حفظ التغييرات</value>
+  </data>
+	<data name="SuccessMessage" xml:space="preserve">
+    <value>تمت العملية بنجاح</value>
+  </data>
+	<data name="ErrorMessage" xml:space="preserve">
+    <value>حدث خطأ</value>
+  </data>
+	<data name="FirstName" xml:space="preserve">
+    <value>الاسم الأول</value>
+  </data>
+	<data name="LastName" xml:space="preserve">
+    <value>اسم العائلة</value>
+  </data>
+	<data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+	<data name="ConfirmPassword" xml:space="preserve">
+    <value>تأكيد كلمة المرور</value>
+  </data>
+	<data name="RememberMe" xml:space="preserve">
+    <value>تذكرني</value>
+  </data>
+</root>

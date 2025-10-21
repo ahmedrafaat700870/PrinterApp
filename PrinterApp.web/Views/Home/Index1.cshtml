@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="content-container">
+    <div class="text-center" style="padding: 60px 20px;">
+        <h1 style="color: var(--text-primary); font-size: var(--font-size-xxxl); margin-bottom: 20px;">
+            Welcome to Permission Management System
+        </h1>
+        <p style="color: var(--text-secondary); font-size: var(--font-size-lg); margin-bottom: 40px;">
+            Secure, Simple, and Efficient Permission Management
+        </p>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="card-custom" style="max-width: 800px; margin: 0 auto;">
+                <div class="card-body-custom" style="padding: 40px;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 30px;">Quick Actions</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <a asp-controller="Permissions" asp-action="Index"
+                           class="btn-primary-custom" style="padding: 30px; font-size: var(--font-size-lg);">
+                            📋 View Permissions
+                        </a>
+                        <a asp-controller="Permissions" asp-action="Create"
+                           class="btn-success-custom" style="padding: 30px; font-size: var(--font-size-lg);">
+                            ➕ Create Permission
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="margin-top: 40px;">
+                <a asp-controller="Account" asp-action="Login" class="btn-primary-custom" style="margin: 0 10px;">
+                    🔐 Login
+                </a>
+                <a asp-controller="Account" asp-action="Register" class="btn-success-custom" style="margin: 0 10px;">
+                    📝 Register
+                </a>
+            </div>
+        }
+    </div>
+</div>

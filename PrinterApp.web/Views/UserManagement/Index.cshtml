@@ -1,0 +1,76 @@
+﻿@model List<UserRoleViewModel>
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👥 User Management</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Current Role</th>
+                        <th style="text-align: center; width: 250px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong style="color: var(--text-primary);">@user.FullName</strong>
+                            </td>
+                            <td>@user.Email</td>
+                            <td>
+                                <span style="background: var(--primary-gradient); color: var(--text-light); padding: 5px 15px; border-radius: var(--border-radius); font-weight: 500;">
+                                    @user.Role
+                                </span>
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons" style="justify-content: center;">
+                                    <a asp-action="AssignRole" asp-route-userId="@user.UserId" class="btn-warning-custom btn-sm-custom">
+                                        👤 Change Role
+                                    </a>
+                                    <a asp-action="ManagePermissions" asp-route-userId="@user.UserId" class="btn-success-custom btn-sm-custom">
+                                        🔐 Permissions
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3 style="color: var(--medium-gray);">No Users Found</h3>
+            </div>
+        </div>
+    }
+</div>

@@ -1,0 +1,91 @@
+﻿@model IEnumerable<PermissionViewModel>
+
+@{
+    ViewData["Title"] = "Permissions";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>🛡️ Permissions Management</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ Create New Permission
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>Permission Name</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Created Date</th>
+                        <th style="text-align: center; width: 300px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong style="color: var(--text-primary);">@item.Name</strong>
+                            </td>
+                            <td>
+                                <code style="background: var(--input-bg); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--text-secondary);">
+                                    @item.Code
+                                </code>
+                            </td>
+                            <td>@item.Description</td>
+                            <td>@item.CreatedDate.ToString("MMM dd, yyyy")</td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons" style="justify-content: center;">
+                                    <a asp-action="ManageRoles" asp-route-id="@item.Id" class="btn-success-custom btn-sm-custom">
+                                        🎭 Roles
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-warning-custom btn-sm-custom">
+                                        ✏️ Edit
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                                onclick="return confirm('Are you sure you want to delete this permission?')">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3 style="color: var(--medium-gray);">No Permissions Found</h3>
+                <p style="color: var(--medium-gray);">Create your first permission to get started</p>
+                <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                    ➕ Create Permission
+                </a>
+            </div>
+        </div>
+    }
+</div>

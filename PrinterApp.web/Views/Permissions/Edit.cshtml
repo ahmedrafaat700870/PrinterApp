@@ -1,0 +1,66 @@
+﻿@model PermissionViewModel
+
+@{
+    ViewData["Title"] = "Edit Permission";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Permission</h2>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>Update Permission Details</h2>
+        </div>
+        <div class="card-body-custom">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-summary">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                <div class="form-group-custom">
+                    <label asp-for="Name" class="form-label-custom">Permission Name</label>
+                    <input asp-for="Name" class="form-control-custom" />
+                    <span asp-validation-for="Name" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Code" class="form-label-custom">Permission Code</label>
+                    <input asp-for="Code" class="form-control-custom" />
+                    <span asp-validation-for="Code" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom">Description</label>
+                    <textarea asp-for="Description" class="form-control-custom"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Created Date</label>
+                    <input type="text" class="form-control-custom" value="@Model.CreatedDate.ToString("MMMM dd, yyyy")" readonly />
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        ← Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
