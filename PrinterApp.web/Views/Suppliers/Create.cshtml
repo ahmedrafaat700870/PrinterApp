@@ -1,0 +1,182 @@
+﻿@model PrinterApp.Models.ViewModels.SupplierViewModel
+
+@{
+    ViewData["Title"] = "Create Supplier";
+    var nextCode = ViewBag.NextSupplierCode as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ Create New Supplier</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>👥 Supplier Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Supplier Code Display -->
+                <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; text-align: center;">
+                    <div style="color: var(--white); font-size: 14px; margin-bottom: 5px; opacity: 0.9;">
+                        Supplier Code (Auto-Generated)
+                    </div>
+                    <div style="color: var(--white); font-size: 36px; font-weight: bold; font-family: monospace;">
+                        #@nextCode
+                    </div>
+                    <div style="color: var(--white); font-size: 12px; margin-top: 5px; opacity: 0.8;">
+                        This code will be assigned automatically
+                    </div>
+                </div>
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 Basic Information
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="SupplierName" class="form-label-custom"></label>
+                        <input asp-for="SupplierName" class="form-control-custom" placeholder="Enter supplier name (e.g., ABC Trading Company)" />
+                        <span asp-validation-for="SupplierName" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 Supplier name must be unique
+                        </small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="CardNumber" class="form-label-custom"></label>
+                            <input asp-for="CardNumber" class="form-control-custom" placeholder="Enter card number (optional)" />
+                            <span asp-validation-for="CardNumber" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="CommercialRegister" class="form-label-custom"></label>
+                            <input asp-for="CommercialRegister" class="form-control-custom" placeholder="Enter commercial register (optional)" />
+                            <span asp-validation-for="CommercialRegister" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        📞 Contact Information
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="PhoneNumber" class="form-label-custom"></label>
+                            <input asp-for="PhoneNumber" type="tel" class="form-control-custom" placeholder="Enter phone number (required)" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Email" class="form-label-custom"></label>
+                            <input asp-for="Email" type="email" class="form-control-custom" placeholder="Enter email (optional)" />
+                            <span asp-validation-for="Email" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--warning-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--warning-color); font-size: 18px;">
+                        📍 Location Information
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="City" class="form-label-custom"></label>
+                            <input asp-for="City" class="form-control-custom" placeholder="Enter city (optional)" />
+                            <span asp-validation-for="City" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Country" class="form-label-custom"></label>
+                            <input asp-for="Country" class="form-control-custom" placeholder="Enter country (optional)" />
+                            <span asp-validation-for="Country" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Address" class="form-label-custom"></label>
+                        <textarea asp-for="Address"
+                                  class="form-control-custom"
+                                  rows="3"
+                                  placeholder="Enter full address (optional)"
+                                  style="resize: vertical;"></textarea>
+                        <span asp-validation-for="Address" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group-custom">
+                    <label asp-for="Notes" class="form-label-custom"></label>
+                    <textarea asp-for="Notes"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="Enter notes or additional information (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger-custom"></span>
+                </div>
+
+                <!-- Tips -->
+                <div style="background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%); color: var(--white); padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px;">💡 Tips for Adding Suppliers</h4>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Supplier code is generated automatically (0001, 0002, 0003...)</li>
+                        <li>Supplier name must be unique</li>
+                        <li>Phone number is required for contact purposes</li>
+                        <li>Card number and commercial register are optional but recommended</li>
+                        <li>When a supplier is deleted, codes are automatically reassigned</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Create Supplier
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-focus on supplier name
+        document.addEventListener('DOMContentLoaded', function() {
+            const supplierNameInput = document.querySelector('input[name="SupplierName"]');
+            if (supplierNameInput) {
+                supplierNameInput.focus();
+            }
+        });
+
+        // Phone number formatting
+        const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                // Remove non-digit characters
+                let value = e.target.value.replace(/\D/g, '');
+                e.target.value = value;
+            });
+        }
+    </script>
+}

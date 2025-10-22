@@ -19,12 +19,31 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<RollDirection> RollDirections { get; set; }
     public DbSet<Machine> Machines { get; set; }
     public DbSet<Carton> Cartons { get; set; }
-    public DbSet<Knife> Knives { get; set; } 
+    public DbSet<Knife> Knives { get; set; }
+    public DbSet<Supplier> Suppliers { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-
+        // Configure Supplier
+        builder.Entity<Supplier>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.SupplierCode).IsRequired().HasMaxLength(4);
+            entity.Property(e => e.SupplierName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.CardNumber).HasMaxLength(50);
+            entity.Property(e => e.CommercialRegister).HasMaxLength(50);
+            entity.Property(e => e.PhoneNumber).IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.Address).HasMaxLength(500);
+            entity.Property(e => e.City).HasMaxLength(100);
+            entity.Property(e => e.Country).HasMaxLength(100);
+            entity.Property(e => e.Notes).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.SupplierCode).IsUnique();
+            entity.HasIndex(e => e.SupplierName).IsUnique();
+        });
 
         // Configure Knife
         builder.Entity<Knife>(entity =>

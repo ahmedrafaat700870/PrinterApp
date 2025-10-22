@@ -232,4 +232,25 @@
 <data name="KnifeFactor" xml:space="preserve">
   <value>Knife Factor</value>
 </data>
+<data name="Suppliers" xml:space="preserve">
+  <value>Suppliers</value>
+</data>
+<data name="SupplierManagement" xml:space="preserve">
+  <value>Supplier Management</value>
+</data>
+<data name="SupplierName" xml:space="preserve">
+  <value>Supplier Name</value>
+</data>
+<data name="SupplierCode" xml:space="preserve">
+  <value>Supplier Code</value>
+</data>
+<data name="CardNumber" xml:space="preserve">
+  <value>Card Number</value>
+</data>
+<data name="CommercialRegister" xml:space="preserve">
+  <value>Commercial Register</value>
+</data>
+<data name="PhoneNumber" xml:space="preserve">
+  <value>Phone Number</value>
+</data>
 </root>

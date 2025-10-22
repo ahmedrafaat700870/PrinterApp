@@ -15,7 +15,8 @@ namespace PrinterApp.Data.UnitOfWork
         IRollDirectionRepository RollDirections { get; }
         IMachineRepository Machines { get; }
         ICartonRepository Cartons { get; }
-        IKnifeRepository Knives { get; } 
+        IKnifeRepository Knives { get; }
+        ISupplierRepository Suppliers { get; }
         Task<int> CompleteAsync();
     }
 }

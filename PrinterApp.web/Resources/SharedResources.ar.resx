@@ -232,4 +232,25 @@
 <data name="KnifeFactor" xml:space="preserve">
   <value>معامل السكينة</value>
 </data>
+<data name="Suppliers" xml:space="preserve">
+  <value>الموردين</value>
+</data>
+<data name="SupplierManagement" xml:space="preserve">
+  <value>إدارة الموردين</value>
+</data>
+<data name="SupplierName" xml:space="preserve">
+  <value>اسم المورد</value>
+</data>
+<data name="SupplierCode" xml:space="preserve">
+  <value>كود المورد</value>
+</data>
+<data name="CardNumber" xml:space="preserve">
+  <value>رقم البطاقة</value>
+</data>
+<data name="CommercialRegister" xml:space="preserve">
+  <value>السجل التجاري</value>
+</data>
+<data name="PhoneNumber" xml:space="preserve">
+  <value>رقم الهاتف</value>
+</data>
 </root>

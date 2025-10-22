@@ -14,6 +14,7 @@ public class UnitOfWork : IUnitOfWork
     private IMachineRepository _machines;
     private ICartonRepository _cartons;
     private IKnifeRepository _knives; 
+    private ISupplierRepository _suppliers;
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
@@ -116,6 +117,18 @@ public class UnitOfWork : IUnitOfWork
                 _knives = new   KnifeRepository(_context);
             }
             return _knives;
+        }
+    }
+
+    public ISupplierRepository Suppliers
+    {
+        get
+        {
+            if (_suppliers is null)
+            {
+                _suppliers = new SupplierRepository(_context);
+            }
+            return _suppliers;
         }
     }
 
