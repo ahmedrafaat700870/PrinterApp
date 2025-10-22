@@ -78,7 +78,11 @@ builder.Services.AddScoped<IPermissionRoleService, PermissionRoleService>();
 builder.Services.AddScoped<IUserManagementService, UserManagementService>();
 builder.Services.AddScoped<IUserPermissionService, UserPermissionService>();
 builder.Services.AddScoped<ISettingsService, SettingsService>();
-
+builder.Services.AddScoped<ICoreService, CoreService>();
+builder.Services.AddScoped<ICartonService, CartonService>(); 
+builder.Services.AddScoped<IRollDirectionService, RollDirectionService>();
+builder.Services.AddScoped<IMachineService, MachineService>();
+builder.Services.AddScoped<IKnifeService, KnifeService>(); 
 var app = builder.Build();
 
 // Seed Database with Roles and Permissions

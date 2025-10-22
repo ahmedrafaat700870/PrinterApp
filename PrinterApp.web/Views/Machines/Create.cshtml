@@ -1,0 +1,119 @@
+﻿@model PrinterApp.Models.ViewModels.MachineViewModel
+
+@{
+    ViewData["Title"] = "Create Machine";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ Create New Machine</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🖨️ Machine Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="MachineName" class="form-label-custom"></label>
+                    <input asp-for="MachineName" class="form-control-custom" placeholder="Enter machine name (e.g., HP Indigo 7600)" />
+                    <span asp-validation-for="MachineName" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="MaxWidth" class="form-label-custom"></label>
+                    <div style="position: relative;">
+                        <input asp-for="MaxWidth" type="number" step="0.01" class="form-control-custom" placeholder="Enter maximum width" style="padding-right: 60px;" />
+                        <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--medium-gray); font-weight: 500;">
+                            mm
+                        </span>
+                    </div>
+                    <span asp-validation-for="MaxWidth" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📏 Maximum printing width for this machine in millimeters
+                    </small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group-custom">
+                        <label asp-for="ModelNumber" class="form-label-custom"></label>
+                        <input asp-for="ModelNumber" class="form-control-custom" placeholder="e.g., XR-2000" />
+                        <span asp-validation-for="ModelNumber" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Manufacturer" class="form-label-custom"></label>
+                        <input asp-for="Manufacturer" class="form-control-custom" placeholder="e.g., HP, Canon, Epson" />
+                        <span asp-validation-for="Manufacturer" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="4"
+                              placeholder="Enter machine description, specifications, or notes (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--primary-color); font-size: 16px;">
+                        💡 Tips for Adding Machines
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--medium-gray);">
+                        <li>Use descriptive names that identify the machine easily</li>
+                        <li>Ensure maximum width is accurate for proper calculations</li>
+                        <li>Include model number for future reference</li>
+                        <li>Add any special notes about the machine in the description</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Create Machine
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-focus on machine name
+        document.addEventListener('DOMContentLoaded', function() {
+            const machineNameInput = document.querySelector('input[name="MachineName"]');
+            if (machineNameInput) {
+                machineNameInput.focus();
+            }
+        });
+
+        // Format max width input
+        const maxWidthInput = document.querySelector('input[name="MaxWidth"]');
+        if (maxWidthInput) {
+            maxWidthInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+        }
+    </script>
+}

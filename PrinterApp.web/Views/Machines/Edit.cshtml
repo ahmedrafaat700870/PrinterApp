@@ -1,0 +1,126 @@
+﻿@model PrinterApp.Models.ViewModels.MachineViewModel
+
+@{
+    ViewData["Title"] = "Edit Machine";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Machine</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🖨️ Machine Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="MachineName" class="form-label-custom"></label>
+                    <input asp-for="MachineName" class="form-control-custom" placeholder="Enter machine name" />
+                    <span asp-validation-for="MachineName" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="MaxWidth" class="form-label-custom"></label>
+                    <div style="position: relative;">
+                        <input asp-for="MaxWidth" type="number" step="0.01" class="form-control-custom" placeholder="Enter maximum width" style="padding-right: 60px;" />
+                        <span style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--medium-gray); font-weight: 500;">
+                            mm
+                        </span>
+                    </div>
+                    <span asp-validation-for="MaxWidth" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📏 Maximum printing width for this machine in millimeters
+                    </small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group-custom">
+                        <label asp-for="ModelNumber" class="form-label-custom"></label>
+                        <input asp-for="ModelNumber" class="form-control-custom" placeholder="e.g., XR-2000" />
+                        <span asp-validation-for="ModelNumber" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Manufacturer" class="form-label-custom"></label>
+                        <input asp-for="Manufacturer" class="form-control-custom" placeholder="e.g., HP, Canon, Epson" />
+                        <span asp-validation-for="Manufacturer" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="4"
+                              placeholder="Enter machine description, specifications, or notes (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        Machine is Active
+                    </label>
+                    <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                        Inactive machines will not be available for selection in printing operations
+                    </small>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>Created:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>Last Modified:</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Format max width input
+        const maxWidthInput = document.querySelector('input[name="MaxWidth"]');
+        if (maxWidthInput) {
+            maxWidthInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@model PrinterApp.Models.ViewModels.CoreViewModel
+
+@{
+    ViewData["Title"] = "Edit Core";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Core</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>Core Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="CoreName" class="form-label-custom"></label>
+                    <input asp-for="CoreName" class="form-control-custom" placeholder="Enter core name" />
+                    <span asp-validation-for="CoreName" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="CoreCoefficient" class="form-label-custom"></label>
+                    <input asp-for="CoreCoefficient" type="number" step="0.0001" class="form-control-custom" placeholder="Enter coefficient value" />
+                    <span asp-validation-for="CoreCoefficient" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 Core coefficient is used for calculations
+                    </small>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="form-group-custom">
+                        <label asp-for="WidthCor" class="form-label-custom"></label>
+                        <input asp-for="WidthCor" type="number" step="0.01" class="form-control-custom" placeholder="Width in mm" />
+                        <span asp-validation-for="WidthCor" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="HeightCor" class="form-label-custom"></label>
+                        <input asp-for="HeightCor" type="number" step="0.01" class="form-control-custom" placeholder="Height in mm" />
+                        <span asp-validation-for="HeightCor" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        Core is Active
+                    </label>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>Created:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>Last Modified:</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

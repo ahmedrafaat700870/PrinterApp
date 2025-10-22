@@ -2,6 +2,7 @@
 using PrinterApp.Models.Entities;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+
 namespace PrinterApp.Services.Implementations;
 
 public class AccountService : IAccountService

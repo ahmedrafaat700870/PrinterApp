@@ -1,0 +1,171 @@
+﻿@model PrinterApp.Models.ViewModels.RollDirectionViewModel
+
+@{
+    ViewData["Title"] = "Edit Roll Direction";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Roll Direction</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>Roll Direction Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="DirectionImage" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="DirectionNumber" class="form-label-custom"></label>
+                    <input asp-for="DirectionNumber" type="number" class="form-control-custom" placeholder="Enter direction number" />
+                    <span asp-validation-for="DirectionNumber" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 Direction number must be unique
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Current Image</label>
+                    @if (!string.IsNullOrEmpty(Model.DirectionImage))
+                    {
+                        <div style="margin-bottom: 15px;">
+                            <img src="@Model.DirectionImage"
+                                 alt="Current Direction Image"
+                                 style="width: 200px; height: 200px; object-fit: cover; border-radius: var(--border-radius); border: 2px solid var(--border-color);" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 15px; padding: 20px; background: var(--input-bg); border-radius: var(--border-radius); text-align: center; color: var(--medium-gray);">
+                            📷 No image uploaded yet
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="ImageFile" class="form-label-custom">Change Image (Optional)</label>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input asp-for="ImageFile"
+                               type="file"
+                               class="form-control-custom"
+                               accept="image/*"
+                               id="imageInput"
+                               onchange="previewImage(event)" />
+                        <span asp-validation-for="ImageFile" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray);">
+                            📸 Leave empty to keep current image. Accepted formats: JPG, PNG, GIF (Max size: 5MB)
+                        </small>
+
+                        <!-- New Image Preview -->
+                        <div id="imagePreviewContainer" style="display: none;">
+                            <label class="form-label-custom">New Image Preview:</label>
+                            <div style="position: relative; width: 200px; height: 200px; border: 2px dashed var(--primary-color); border-radius: var(--border-radius); overflow: hidden;">
+                                <img id="imagePreview"
+                                     src=""
+                                     alt="Preview"
+                                     style="width: 100%; height: 100%; object-fit: cover;" />
+                                <button type="button"
+                                        onclick="clearImage()"
+                                        style="position: absolute; top: 10px; right: 10px; background: var(--danger-color); color: var(--white); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="Enter description (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        Direction is Active
+                    </label>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>Created:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>Last Modified:</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    event.target.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file');
+                    event.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImage() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+        }
+    </script>
+}

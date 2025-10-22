@@ -1,0 +1,107 @@
+﻿@model PrinterApp.Models.ViewModels.KnifeViewModel
+
+@{
+    ViewData["Title"] = "Edit Knife";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Knife</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🔪 Knife Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="KnifeName" class="form-label-custom"></label>
+                    <input asp-for="KnifeName" class="form-control-custom" placeholder="Enter knife name" />
+                    <span asp-validation-for="KnifeName" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 Knife name must be unique
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="KnifeFactor" class="form-label-custom"></label>
+                    <input asp-for="KnifeFactor" type="number" step="0.0001" class="form-control-custom" placeholder="Enter knife factor" />
+                    <span asp-validation-for="KnifeFactor" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📊 The multiplication factor for this knife type
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="Enter description (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        Knife is Active
+                    </label>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>Created:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>Last Modified:</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Format knife factor input
+        const knifeFactorInput = document.querySelector('input[name="KnifeFactor"]');
+        if (knifeFactorInput) {
+            knifeFactorInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(4);
+                }
+            });
+        }
+    </script>
+}

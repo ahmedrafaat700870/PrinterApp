@@ -150,4 +150,86 @@
 	<data name="RememberMe" xml:space="preserve">
     <value>Remember Me</value>
   </data>
+
+  <data name="Cores" xml:space="preserve">
+  <value>Cores</value>
+</data>
+<data name="CoreManagement" xml:space="preserve">
+  <value>Core Management</value>
+</data>
+<data name="CoreName" xml:space="preserve">
+  <value>Core Name</value>
+</data>
+<data name="CoreCoefficient" xml:space="preserve">
+  <value>Core Coefficient</value>
+</data>
+<data name="Width" xml:space="preserve">
+  <value>Width</value>
+</data>
+<data name="Height" xml:space="preserve">
+  <value>Height</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>Status</value>
+</data>
+<data name="Active" xml:space="preserve">
+  <value>Active</value>
+</data>
+<data name="Inactive" xml:space="preserve">
+  <value>Inactive</value>
+</data>
+<data name="RollDirections" xml:space="preserve">
+  <value>Roll Directions</value>
+</data>
+<data name="DirectionNumber" xml:space="preserve">
+  <value>Direction Number</value>
+</data>
+<data name="DirectionImage" xml:space="preserve">
+  <value>Direction Image</value>
+</data>
+<data name="RollDirectionManagement" xml:space="preserve">
+  <value>Roll Direction Management</value>
+</data>
+<data name="Machines" xml:space="preserve">
+  <value>Machines</value>
+</data>
+<data name="MachineManagement" xml:space="preserve">
+  <value>Machine Management</value>
+</data>
+<data name="MachineName" xml:space="preserve">
+  <value>Machine Name</value>
+</data>
+<data name="MaxWidth" xml:space="preserve">
+  <value>Maximum Width</value>
+</data>
+<data name="ModelNumber" xml:space="preserve">
+  <value>Model Number</value>
+</data>
+<data name="Manufacturer" xml:space="preserve">
+  <value>Manufacturer</value>
+</data>
+<data name="Cartons" xml:space="preserve">
+  <value>Cartons</value>
+</data>
+<data name="CartonManagement" xml:space="preserve">
+  <value>Carton Management</value>
+</data>
+<data name="CartonName" xml:space="preserve">
+  <value>Carton Name</value>
+</data>
+<data name="CartonFactor" xml:space="preserve">
+  <value>Carton Factor</value>
+</data>
+<data name="Knives" xml:space="preserve">
+  <value>Knives</value>
+</data>
+<data name="KnifeManagement" xml:space="preserve">
+  <value>Knife Management</value>
+</data>
+<data name="KnifeName" xml:space="preserve">
+  <value>Knife Name</value>
+</data>
+<data name="KnifeFactor" xml:space="preserve">
+  <value>Knife Factor</value>
+</data>
 </root>

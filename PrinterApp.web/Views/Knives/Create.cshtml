@@ -1,0 +1,103 @@
+﻿@model PrinterApp.Models.ViewModels.KnifeViewModel
+
+@{
+    ViewData["Title"] = "Create Knife";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ Create New Knife</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🔪 Knife Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="KnifeName" class="form-label-custom"></label>
+                    <input asp-for="KnifeName" class="form-control-custom" placeholder="Enter knife name (e.g., Standard Blade 10mm)" />
+                    <span asp-validation-for="KnifeName" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 Knife name must be unique
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="KnifeFactor" class="form-label-custom"></label>
+                    <input asp-for="KnifeFactor" type="number" step="0.0001" class="form-control-custom" placeholder="Enter knife factor (e.g., 1.15)" />
+                    <span asp-validation-for="KnifeFactor" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📊 The multiplication factor for this knife type
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="Enter description (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--primary-color); font-size: 16px;">
+                        💡 Tips for Adding Knives
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--medium-gray);">
+                        <li>Use descriptive names including blade size if applicable</li>
+                        <li>Knife factor is used in cutting calculations</li>
+                        <li>Common factors range from 0.8 to 2.0</li>
+                        <li>Higher factor means thicker/sharper blades</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Create Knife
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-focus on knife name
+        document.addEventListener('DOMContentLoaded', function() {
+            const knifeNameInput = document.querySelector('input[name="KnifeName"]');
+            if (knifeNameInput) {
+                knifeNameInput.focus();
+            }
+        });
+
+        // Format knife factor input
+        const knifeFactorInput = document.querySelector('input[name="KnifeFactor"]');
+        if (knifeFactorInput) {
+            knifeFactorInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(4);
+                }
+            });
+        }
+    </script>
+}

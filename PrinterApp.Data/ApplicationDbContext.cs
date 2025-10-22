@@ -15,11 +15,77 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<PermissionRole> PermissionRoles { get; set; }
     public DbSet<UserPermission> UserPermissions { get; set; }
     public DbSet<SystemSetting> SystemSettings { get; set; }
-
+    public DbSet<Core> Cores { get; set; }
+    public DbSet<RollDirection> RollDirections { get; set; }
+    public DbSet<Machine> Machines { get; set; }
+    public DbSet<Carton> Cartons { get; set; }
+    public DbSet<Knife> Knives { get; set; } 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+
+
+        // Configure Knife
+        builder.Entity<Knife>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.KnifeName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.KnifeFactor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.KnifeName).IsUnique();
+        });
+        // Configure Carton
+        builder.Entity<Carton>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CartonName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.CartonFactor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.CartonName).IsUnique();
+        });
+        // Configure Machine
+        builder.Entity<Machine>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.MachineName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.MaxWidth).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.ModelNumber).HasMaxLength(100);
+            entity.Property(e => e.Manufacturer).HasMaxLength(100);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.MachineName).IsUnique();
+        });
+
+        // Configure RollDirection
+        builder.Entity<RollDirection>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.DirectionNumber).IsRequired();
+            entity.Property(e => e.DirectionImage).HasMaxLength(500);
+            entity.Property(e => e.Description).HasMaxLength(200);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.DirectionNumber).IsUnique();
+        });
+
+        // Configure Core
+        builder.Entity<Core>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CoreName).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.CoreCoefficient).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.WidthCor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.HeightCor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.CoreName).IsUnique();
+        });
         // Configure SystemSetting
         builder.Entity<SystemSetting>(entity =>
         {

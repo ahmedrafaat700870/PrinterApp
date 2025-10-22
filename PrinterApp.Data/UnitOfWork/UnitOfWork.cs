@@ -1,7 +1,4 @@
 ﻿using PrinterApp.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace PrinterApp.Data.UnitOfWork;
 
@@ -12,7 +9,11 @@ public class UnitOfWork : IUnitOfWork
     private IPermissionRoleRepository _permissionRoles;
     private IUserPermissionRepository _userPermissions;
     private ISystemSettingRepository _systemRepository;
-
+    private ICoreRepository _coreRepository;
+    private IRollDirectionRepository _rollDirectionRepository;
+    private IMachineRepository _machines;
+    private ICartonRepository _cartons;
+    private IKnifeRepository _knives; 
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
@@ -39,7 +40,6 @@ public class UnitOfWork : IUnitOfWork
             return _permissions;
         }
     }
-
     public IPermissionRoleRepository PermissionRoles
     {
         get
@@ -51,7 +51,17 @@ public class UnitOfWork : IUnitOfWork
             return _permissionRoles;
         }
     }
-
+    public ICoreRepository Cores
+    {
+        get
+        {
+            if (_coreRepository is null)
+            {
+                _coreRepository = new CoreRepository(_context);
+            }
+            return _coreRepository;
+        }
+    }
     public IUserPermissionRepository UserPermissions
     {
         get
@@ -63,12 +73,56 @@ public class UnitOfWork : IUnitOfWork
             return _userPermissions;
         }
     }
+    public IRollDirectionRepository RollDirections
+    {
+        get
+        {
+            if (_rollDirectionRepository == null)
+            {
+                _rollDirectionRepository = new RollDirectionRepository(_context);
+            }
+            return _rollDirectionRepository;
+        }
+    }
+    public IMachineRepository Machines
+    {
+        get
+        {
+            if (_machines == null)
+            {
+                _machines = new MachineRepository(_context);
+            }
+            return _machines;
+        }
+    }
+    public ICartonRepository Cartons
+    {
+        get
+        {
+            if (_cartons == null)
+            {
+                _cartons = new CartonRepository(_context);
+            }
+            return _cartons;
+        }
+    }
+
+    public IKnifeRepository Knives
+    {
+        get
+        {
+            if (_knives is null)
+            {
+                _knives = new   KnifeRepository(_context);
+            }
+            return _knives;
+        }
+    }
 
     public async Task<int> CompleteAsync()
     {
         return await _context.SaveChangesAsync();
     }
-
     public void Dispose()
     {
         _context.Dispose();

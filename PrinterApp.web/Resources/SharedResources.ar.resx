@@ -150,4 +150,86 @@
 	<data name="RememberMe" xml:space="preserve">
     <value>تذكرني</value>
   </data>
+
+  <data name="Cores" xml:space="preserve">
+  <value>الأكوار</value>
+</data>
+<data name="CoreManagement" xml:space="preserve">
+  <value>إدارة الأكوار</value>
+</data>
+<data name="CoreName" xml:space="preserve">
+  <value>اسم الكور</value>
+</data>
+<data name="CoreCoefficient" xml:space="preserve">
+  <value>معامل الكور</value>
+</data>
+<data name="Width" xml:space="preserve">
+  <value>العرض</value>
+</data>
+<data name="Height" xml:space="preserve">
+  <value>الارتفاع</value>
+</data>
+<data name="Status" xml:space="preserve">
+  <value>الحالة</value>
+</data>
+<data name="Active" xml:space="preserve">
+  <value>نشط</value>
+</data>
+<data name="Inactive" xml:space="preserve">
+  <value>غير نشط</value>
+</data>
+<data name="RollDirections" xml:space="preserve">
+  <value>اتجاهات الرول</value>
+</data>
+<data name="DirectionNumber" xml:space="preserve">
+  <value>رقم الاتجاه</value>
+</data>
+<data name="DirectionImage" xml:space="preserve">
+  <value>صورة الاتجاه</value>
+</data>
+<data name="RollDirectionManagement" xml:space="preserve">
+  <value>إدارة اتجاهات الرول</value>
+</data>
+<data name="Machines" xml:space="preserve">
+  <value>الماكينات</value>
+</data>
+<data name="MachineManagement" xml:space="preserve">
+  <value>إدارة الماكينات</value>
+</data>
+<data name="MachineName" xml:space="preserve">
+  <value>اسم المكينة</value>
+</data>
+<data name="MaxWidth" xml:space="preserve">
+  <value>أقصى عرض</value>
+</data>
+<data name="ModelNumber" xml:space="preserve">
+  <value>رقم الموديل</value>
+</data>
+<data name="Manufacturer" xml:space="preserve">
+  <value>الشركة المصنعة</value>
+</data>
+<data name="Cartons" xml:space="preserve">
+  <value>الكراتين</value>
+</data>
+<data name="CartonManagement" xml:space="preserve">
+  <value>إدارة الكراتين</value>
+</data>
+<data name="CartonName" xml:space="preserve">
+  <value>اسم الكرتون</value>
+</data>
+<data name="CartonFactor" xml:space="preserve">
+  <value>معامل الكرتون</value>
+</data>
+<data name="Knives" xml:space="preserve">
+  <value>السكاكين</value>
+</data>
+<data name="KnifeManagement" xml:space="preserve">
+  <value>إدارة السكاكين</value>
+</data>
+<data name="KnifeName" xml:space="preserve">
+  <value>اسم السكينة</value>
+</data>
+<data name="KnifeFactor" xml:space="preserve">
+  <value>معامل السكينة</value>
+</data>
 </root>

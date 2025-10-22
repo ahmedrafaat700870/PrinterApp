@@ -1,0 +1,202 @@
+﻿@model IEnumerable<PrinterApp.Models.ViewModels.CoreViewModel>
+
+@{
+    ViewData["Title"] = "Cores Management";
+    var currentFilter = ViewData["CurrentFilter"] as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>🎯 Cores Management</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ Add New Core
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="Index" method="get" id="searchForm">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <input type="text"
+                               name="searchTerm"
+                               id="searchInput"
+                               value="@currentFilter"
+                               class="form-control-custom"
+                               placeholder="🔍 Search by name, coefficient, width, or height..."
+                               style="padding-right: 100px;" />
+
+                        @if (!string.IsNullOrEmpty(currentFilter))
+                        {
+                            <button type="button"
+                                    id="clearSearch"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--danger-color); cursor: pointer; font-size: 20px; padding: 5px 10px;"
+                                    title="Clear search">
+                                ✕
+                            </button>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom" style="white-space: nowrap;">
+                        🔍 Search
+                    </button>
+
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <a asp-action="Index" class="btn-secondary-custom" style="white-space: nowrap;">
+                            🔄 Reset
+                        </a>
+                    }
+                </div>
+            </form>
+
+            @if (!string.IsNullOrEmpty(currentFilter))
+            {
+                <div style="margin-top: 15px; padding: 10px; background: var(--primary-light); color: var(--white); border-radius: var(--border-radius); display: flex; justify-content: space-between; align-items: center;">
+                    <span>
+                        🔍 Searching for: <strong>"@currentFilter"</strong> - Found <strong>@Model.Count()</strong> result(s)
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    @if (Model.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div style="padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--primary-color);">
+                            @Model.Count()
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            Total Cores
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--success-color);">
+                            @Model.Count(c => c.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            Active Cores
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--danger-color);">
+                            @Model.Count(c => !c.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            Inactive Cores
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Table -->
+    <div class="card-custom" id="coresTableContainer">
+        @if (Model.Any())
+        {
+            <partial name="_CoresTablePartial" model="Model" />
+        }
+        else
+        {
+            <div class="empty-state">
+                <div class="empty-state-icon">🎯</div>
+                <h3 style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>No Cores Found</text>
+                    }
+                    else
+                    {
+                        <text>No Cores Available</text>
+                    }
+                </h3>
+                <p style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>Try adjusting your search criteria</text>
+                    }
+                    else
+                    {
+                        <text>Start by adding your first core</text>
+                    }
+                </p>
+                @if (string.IsNullOrEmpty(currentFilter))
+                {
+                    <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                        ➕ Add New Core
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn-secondary-custom" style="margin-top: 20px;">
+                        🔄 Clear Search
+                    </a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Real-time search with debounce
+        let searchTimeout;
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        if (searchInput) {
+            // Auto-submit on typing (with 500ms delay)
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (searchInput.value.length >= 2 || searchInput.value.length === 0) {
+                        searchForm.submit();
+                    }
+                }, 500);
+            });
+
+            // Focus on search input
+            searchInput.focus();
+        }
+
+        // Clear search button
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                searchForm.submit();
+            });
+        }
+
+        // Keyboard shortcut (Ctrl+K or Cmd+K to focus search)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+        });
+    </script>
+}
+

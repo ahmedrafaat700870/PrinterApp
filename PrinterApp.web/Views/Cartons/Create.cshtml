@@ -1,0 +1,103 @@
+﻿@model PrinterApp.Models.ViewModels.CartonViewModel
+
+@{
+    ViewData["Title"] = "Create Carton";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ Create New Carton</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>📦 Carton Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="CartonName" class="form-label-custom"></label>
+                    <input asp-for="CartonName" class="form-control-custom" placeholder="Enter carton name (e.g., Standard Carton A)" />
+                    <span asp-validation-for="CartonName" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 Carton name must be unique
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="CartonFactor" class="form-label-custom"></label>
+                    <input asp-for="CartonFactor" type="number" step="0.0001" class="form-control-custom" placeholder="Enter carton factor (e.g., 1.25)" />
+                    <span asp-validation-for="CartonFactor" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📊 The multiplication factor for this carton type
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom"></label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="Enter description (optional)"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); border-left: 4px solid var(--primary-color); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--primary-color); font-size: 16px;">
+                        💡 Tips for Adding Cartons
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--medium-gray);">
+                        <li>Use descriptive names for easy identification</li>
+                        <li>Carton factor is used in calculations (similar to core factor)</li>
+                        <li>Common factors range from 0.5 to 3.0</li>
+                        <li>Higher factor means larger/heavier cartons</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Create Carton
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-focus on carton name
+        document.addEventListener('DOMContentLoaded', function() {
+            const cartonNameInput = document.querySelector('input[name="CartonName"]');
+            if (cartonNameInput) {
+                cartonNameInput.focus();
+            }
+        });
+
+        // Format carton factor input
+        const cartonFactorInput = document.querySelector('input[name="CartonFactor"]');
+        if (cartonFactorInput) {
+            cartonFactorInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(4);
+                }
+            });
+        }
+    </script>
+}
