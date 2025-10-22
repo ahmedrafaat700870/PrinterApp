@@ -1,0 +1,197 @@
+﻿@model IEnumerable<PrinterApp.Models.ViewModels.MoldViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Molds"];
+    var searchTerm = ViewData["CurrentFilter"]?.ToString() ?? "";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>🔲 @Localizer["MoldManagement"]</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ @Localizer["AddNew"]
+        </a>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+        <div class="stat-card-custom" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);">
+            <div class="stat-icon-custom">📊</div>
+            <div class="stat-info-custom">
+                <div class="stat-value-custom">@Model.Count()</div>
+                <div class="stat-label-custom">@Localizer["TotalRecords"]</div>
+            </div>
+        </div>
+
+        <div class="stat-card-custom" style="background: linear-gradient(135deg, var(--success-color) 0%, #28a745 100%);">
+            <div class="stat-icon-custom">✓</div>
+            <div class="stat-info-custom">
+                <div class="stat-value-custom">@Model.Count(m => m.IsActive)</div>
+                <div class="stat-label-custom">@Localizer["ActiveRecords"]</div>
+            </div>
+        </div>
+
+        <div class="stat-card-custom" style="background: linear-gradient(135deg, var(--info-color) 0%, #17a2b8 100%);">
+            <div class="stat-icon-custom">👁️</div>
+            <div class="stat-info-custom">
+                <div class="stat-value-custom">@Model.Sum(m => m.TotalEyes)</div>
+                <div class="stat-label-custom">@Localizer["TotalEyes"]</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div class="card-body-custom">
+            <form asp-action="Index" method="get" style="display: flex; gap: 10px;">
+                <input type="text"
+                       name="searchTerm"
+                       value="@searchTerm"
+                       class="form-control-custom"
+                       placeholder="@Localizer["SearchPlaceholder"]"
+                       style="flex: 1;" />
+                <button type="submit" class="btn-primary-custom" style="min-width: 120px;">
+                    🔍 @Localizer["Search"]
+                </button>
+                @if (!string.IsNullOrEmpty(searchTerm))
+                {
+                    <a asp-action="Index" class="btn-secondary-custom" style="min-width: 120px;">
+                        🔄 @Localizer["Reset"]
+                    </a>
+                }
+            </form>
+        </div>
+    </div>
+
+    <!-- Molds Table -->
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🔲 @Localizer["Molds"]</h2>
+        </div>
+        <div class="card-body-custom">
+            @if (Model.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>@Localizer["MoldNumber"]</th>
+                                <th>@Localizer["Machine"]</th>
+                                <th>@Localizer["MoldShape"]</th>
+                                <th style="text-align: center;">@Localizer["Width"]</th>
+                                <th style="text-align: center;">@Localizer["Height"]</th>
+                                <th style="text-align: center;">@Localizer["TotalEyes"]</th>
+                                <th style="text-align: center;">@Localizer["PrintedSize"]</th>
+                                <th style="text-align: center;">@Localizer["PlainSize"]</th>
+                                <th style="width: 100px; text-align: center;">@Localizer["Status"]</th>
+                                <th style="width: 150px; text-align: center;">@Localizer["Actions"]</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var mold in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 5px;">
+                                            @mold.MoldNumber
+                                        </div>
+                                        <small style="color: var(--medium-gray);">
+                                            @Localizer["CreatedDate"]: @mold.CreatedDate.ToString("dd/MM/yyyy")
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500;">@mold.MachineName</div>
+                                        <small style="color: var(--medium-gray);">@mold.MachineCode</small>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            @if (!string.IsNullOrEmpty(mold.ShapeImagePath))
+                                            {
+                                                <img src="@mold.ShapeImagePath"
+                                                     alt="@mold.MoldShapeName"
+                                                     style="width: 40px; height: 40px; object-fit: cover; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);" />
+                                            }
+                                            <span style="font-weight: 500;">@mold.MoldShapeName</span>
+                                        </div>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="badge-custom" style="background: var(--primary-light); color: var(--primary-color); font-weight: 600;">
+                                            @mold.Width
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="badge-custom" style="background: var(--primary-light); color: var(--primary-color); font-weight: 600;">
+                                            @mold.Height
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="badge-custom" style="background: var(--success-color); color: white; font-size: 16px; font-weight: 700; padding: 8px 16px;">
+                                            @mold.TotalEyes 👁️
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span style="font-weight: 600; color: var(--info-color);">
+                                            @mold.PrintedRawMaterialSize.ToString("N2")
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span style="font-weight: 600; color: var(--info-color);">
+                                            @mold.PlainRawMaterialSize.ToString("N2")
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        @if (mold.IsActive)
+                                        {
+                                            <span class="badge-custom badge-success-custom">✓ @Localizer["Active"]</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-custom badge-danger-custom">✗ @Localizer["Inactive"]</span>
+                                        }
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <div style="display: flex; gap: 5px; justify-content: center;">
+                                            <a asp-action="Edit" asp-route-id="@mold.Id" class="btn-action-custom btn-action-edit-custom" title="@Localizer["Edit"]">
+                                                ✏️
+                                            </a>
+
+                                            <form asp-action="ToggleStatus" asp-route-id="@mold.Id" method="post" style="display: inline;">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit"
+                                                        class="btn-action-custom @(mold.IsActive ? "btn-action-warning-custom" : "btn-action-success-custom")"
+                                                        title="@(mold.IsActive? Localizer["Deactivate"] : Localizer["Activate"])">
+                                                    @(mold.IsActive ? "⏸️" : "▶️")
+                                                </button>
+                                            </form>
+
+                                            <form asp-action="Delete" asp-route-id="@mold.Id" method="post" style="display: inline;"
+                                                  onsubmit="return confirm('@Localizer["DeleteConfirmation"]');">
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn-action-custom btn-action-delete-custom" title="@Localizer["Delete"]">
+                                                    🗑️
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div style="text-align: center; padding: 60px 20px; color: var(--medium-gray);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🔲</div>
+                    <h3 style="margin-bottom: 10px;">@Localizer["NoResultsFound"]</h3>
+                    <p style="margin-bottom: 20px;">@Localizer["NoDataAvailable"]</p>
+                    <a asp-action="Create" class="btn-primary-custom">
+                        ➕ @Localizer["AddNew"]
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,206 @@
+﻿@model PrinterApp.Models.ViewModels.MoldViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Create"] + " " + Localizer["Molds"];
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ @Localizer["Create"] @Localizer["Molds"]</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Localizer["BackToList"]
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🔲 @Localizer["Molds"] @Localizer["Description"]</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post" id="moldForm">
+                @Html.AntiForgeryToken()
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Localizer["MoldNumber"]
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="MoldNumber" class="form-label-custom"></label>
+                        <input asp-for="MoldNumber" class="form-control-custom" placeholder="@Localizer["MoldNumber"]" />
+                        <span asp-validation-for="MoldNumber" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Machine & Shape Selection -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        🖨️ @Localizer["Machine"] & 🔷 @Localizer["MoldShape"]
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="MachineId" class="form-label-custom"></label>
+                            <select asp-for="MachineId"
+                                    asp-items="Model.Machines"
+                                    class="form-control-custom">
+                                <option value="">@Localizer["SelectMachine"]</option>
+                            </select>
+                            <span asp-validation-for="MachineId" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="MoldShapeId" class="form-label-custom"></label>
+                            <select asp-for="MoldShapeId"
+                                    asp-items="Model.MoldShapes"
+                                    class="form-control-custom">
+                                <option value="">@Localizer["SelectMoldShape"]</option>
+                            </select>
+                            <span asp-validation-for="MoldShapeId" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dimensions (Width & Height) -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--info-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--info-color); font-size: 18px;">
+                        📏 @Localizer["Width"] & @Localizer["Height"]
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: end;">
+                        <div class="form-group-custom">
+                            <label asp-for="Width" class="form-label-custom"></label>
+                            <input asp-for="Width"
+                                   type="number"
+                                   class="form-control-custom"
+                                   placeholder="@Localizer["Width"]"
+                                   min="1"
+                                   max="1000"
+                                   id="widthInput" />
+                            <span asp-validation-for="Width" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Height" class="form-label-custom"></label>
+                            <input asp-for="Height"
+                                   type="number"
+                                   class="form-control-custom"
+                                   placeholder="@Localizer["Height"]"
+                                   min="1"
+                                   max="1000"
+                                   id="heightInput" />
+                            <span asp-validation-for="Height" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="TotalEyes" class="form-label-custom"></label>
+                            <input asp-for="TotalEyes"
+                                   type="number"
+                                   class="form-control-custom"
+                                   readonly
+                                   style="background: var(--light-gray); font-weight: 700; color: var(--success-color); font-size: 18px; text-align: center;"
+                                   id="totalEyesInput" />
+                            <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                                👁️ @Localizer["AutoCalculated"]
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw Material Sizes -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--warning-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--warning-color); font-size: 18px;">
+                        📦 @Localizer["RawMaterial"] @Localizer["Description"]
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="PrintedRawMaterialSize" class="form-label-custom"></label>
+                            <input asp-for="PrintedRawMaterialSize"
+                                   type="number"
+                                   step="0.01"
+                                   class="form-control-custom"
+                                   placeholder="0.00" />
+                            <span asp-validation-for="PrintedRawMaterialSize" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="PlainRawMaterialSize" class="form-label-custom"></label>
+                            <input asp-for="PlainRawMaterialSize"
+                                   type="number"
+                                   step="0.01"
+                                   class="form-control-custom"
+                                   placeholder="0.00" />
+                            <span asp-validation-for="PlainRawMaterialSize" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--secondary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--secondary-color); font-size: 18px;">
+                        📝 @Localizer["Description"]
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Description" class="form-label-custom"></label>
+                        <textarea asp-for="Description" class="form-control-custom" rows="4" placeholder="@Localizer["Description"]"></textarea>
+                        <span asp-validation-for="Description" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Localizer["Create"]
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Localizer["Cancel"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-calculate Total Eyes
+        function calculateTotalEyes() {
+            const width = parseInt(document.getElementById('widthInput').value) || 0;
+            const height = parseInt(document.getElementById('heightInput').value) || 0;
+            const totalEyes = width * height;
+            document.getElementById('totalEyesInput').value = totalEyes;
+        }
+
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const widthInput = document.getElementById('widthInput');
+            const heightInput = document.getElementById('heightInput');
+
+            widthInput.addEventListener('input', calculateTotalEyes);
+            heightInput.addEventListener('input', calculateTotalEyes);
+
+            // Calculate on page load if values exist
+            calculateTotalEyes();
+
+            // Auto-focus on mold number
+            const moldNumberInput = document.querySelector('input[name="MoldNumber"]');
+            if (moldNumberInput) {
+                moldNumberInput.focus();
+            }
+        });
+    </script>
+}

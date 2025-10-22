@@ -1,4 +1,110 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Home"];
 }
 
+<div class="content-container">
+    <div class="text-center">
+        <h1 class="display-4">@Localizer["Welcome"]</h1>
+        <p class="lead">@Localizer["WelcomeMessage"]</p>
+    </div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div style="margin-top: 40px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+
+                <!-- Cores Card -->
+                <a asp-controller="Cores" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease; hover: transform: translateY(-5px);">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Cores"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageCores"]</p>
+                    </div>
+                </a>
+
+                <!-- Cartons Card -->
+                <a asp-controller="Cartons" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Cartons"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageCartons"]</p>
+                    </div>
+                </a>
+
+                <!-- Knives Card -->
+                <a asp-controller="Knives" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🔪</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Knives"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageKnives"]</p>
+                    </div>
+                </a>
+
+                <!-- Suppliers Card -->
+                <a asp-controller="Suppliers" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">👥</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Suppliers"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageSuppliers"]</p>
+                    </div>
+                </a>
+
+                <!-- Raw Materials Card -->
+                <a asp-controller="RawMaterials" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["RawMaterials"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageRawMaterials"]</p>
+                    </div>
+                </a>
+
+                <!-- Products Card -->
+                <a asp-controller="Products" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Products"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageProducts"]</p>
+                    </div>
+                </a>
+
+                <!-- Manufacturing Additions Card -->
+                <a asp-controller="ManufacturingAdditions" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">⚙️</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Additions"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageAdditions"]</p>
+                    </div>
+                </a>
+
+                <!-- Machines Card -->
+                <a asp-controller="Machines" asp-action="Index" style="text-decoration: none;">
+                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
+                        <div style="font-size: 48px; margin-bottom: 15px;">🖨️</div>
+                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Machines"]</h3>
+                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageMachines"]</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; margin-top: 40px;">
+            <p>@Localizer["PleaseLoginMessage"]</p>
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn-primary-custom">
+                @Localizer["Login"]
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .card-custom:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+</style>

@@ -18,7 +18,9 @@ public class UnitOfWork : IUnitOfWork
     private IRawMaterialRepository _rawMaterials;
     private IManufacturingAdditionRepository _manufacturingAdditions;
     private IProductRepository _products; 
-    private IProductAdditionRepository _productAdditions; 
+    private IProductAdditionRepository _productAdditions;
+    private IMoldShapeRepository _moldShapes; 
+    private IMoldRepository _molds;
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
@@ -181,6 +183,31 @@ public class UnitOfWork : IUnitOfWork
             return _productAdditions;
         }
     }
+
+    public IMoldShapeRepository MoldShapes
+    {
+        get
+        {
+            if (_moldShapes is null)
+            {
+                _moldShapes = new MoldShapeRepository(_context);
+            }
+            return _moldShapes;
+        }
+    }
+
+    public IMoldRepository Molds 
+    {
+        get
+        {
+            if (_molds is null)
+            {
+                _molds = new MoldRepository(_context);
+            }
+            return _molds;
+        }
+    }
+
     public async Task<int> CompleteAsync()
     {
         return await _context.SaveChangesAsync();

@@ -20,7 +20,9 @@ namespace PrinterApp.Data.UnitOfWork
         IRawMaterialRepository RawMaterials { get; }
         IManufacturingAdditionRepository ManufacturingAdditions { get; }
         IProductRepository Products { get; } 
-        IProductAdditionRepository ProductAdditions { get; } 
+        IProductAdditionRepository ProductAdditions { get; }
+        IMoldShapeRepository MoldShapes { get; } 
+        IMoldRepository Molds { get; } 
         Task<int> CompleteAsync();
     }
 }

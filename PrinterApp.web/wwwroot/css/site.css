@@ -29,3 +29,84 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* RTL Support */
+html[dir="rtl"] {
+    text-align: right;
+    direction: rtl;
+}
+
+    html[dir="rtl"] .navbar-nav {
+        margin-right: 0;
+        margin-left: auto;
+    }
+
+    html[dir="rtl"] .navbar-collapse {
+        justify-content: flex-start !important;
+    }
+
+    html[dir="rtl"] .dropdown-menu-end {
+        right: auto !important;
+        left: 0 !important;
+    }
+
+    html[dir="rtl"] .form-check {
+        padding-right: 1.5em;
+        padding-left: 0;
+    }
+
+    html[dir="rtl"] .form-check-input {
+        float: right;
+        margin-right: -1.5em;
+        margin-left: 0;
+    }
+
+    html[dir="rtl"] .action-buttons {
+        flex-direction: row-reverse;
+    }
+
+    html[dir="rtl"] .page-header {
+        flex-direction: row-reverse;
+    }
+
+    html[dir="rtl"] table {
+        text-align: right;
+    }
+
+    html[dir="rtl"] .table-custom th:last-child,
+    html[dir="rtl"] .table-custom td:last-child {
+        text-align: center;
+    }
+
+/* Language Switcher Styling */
+#languageDropdown {
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-item.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dropdown-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+    .dropdown-item:hover {
+        background-color: var(--primary-light);
+        color: white;
+    }
+
+    .dropdown-item button {
+        background: none;
+        border: none;
+        width: 100%;
+        text-align: inherit;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+    }

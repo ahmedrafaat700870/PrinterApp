@@ -59,7 +59,23 @@ namespace PrinterApp.Web.Controllers
             string imagePath = null;
             if (model.ImageFile != null)
             {
-                imagePath = await FileUploadHelper.SaveImageAsync(model.ImageFile, _webHostEnvironment);
+                //imagePath = await FileUploadHelper.SaveImageAsync(model.ImageFile, _webHostEnvironment);
+
+                var uploadResult = await FileUploadHelper.UploadFileAsync(
+                model.ImageFile,
+                _webHostEnvironment.WebRootPath,
+                "uploads/directions",
+                new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" },
+                5 * 1024 * 1024 // 5MB max
+                );
+
+                if (!uploadResult.Success)
+                {
+                    ModelState.AddModelError(string.Empty, uploadResult.ErrorMessage);
+                    return View(model);
+                }
+
+                imagePath = uploadResult.FilePath;
             }
 
             var (success, errors) = await _rollDirectionService.CreateDirectionAsync(model, imagePath);

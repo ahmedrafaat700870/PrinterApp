@@ -1,0 +1,188 @@
+﻿@model PrinterApp.Models.ViewModels.MoldShapeViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Edit"] + " " + Localizer["MoldShape"];
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ @Localizer["Edit"] @Localizer["MoldShape"]</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Localizer["BackToList"]
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🔷 @Localizer["MoldShape"] @Localizer["Description"]</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+                <input type="hidden" asp-for="ShapeImagePath" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Shape Name -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Localizer["MoldShapeName"]
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="ShapeName" class="form-label-custom"></label>
+                        <input asp-for="ShapeName" class="form-control-custom" placeholder="@Localizer["MoldShapeName"]" />
+                        <span asp-validation-for="ShapeName" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Shape Image -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        🖼️ @Localizer["ShapeImage"]
+                    </h3>
+
+                    @if (!string.IsNullOrEmpty(Model.ShapeImagePath))
+                    {
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 10px; display: block;">
+                                @Localizer["CurrentImage"]:
+                            </label>
+                            <img src="@Model.ShapeImagePath"
+                                 alt="@Model.ShapeName"
+                                 style="max-width: 300px; max-height: 300px; border-radius: var(--border-radius); border: 2px solid var(--border-color); display: block; margin-bottom: 15px;" />
+                        </div>
+                    }
+
+                    <div class="form-group-custom">
+                        <label asp-for="ShapeImage" class="form-label-custom">
+                            @(string.IsNullOrEmpty(Model.ShapeImagePath) ? Localizer["UploadImage"] : Localizer["ChangeImage"])
+                        </label>
+                        <input asp-for="ShapeImage"
+                               type="file"
+                               class="form-control-custom"
+                               accept="image/*"
+                               onchange="previewImage(this)" />
+                        <span asp-validation-for="ShapeImage" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 Leave empty to keep current image. Allowed formats: JPG, JPEG, PNG, GIF, BMP (Max size: 5MB)
+                        </small>
+                    </div>
+
+                    <!-- New Image Preview -->
+                    <div id="imagePreview" style="display: none; margin-top: 15px;">
+                        <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 10px; display: block;">
+                            @Localizer["ImagePreview"] (New):
+                        </label>
+                        <img id="previewImg"
+                             style="max-width: 300px; max-height: 300px; border-radius: var(--border-radius); border: 2px solid var(--success-color); display: block;" />
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--info-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--info-color); font-size: 18px;">
+                        📝 @Localizer["Description"]
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Description" class="form-label-custom"></label>
+                        <textarea asp-for="Description" class="form-control-custom" rows="4" placeholder="@Localizer["Description"]"></textarea>
+                        <span asp-validation-for="Description" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        ✓ @Localizer["Status"]
+                    </h3>
+
+                    <div class="form-check-custom">
+                        <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                        <label for="isActive" class="form-check-label-custom">
+                            @Localizer["IsActive"]
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                @if (Model.MoldsCount > 0)
+                {
+                    <div style="background: linear-gradient(135deg, var(--info-color) 0%, #17a2b8 100%); color: white; padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">📊 @Localizer["Statistics"]</h4>
+                        <p style="margin: 0;">
+                            This mold shape is used in <strong>@Model.MoldsCount</strong> mold(s)
+                        </p>
+                    </div>
+                }
+
+                <!-- Dates Information -->
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: var(--medium-gray); font-size: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">📅</span>
+                            <div>
+                                <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">@Localizer["CreatedDate"]</div>
+                                <div>@Model.CreatedDate.ToString("MMMM dd, yyyy 'at' HH:mm")</div>
+                            </div>
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 24px;">🔄</span>
+                                <div>
+                                    <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">@Localizer["LastModified"]</div>
+                                    <div>@Model.LastModified.Value.ToString("MMMM dd, yyyy 'at' HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Localizer["SaveChanges"]
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Localizer["Cancel"]
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const previewImg = document.getElementById('previewImg');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+    </script>
+}

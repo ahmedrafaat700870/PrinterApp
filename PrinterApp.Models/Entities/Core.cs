@@ -35,4 +35,18 @@ public class Core
 
     [Display(Name = "Is Active")]
     public bool IsActive { get; set; } = true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

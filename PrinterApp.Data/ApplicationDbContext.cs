@@ -24,11 +24,53 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<RawMaterial> RawMaterials { get; set; }
     public DbSet<ManufacturingAddition> ManufacturingAdditions { get; set; }
     public DbSet<Product> Products { get; set; } 
-    public DbSet<ProductAddition> ProductAdditions { get; set; } 
+    public DbSet<ProductAddition> ProductAdditions { get; set; }
+    public DbSet<MoldShape> MoldShapes { get; set; } 
+    public DbSet<Mold> Molds { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+
+        // Configure MoldShape
+        builder.Entity<MoldShape>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.ShapeName).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.ShapeImagePath).HasMaxLength(500);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.ShapeName).IsUnique();
+        });
+
+        // Configure Mold
+        builder.Entity<Mold>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.MoldNumber).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.Width).IsRequired();
+            entity.Property(e => e.Height).IsRequired();
+            entity.Property(e => e.TotalEyes).IsRequired();
+            entity.Property(e => e.PrintedRawMaterialSize).IsRequired().HasPrecision(18, 2);
+            entity.Property(e => e.PlainRawMaterialSize).IsRequired().HasPrecision(18, 2);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+
+            // Foreign Keys
+            entity.HasOne(e => e.Machine)
+                  .WithMany()
+                  .HasForeignKey(e => e.MachineId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.MoldShape)
+                  .WithMany(ms => ms.Molds)
+                  .HasForeignKey(e => e.MoldShapeId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => e.MoldNumber).IsUnique();
+        });
 
 
         // Configure Product

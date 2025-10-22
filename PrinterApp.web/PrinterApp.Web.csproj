@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\uploads\directions\" />
+    <Folder Include="wwwroot\uploads\mold-shapes\" />
   </ItemGroup>
 
 </Project>
