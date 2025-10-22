@@ -1,0 +1,223 @@
+﻿@model PrinterApp.Models.ViewModels.RawMaterialViewModel
+
+@{
+    ViewData["Title"] = "Edit Raw Material";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Raw Material</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>📦 Raw Material Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post" id="rawMaterialForm">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 Basic Information
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="RawMaterialName" class="form-label-custom"></label>
+                        <input asp-for="RawMaterialName" class="form-control-custom" placeholder="Enter raw material name" />
+                        <span asp-validation-for="RawMaterialName" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 Raw material name must be unique
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Dimensions & Price -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        📏 Dimensions & Price
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="Width" class="form-label-custom"></label>
+                            <input asp-for="Width" type="number" step="0.01" class="form-control-custom" placeholder="Enter width in cm" id="widthInput" />
+                            <span asp-validation-for="Width" class="text-danger-custom"></span>
+                            <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                                Example: 100 cm
+                            </small>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Height" class="form-label-custom"></label>
+                            <input asp-for="Height" type="number" step="0.01" class="form-control-custom" placeholder="Enter height in meters" id="heightInput" />
+                            <span asp-validation-for="Height" class="text-danger-custom"></span>
+                            <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                                Example: 50 m
+                            </small>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="TotalPrice" class="form-label-custom"></label>
+                            <input asp-for="TotalPrice" type="number" step="0.01" class="form-control-custom" placeholder="Enter total price" id="priceInput" />
+                            <span asp-validation-for="TotalPrice" class="text-danger-custom"></span>
+                            <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                                Example: 5000.00
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Calculated Values -->
+                <div style="background: linear-gradient(135deg, var(--warning-color) 0%, #ff9800 100%); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                    <h3 style="margin: 0 0 15px 0; color: var(--white); font-size: 18px;">
+                        📊 Current Calculated Values
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Area (m²)</div>
+                            <div style="color: var(--white); font-size: 24px; font-weight: bold;">@Model.AreaSquareMeters.ToString("0.####")</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Price per m²</div>
+                            <div style="color: var(--white); font-size: 24px; font-weight: bold;">@Model.PricePerSquareMeter.ToString("N2")</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Price per Linear Meter</div>
+                            <div style="color: var(--white); font-size: 24px; font-weight: bold;">@Model.PricePerLinearMeter.ToString("N2")</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New Calculated Values Preview -->
+                <div id="calculatedPreview" style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; display: none;">
+                    <h3 style="margin: 0 0 15px 0; color: var(--white); font-size: 18px;">
+                        🧮 New Calculated Values (Preview)
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Area (m²)</div>
+                            <div id="areaPreview" style="color: var(--white); font-size: 24px; font-weight: bold;">0.00</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Price per m²</div>
+                            <div id="pricePerM2Preview" style="color: var(--white); font-size: 24px; font-weight: bold;">0.00</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 15px; border-radius: var(--border-radius);">
+                            <div style="color: var(--white); font-size: 12px; opacity: 0.9; margin-bottom: 5px;">Price per Linear Meter</div>
+                            <div id="pricePerMPreview" style="color: var(--white); font-size: 24px; font-weight: bold;">0.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        Raw Material is Active
+                    </label>
+                    <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                        Inactive materials will not be available for selection
+                    </small>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>Created:</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>Last Modified:</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Real-time calculation preview
+        const widthInput = document.getElementById('widthInput');
+        const heightInput = document.getElementById('heightInput');
+        const priceInput = document.getElementById('priceInput');
+        const calculatedPreview = document.getElementById('calculatedPreview');
+        const areaPreview = document.getElementById('areaPreview');
+        const pricePerM2Preview = document.getElementById('pricePerM2Preview');
+        const pricePerMPreview = document.getElementById('pricePerMPreview');
+
+        // Store original values
+        const originalWidth = parseFloat(widthInput.value);
+        const originalHeight = parseFloat(heightInput.value);
+        const originalPrice = parseFloat(priceInput.value);
+
+        function calculatePreview() {
+            const width = parseFloat(widthInput.value) || 0;
+            const height = parseFloat(heightInput.value) || 0;
+            const price = parseFloat(priceInput.value) || 0;
+
+            // Check if values changed
+            const valuesChanged = (width !== originalWidth || height !== originalHeight || price !== originalPrice);
+
+            if (width > 0 && height > 0 && price > 0 && valuesChanged) {
+                calculatedPreview.style.display = 'block';
+
+                // Calculate area (width in cm / 100 * height in m)
+                const widthInMeters = width / 100;
+                const area = widthInMeters * height;
+
+                // Calculate price per m²
+                const pricePerM2 = area > 0 ? price / area : 0;
+
+                // Calculate price per linear meter
+                const pricePerM = height > 0 ? price / height : 0;
+
+                areaPreview.textContent = area.toFixed(4) + ' m²';
+                pricePerM2Preview.textContent = pricePerM2.toFixed(2);
+                pricePerMPreview.textContent = pricePerM.toFixed(2);
+            } else if (!valuesChanged) {
+                calculatedPreview.style.display = 'none';
+            }
+        }
+
+        widthInput.addEventListener('input', calculatePreview);
+        heightInput.addEventListener('input', calculatePreview);
+        priceInput.addEventListener('input', calculatePreview);
+
+        // Format decimal inputs on blur
+        [widthInput, heightInput, priceInput].forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(2);
+                    calculatePreview();
+                }
+            });
+        });
+    </script>
+}

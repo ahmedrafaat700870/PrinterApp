@@ -15,6 +15,10 @@ public class UnitOfWork : IUnitOfWork
     private ICartonRepository _cartons;
     private IKnifeRepository _knives; 
     private ISupplierRepository _suppliers;
+    private IRawMaterialRepository _rawMaterials;
+    private IManufacturingAdditionRepository _manufacturingAdditions;
+    private IProductRepository _products; 
+    private IProductAdditionRepository _productAdditions; 
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
@@ -132,6 +136,51 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
+    public IRawMaterialRepository RawMaterials
+    {
+        get
+        {
+            if(_rawMaterials is null)       
+            {
+                _rawMaterials = new RawMaterialRepository(_context);
+            }
+            return _rawMaterials;
+        }
+    }
+    public IManufacturingAdditionRepository ManufacturingAdditions
+    {
+        get
+        {
+            if (_manufacturingAdditions == null)
+            {
+                _manufacturingAdditions = new ManufacturingAdditionRepository(_context);
+            }
+            return _manufacturingAdditions;
+        }
+    }
+    public IProductRepository Products
+    {
+        get
+        {
+            if (_products == null)
+            {
+                _products = new ProductRepository(_context);
+            }
+            return _products;
+        }
+    }
+
+    public IProductAdditionRepository ProductAdditions
+    {
+        get
+        {
+            if (_productAdditions == null)
+            {
+                _productAdditions = new ProductAdditionRepository(_context);
+            }
+            return _productAdditions;
+        }
+    }
     public async Task<int> CompleteAsync()
     {
         return await _context.SaveChangesAsync();

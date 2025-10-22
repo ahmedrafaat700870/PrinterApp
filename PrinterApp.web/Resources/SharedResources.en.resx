@@ -253,4 +253,64 @@
 <data name="PhoneNumber" xml:space="preserve">
   <value>Phone Number</value>
 </data>
+<data name="RawMaterials" xml:space="preserve">
+  <value>Raw Materials</value>
+</data>
+<data name="RawMaterialManagement" xml:space="preserve">
+  <value>Raw Material Management</value>
+</data>
+<data name="RawMaterialName" xml:space="preserve">
+  <value>Raw Material Name</value>
+</data>
+<data name="Width" xml:space="preserve">
+  <value>Width</value>
+</data>
+<data name="Height" xml:space="preserve">
+  <value>Height</value>
+</data>
+<data name="TotalPrice" xml:space="preserve">
+  <value>Total Price</value>
+</data>
+<data name="AreaSquareMeters" xml:space="preserve">
+  <value>Area (m²)</value>
+</data>
+<data name="PricePerSquareMeter" xml:space="preserve">
+  <value>Price per Square Meter</value>
+</data>
+<data name="PricePerLinearMeter" xml:space="preserve">
+  <value>Price per Linear Meter</value>
+</data>
+<data name="ManufacturingAdditions" xml:space="preserve">
+  <value>Manufacturing Additions</value>
+</data>
+<data name="ManufacturingAdditionManagement" xml:space="preserve">
+  <value>Manufacturing Addition Management</value>
+</data>
+<data name="AdditionName" xml:space="preserve">
+  <value>Addition Name</value>
+</data>
+<data name="Additions" xml:space="preserve">
+  <value>Additions</value>
+</data>
+<data name="Products" xml:space="preserve">
+  <value>Products</value>
+</data>
+<data name="ProductManagement" xml:space="preserve">
+  <value>Product Management</value>
+</data>
+<data name="ProductName" xml:space="preserve">
+  <value>Product Name</value>
+</data>
+<data name="ProductCode" xml:space="preserve">
+  <value>Product Code</value>
+</data>
+<data name="IsPrinted" xml:space="preserve">
+  <value>Is Printed</value>
+</data>
+<data name="Printed" xml:space="preserve">
+  <value>Printed</value>
+</data>
+<data name="NonPrinted" xml:space="preserve">
+  <value>Non-Printed</value>
+</data>
 </root>

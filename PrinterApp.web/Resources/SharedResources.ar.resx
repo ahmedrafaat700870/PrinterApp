@@ -253,4 +253,64 @@
 <data name="PhoneNumber" xml:space="preserve">
   <value>رقم الهاتف</value>
 </data>
+<data name="RawMaterials" xml:space="preserve">
+  <value>المواد الخام</value>
+</data>
+<data name="RawMaterialManagement" xml:space="preserve">
+  <value>إدارة المواد الخام</value>
+</data>
+<data name="RawMaterialName" xml:space="preserve">
+  <value>اسم الخام</value>
+</data>
+<data name="Width" xml:space="preserve">
+  <value>العرض</value>
+</data>
+<data name="Height" xml:space="preserve">
+  <value>الطول</value>
+</data>
+<data name="TotalPrice" xml:space="preserve">
+  <value>السعر الإجمالي</value>
+</data>
+<data name="AreaSquareMeters" xml:space="preserve">
+  <value>المساحة (م²)</value>
+</data>
+<data name="PricePerSquareMeter" xml:space="preserve">
+  <value>سعر المتر المربع</value>
+</data>
+<data name="PricePerLinearMeter" xml:space="preserve">
+  <value>سعر المتر الطولي</value>
+</data>
+<data name="ManufacturingAdditions" xml:space="preserve">
+  <value>إضافات التصنيع</value>
+</data>
+<data name="ManufacturingAdditionManagement" xml:space="preserve">
+  <value>إدارة إضافات التصنيع</value>
+</data>
+<data name="AdditionName" xml:space="preserve">
+  <value>اسم الإضافة</value>
+</data>
+<data name="Additions" xml:space="preserve">
+  <value>الإضافات</value>
+</data>
+<data name="Products" xml:space="preserve">
+  <value>الأصناف</value>
+</data>
+<data name="ProductManagement" xml:space="preserve">
+  <value>إدارة الأصناف</value>
+</data>
+<data name="ProductName" xml:space="preserve">
+  <value>اسم الصنف</value>
+</data>
+<data name="ProductCode" xml:space="preserve">
+  <value>كود الصنف</value>
+</data>
+<data name="IsPrinted" xml:space="preserve">
+  <value>مطبوع</value>
+</data>
+<data name="Printed" xml:space="preserve">
+  <value>مطبوع</value>
+</data>
+<data name="NonPrinted" xml:space="preserve">
+  <value>غير مطبوع</value>
+</data>
 </root>

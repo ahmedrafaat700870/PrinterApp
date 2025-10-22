@@ -1,0 +1,116 @@
+﻿@model PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel
+
+@{
+    ViewData["Title"] = "Edit Manufacturing Addition";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ Edit Manufacturing Addition</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← Back to List
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>⚙️ Manufacturing Addition Information</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 Basic Information
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="AdditionName" class="form-label-custom"></label>
+                        <input asp-for="AdditionName" class="form-control-custom" placeholder="Enter addition name" />
+                        <span asp-validation-for="AdditionName" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 Addition name must be unique
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        ✓ Status
+                    </h3>
+
+                    <div class="form-check-custom">
+                        <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                        <label for="isActive" class="form-check-label-custom">
+                            Addition is Active
+                        </label>
+                        <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                            Inactive additions will not be available for selection in orders
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Dates Information -->
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: var(--medium-gray); font-size: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">📅</span>
+                            <div>
+                                <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">Created Date</div>
+                                <div>@Model.CreatedDate.ToString("MMMM dd, yyyy 'at' HH:mm")</div>
+                            </div>
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 24px;">🔄</span>
+                                <div>
+                                    <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">Last Modified</div>
+                                    <div>@Model.LastModified.Value.ToString("MMMM dd, yyyy 'at' HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Examples -->
+                <div style="background: linear-gradient(135deg, var(--warning-color) 0%, #ff9800 100%); color: var(--white); padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px;">💡 Common Manufacturing Additions</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                        <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: var(--border-radius-sm);">
+                            • كليشة
+                        </div>
+                        <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: var(--border-radius-sm);">
+                            • تشغيلة
+                        </div>
+                      
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

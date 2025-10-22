@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrinterApp.Data;
 
@@ -11,9 +12,11 @@ using PrinterApp.Data;
 namespace PrinterApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022073859_updateDecimals")]
+    partial class updateDecimals
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -401,38 +404,6 @@ namespace PrinterApp.Data.Migrations
                     b.ToTable("Machines");
                 });
 
-            modelBuilder.Entity("PrinterApp.Models.Entities.ManufacturingAddition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AdditionName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdditionName")
-                        .IsUnique();
-
-                    b.ToTable("ManufacturingAdditions");
-                });
-
             modelBuilder.Entity("PrinterApp.Models.Entities.Permission", b =>
                 {
                     b.Property<int>("Id")
@@ -500,90 +471,6 @@ namespace PrinterApp.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("PermissionRoles");
-                });
-
-            modelBuilder.Entity("PrinterApp.Models.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<bool>("IsPrinted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProductCode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("RawMaterialId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductCode")
-                        .IsUnique();
-
-                    b.HasIndex("ProductName");
-
-                    b.HasIndex("RawMaterialId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("PrinterApp.Models.Entities.ProductAddition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("ManufacturingAdditionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ManufacturingAdditionId");
-
-                    b.HasIndex("ProductId", "ManufacturingAdditionId")
-                        .IsUnique();
-
-                    b.ToTable("ProductAdditions");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.RawMaterial", b =>
@@ -884,44 +771,6 @@ namespace PrinterApp.Data.Migrations
                     b.Navigation("Permission");
                 });
 
-            modelBuilder.Entity("PrinterApp.Models.Entities.Product", b =>
-                {
-                    b.HasOne("PrinterApp.Models.Entities.RawMaterial", "RawMaterial")
-                        .WithMany()
-                        .HasForeignKey("RawMaterialId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PrinterApp.Models.Entities.Supplier", "Supplier")
-                        .WithMany()
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("RawMaterial");
-
-                    b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("PrinterApp.Models.Entities.ProductAddition", b =>
-                {
-                    b.HasOne("PrinterApp.Models.Entities.ManufacturingAddition", "ManufacturingAddition")
-                        .WithMany()
-                        .HasForeignKey("ManufacturingAdditionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PrinterApp.Models.Entities.Product", "Product")
-                        .WithMany("ProductAdditions")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ManufacturingAddition");
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("PrinterApp.Models.Entities.UserPermission", b =>
                 {
                     b.HasOne("PrinterApp.Models.Entities.Permission", "Permission")
@@ -964,11 +813,6 @@ namespace PrinterApp.Data.Migrations
             modelBuilder.Entity("PrinterApp.Models.Entities.PermissionRole", b =>
                 {
                     b.Navigation("UserPermissions");
-                });
-
-            modelBuilder.Entity("PrinterApp.Models.Entities.Product", b =>
-                {
-                    b.Navigation("ProductAdditions");
                 });
 #pragma warning restore 612, 618
         }

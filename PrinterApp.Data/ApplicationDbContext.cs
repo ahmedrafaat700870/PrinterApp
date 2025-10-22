@@ -21,10 +21,87 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Carton> Cartons { get; set; }
     public DbSet<Knife> Knives { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
+    public DbSet<RawMaterial> RawMaterials { get; set; }
+    public DbSet<ManufacturingAddition> ManufacturingAdditions { get; set; }
+    public DbSet<Product> Products { get; set; } 
+    public DbSet<ProductAddition> ProductAdditions { get; set; } 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
+
+
+        // Configure Product
+        builder.Entity<Product>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.ProductName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.ProductCode).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.IsPrinted).IsRequired();
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+
+            // Foreign Keys
+            entity.HasOne(e => e.RawMaterial)
+                  .WithMany()
+                  .HasForeignKey(e => e.RawMaterialId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.Supplier)
+                  .WithMany()
+                  .HasForeignKey(e => e.SupplierId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(e => e.ProductCode).IsUnique();
+            entity.HasIndex(e => e.ProductName);
+        });
+
+        // Configure ProductAddition (Many-to-Many)
+        builder.Entity<ProductAddition>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.HasOne(e => e.Product)
+                  .WithMany(p => p.ProductAdditions)
+                  .HasForeignKey(e => e.ProductId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.ManufacturingAddition)
+                  .WithMany()
+                  .HasForeignKey(e => e.ManufacturingAdditionId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => new { e.ProductId, e.ManufacturingAdditionId }).IsUnique();
+        });
+
+
+
+
+        // Configure ManufacturingAddition
+        builder.Entity<ManufacturingAddition>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.AdditionName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.AdditionName).IsUnique();
+        });
+        // Configure RawMaterial
+        builder.Entity<RawMaterial>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.RawMaterialName).IsRequired().HasMaxLength(200);
+            entity.Property(e => e.Width).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.Height).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.TotalPrice).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.AreaSquareMeters).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.PricePerSquareMeter).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.PricePerLinearMeter).HasColumnType("decimal(18,2)");
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
+            entity.HasIndex(e => e.RawMaterialName).IsUnique();
+        });
         // Configure Supplier
         builder.Entity<Supplier>(entity =>
         {
@@ -50,7 +127,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.KnifeName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.KnifeFactor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.KnifeFactor).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.CreatedDate).IsRequired();
             entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
@@ -61,7 +138,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CartonName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.CartonFactor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.CartonFactor).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.CreatedDate).IsRequired();
             entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
@@ -72,7 +149,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.MachineName).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.MaxWidth).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.MaxWidth).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.ModelNumber).HasMaxLength(100);
             entity.Property(e => e.Manufacturer).HasMaxLength(100);
@@ -98,9 +175,9 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CoreName).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.CoreCoefficient).IsRequired().HasColumnType("decimal(18,4)");
-            entity.Property(e => e.WidthCor).IsRequired().HasColumnType("decimal(18,4)");
-            entity.Property(e => e.HeightCor).IsRequired().HasColumnType("decimal(18,4)");
+            entity.Property(e => e.CoreCoefficient).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.WidthCor).IsRequired().HasColumnType("decimal(18,2)");
+            entity.Property(e => e.HeightCor).IsRequired().HasColumnType("decimal(18,2)");
             entity.Property(e => e.CreatedDate).IsRequired();
             entity.Property(e => e.IsActive).IsRequired().HasDefaultValue(true);
             entity.HasIndex(e => e.CoreName).IsUnique();

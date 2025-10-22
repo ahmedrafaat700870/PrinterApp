@@ -51,6 +51,7 @@ public class SuppliersController : Controller
 
     public async Task<IActionResult> Create(SupplierViewModel model)
     {
+        ModelState.Remove(nameof(SupplierViewModel.SupplierCode));
         if (!ModelState.IsValid)
         {
             var nextCode = await _supplierService.GetNextSupplierCodeAsync();

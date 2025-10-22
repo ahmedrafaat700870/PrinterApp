@@ -17,6 +17,10 @@ namespace PrinterApp.Data.UnitOfWork
         ICartonRepository Cartons { get; }
         IKnifeRepository Knives { get; }
         ISupplierRepository Suppliers { get; }
+        IRawMaterialRepository RawMaterials { get; }
+        IManufacturingAdditionRepository ManufacturingAdditions { get; }
+        IProductRepository Products { get; } 
+        IProductAdditionRepository ProductAdditions { get; } 
         Task<int> CompleteAsync();
     }
 }

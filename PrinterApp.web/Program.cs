@@ -84,6 +84,9 @@ builder.Services.AddScoped<IRollDirectionService, RollDirectionService>();
 builder.Services.AddScoped<IMachineService, MachineService>();
 builder.Services.AddScoped<IKnifeService, KnifeService>();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddScoped<IRawMaterialService, RawMaterialService>();
+builder.Services.AddScoped<IManufacturingAdditionService, ManufacturingAdditionService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 var app = builder.Build();
 
 // Seed Database with Roles and Permissions
