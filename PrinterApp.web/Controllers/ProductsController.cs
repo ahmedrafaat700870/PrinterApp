@@ -16,6 +16,7 @@ namespace PrinterApp.Web.Controllers
         }
 
         // GET: Products
+        [Authorize(Policy = "Permission.PRODUCT.View")]
         public async Task<IActionResult> Index(string searchTerm)
         {
             IEnumerable<ProductViewModel> products;
@@ -35,6 +36,8 @@ namespace PrinterApp.Web.Controllers
 
         // GET: Products/Create
         [HttpGet]
+        [Authorize(Policy = "Permission.PRODUCT.Create")]
+
         public async Task<IActionResult> Create()
         {
             var model = await _productService.GetProductForCreateAsync();
@@ -44,11 +47,19 @@ namespace PrinterApp.Web.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission.PRODUCT.Create")]
+
         public async Task<IActionResult> Create(ProductViewModel model)
         {
+            ModelState.Remove(nameof(ProductViewModel.Suppliers));
+            ModelState.Remove(nameof(ProductViewModel.RawMaterials));
+            ModelState.Remove(nameof(ProductViewModel.SupplierCode));
+            ModelState.Remove(nameof(ProductViewModel.RawMaterialName));
+            ModelState.Remove(nameof(ProductViewModel.AvailableAdditions));
+            ModelState.Remove(nameof(ProductViewModel.SupplierName));
             if (!ModelState.IsValid)
             {
-                await _productService.GetProductForCreateAsync();
+                model = await _productService.GetProductForCreateAsync();
                 return View(model);
             }
 
@@ -79,6 +90,8 @@ namespace PrinterApp.Web.Controllers
 
         // GET: Products/Edit/5
         [HttpGet]
+        [Authorize(Policy = "Permission.PRODUCT.Edit")]
+
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productService.GetProductForEditAsync(id);
@@ -94,8 +107,16 @@ namespace PrinterApp.Web.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission.PRODUCT.Edit")]
+
         public async Task<IActionResult> Edit(ProductViewModel model)
         {
+            ModelState.Remove(nameof(ProductViewModel.Suppliers));
+            ModelState.Remove(nameof(ProductViewModel.RawMaterials));
+            ModelState.Remove(nameof(ProductViewModel.SupplierCode));
+            ModelState.Remove(nameof(ProductViewModel.RawMaterialName));
+            ModelState.Remove(nameof(ProductViewModel.AvailableAdditions));
+            ModelState.Remove(nameof(ProductViewModel.SupplierName));
             if (!ModelState.IsValid)
             {
                 var modelWithData = await _productService.GetProductForEditAsync(model.Id);
@@ -133,6 +154,8 @@ namespace PrinterApp.Web.Controllers
         // POST: Products/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission.PRODUCT.Delete")]
+
         public async Task<IActionResult> Delete(int id)
         {
             var (success, errors) = await _productService.DeleteProductAsync(id);
@@ -152,6 +175,8 @@ namespace PrinterApp.Web.Controllers
         // POST: Products/ToggleStatus/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Permission.PRODUCT.Edit")]
+
         public async Task<IActionResult> ToggleStatus(int id)
         {
             var (success, errors) = await _productService.ToggleProductStatusAsync(id);
