@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.RollDirectionViewModel
+﻿@* @model PrinterApp.Models.ViewModels.RollDirectionViewModel
 
 @{
     ViewData["Title"] = "Create Roll Direction";
@@ -106,6 +106,194 @@
                 // Check file type
                 if (!file.type.match('image.*')) {
                     alert('Please select an image file');
+                    event.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImage() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+        }
+
+        // Drag and drop support
+        const imageInput = document.getElementById('imageInput');
+        const formControl = imageInput.closest('.form-group-custom');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            formControl.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            formControl.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            formControl.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            formControl.style.borderColor = 'var(--primary-color)';
+            formControl.style.backgroundColor = 'var(--input-bg)';
+        }
+
+        function unhighlight(e) {
+            formControl.style.borderColor = '';
+            formControl.style.backgroundColor = '';
+        }
+
+        formControl.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            imageInput.files = files;
+
+            // Trigger preview
+            const event = new Event('change', { bubbles: true });
+            imageInput.dispatchEvent(event);
+        }
+    </script>
+}
+
+<style>
+    .form-group-custom.drag-over {
+        border: 2px dashed var(--primary-color);
+        background-color: var(--input-bg);
+        padding: 20px;
+        border-radius: var(--border-radius);
+    }
+</style> *@
+
+@model PrinterApp.Models.ViewModels.RollDirectionViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("CreateRollDirection");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ @Lang.GetText("CreateNewRollDirection")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>@Lang.GetText("RollDirectionInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="DirectionNumber" class="form-label-custom">@Lang.GetText("DirectionNumber")</label>
+                    <input asp-for="DirectionNumber" type="number" class="form-control-custom" placeholder="@Lang.GetText("DirectionNumberPlaceholder")" />
+                    <span asp-validation-for="DirectionNumber" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 @Lang.GetText("DirectionNumberMustBeUnique")
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="ImageFile" class="form-label-custom">@Lang.GetText("DirectionImage")</label>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input asp-for="ImageFile"
+                               type="file"
+                               class="form-control-custom"
+                               accept="image/*"
+                               id="imageInput"
+                               onchange="previewImage(event)" />
+                        <span asp-validation-for="ImageFile" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray);">
+                            📸 @Lang.GetText("AcceptedImageFormats")
+                        </small>
+
+                        <!-- Image Preview -->
+                        <div id="imagePreviewContainer" style="display: none;">
+                            <label class="form-label-custom">@Lang.GetText("ImagePreview"):</label>
+                            <div style="position: relative; width: 200px; height: 200px; border: 2px dashed var(--border-color); border-radius: var(--border-radius); overflow: hidden;">
+                                <img id="imagePreview"
+                                     src=""
+                                     alt="@Lang.GetText("Preview")"
+                                     style="width: 100%; height: 100%; object-fit: cover;" />
+                                <button type="button"
+                                        onclick="clearImage()"
+                                        style="position: absolute; top: 10px; right: 10px; background: var(--error-color); color: var(--white); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom">@Lang.GetText("Description")</label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="@Lang.GetText("EnterDescriptionOptional")"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("CreateDirection")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const translations = {
+            fileSizeTooLarge: '@Lang.GetText("FileSizeTooLarge")',
+            pleaseSelectImageFile: '@Lang.GetText("PleaseSelectImageFile")'
+        };
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(translations.fileSizeTooLarge);
+                    event.target.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert(translations.pleaseSelectImageFile);
                     event.target.value = '';
                     return;
                 }

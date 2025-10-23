@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrinterApp.Models.ViewModels.SupplierViewModel>
+﻿@* @model IEnumerable<PrinterApp.Models.ViewModels.SupplierViewModel>
 
 @{
     ViewData["Title"] = "Suppliers Management";
@@ -288,6 +288,347 @@
                 {
                     <a asp-action="Index" class="btn-secondary-custom" style="margin-top: 20px;">
                         🔄 Clear Search
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        let searchTimeout;
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (searchInput.value.length >= 1 || searchInput.value.length === 0) {
+                        searchForm.submit();
+                    }
+                }, 500);
+            });
+            searchInput.focus();
+        }
+
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                searchForm.submit();
+            });
+        }
+
+        // Keyboard shortcut (Ctrl+K to focus search)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+        });
+    </script>
+} *@
+
+
+@model IEnumerable<PrinterApp.Models.ViewModels.SupplierViewModel>
+
+@{
+    ViewData["Title"] = Lang.GetText("SuppliersManagement");
+    var currentFilter = ViewData["CurrentFilter"] as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👥 @Lang.GetText("SuppliersManagement")</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ @Lang.GetText("AddNewSupplier")
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="Index" method="get" id="searchForm">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <input type="text"
+                               name="searchTerm"
+                               id="searchInput"
+                               value="@currentFilter"
+                               class="form-control-custom"
+                               placeholder="🔍 @Lang.GetText("SearchSuppliersPlaceholder")..."
+                               style="padding-right: 100px;" />
+
+                        @if (!string.IsNullOrEmpty(currentFilter))
+                        {
+                            <button type="button"
+                                    id="clearSearch"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--error-color); cursor: pointer; font-size: 20px; padding: 5px 10px;"
+                                    title="@Lang.GetText("ClearSearch")">
+                                ✕
+                            </button>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom" style="white-space: nowrap;">
+                        🔍 @Lang.GetText("Search")
+                    </button>
+
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <a asp-action="Index" class="btn-secondary-custom" style="white-space: nowrap;">
+                            🔄 @Lang.GetText("Reset")
+                        </a>
+                    }
+                </div>
+            </form>
+
+            @if (!string.IsNullOrEmpty(currentFilter))
+            {
+                <div style="margin-top: 15px; padding: 10px; background: var(--primary-light); color: var(--white); border-radius: var(--border-radius); display: flex; justify-content: space-between; align-items: center;">
+                    <span>
+                        🔍 @Lang.GetText("SearchingFor"): <strong>"@currentFilter"</strong> - @Lang.GetText("Found") <strong>@Model.Count()</strong> @Lang.GetText("Results")
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    @if (Model.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div style="padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--primary-color);">
+                            @Model.Count()
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("TotalSuppliers")
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--success-color);">
+                            @Model.Count(s => s.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("ActiveSuppliers")
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--error-color);">
+                            @Model.Count(s => !s.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("InactiveSuppliers")
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--warning-color);">
+                            @(Model.Any() ? Model.Max(s => s.SupplierCode) : "0000")
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("LastCode")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <div style="overflow-x: auto;">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">@Lang.GetText("Code")</th>
+                            <th style="width: 20%;">@Lang.GetText("SupplierInfo")</th>
+                            <th style="width: 15%;">@Lang.GetText("Contact")</th>
+                            <th style="width: 15%;">@Lang.GetText("Documents")</th>
+                            <th style="width: 15%;">@Lang.GetText("Location")</th>
+                            <th style="width: 10%;">@Lang.GetText("Status")</th>
+                            <th style="text-align: center; width: 15%;">@Lang.GetText("Actions")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr style="@(item.IsActive ? "" : "opacity: 0.6; background-color: #f5f5f5;")">
+                                <td>
+                                    <span style="background: var(--primary-gradient); color: var(--white); padding: 10px 15px; border-radius: var(--border-radius); font-weight: bold; font-size: 18px; display: inline-block; font-family: monospace;">
+                                        #@item.SupplierCode
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column;">
+                                        <strong style="color: var(--text-primary); font-size: 16px;">@item.SupplierName</strong>
+                                        @if (!string.IsNullOrEmpty(item.Notes))
+                                        {
+                                            <small style="color: var(--medium-gray); margin-top: 3px;">@item.Notes</small>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        @if (!string.IsNullOrEmpty(item.PhoneNumber))
+                                        {
+                                            <div style="display: flex; align-items: center; gap: 5px;">
+                                                <span style="color: var(--primary-color);">📞</span>
+                                                <a href="tel:@item.PhoneNumber" style="color: var(--text-primary); text-decoration: none;">@item.PhoneNumber</a>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.Email))
+                                        {
+                                            <div style="display: flex; align-items: center; gap: 5px;">
+                                                <span style="color: var(--primary-color);">📧</span>
+                                                <a href="mailto:@item.Email" style="color: var(--text-primary); text-decoration: none; font-size: 12px;">@item.Email</a>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 5px; font-size: 13px;">
+                                        @if (!string.IsNullOrEmpty(item.CardNumber))
+                                        {
+                                            <div>
+                                                <span style="color: var(--medium-gray);">@Lang.GetText("Card"):</span>
+                                                <span style="font-family: monospace; font-weight: 500;">@item.CardNumber</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.CommercialRegister))
+                                        {
+                                            <div>
+                                                <span style="color: var(--medium-gray);">@Lang.GetText("Register"):</span>
+                                                <span style="font-family: monospace; font-weight: 500;">@item.CommercialRegister</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; flex-direction: column; gap: 3px; font-size: 13px;">
+                                        @if (!string.IsNullOrEmpty(item.City))
+                                        {
+                                            <div>
+                                                <span style="color: var(--primary-color);">📍</span>
+                                                <span>@item.City</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.Country))
+                                        {
+                                            <div>
+                                                <span style="color: var(--primary-color);">🌍</span>
+                                                <span>@item.Country</span>
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.Address))
+                                        {
+                                            <div style="color: var(--medium-gray); font-size: 11px; margin-top: 3px;">
+                                                @(item.Address.Length > 30 ? item.Address.Substring(0, 30) + "..." : item.Address)
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                            ✓ @Lang.GetText("Active")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                            ✗ @Lang.GetText("Inactive")
+                                        </span>
+                                    }
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="action-buttons" style="justify-content: center;">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn-warning-custom btn-sm-custom" title="@Lang.GetText("Edit")">
+                                            ✏️ @Lang.GetText("Edit")
+                                        </a>
+
+                                        <form asp-action="ToggleStatus" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="@(item.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom" title="@(item.IsActive? Lang.GetText("Deactivate") : Lang.GetText("Activate"))">
+                                                @(item.IsActive ? "🔒" : "✓")
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                                    onclick="return confirm('@Lang.GetText("DeleteSupplierConfirmation")')"
+                                                    title="@Lang.GetText("Delete")">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3 style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>@Lang.GetText("NoSuppliersFound")</text>
+                    }
+                    else
+                    {
+                        <text>@Lang.GetText("NoSuppliersAvailable")</text>
+                    }
+                </h3>
+                <p style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>@Lang.GetText("TryAdjustingSearch")</text>
+                    }
+                    else
+                    {
+                        <text>@Lang.GetText("StartByAddingSupplier")</text>
+                    }
+                </p>
+                @if (string.IsNullOrEmpty(currentFilter))
+                {
+                    <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                        ➕ @Lang.GetText("AddNewSupplier")
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn-secondary-custom" style="margin-top: 20px;">
+                        🔄 @Lang.GetText("ClearSearch")
                     </a>
                 }
             </div>

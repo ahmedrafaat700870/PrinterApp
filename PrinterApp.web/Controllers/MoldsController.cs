@@ -111,6 +111,12 @@ public class MoldsController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(MoldViewModel model)
     {
+        ModelState.Remove(nameof(MoldViewModel.Machines));
+        ModelState.Remove(nameof(MoldViewModel.MoldShapes));
+        ModelState.Remove(nameof(MoldViewModel.MachineCode));
+        ModelState.Remove(nameof(MoldViewModel.MachineName));
+        ModelState.Remove(nameof(MoldViewModel.MoldShapeName));
+        ModelState.Remove(nameof(MoldViewModel.ShapeImagePath));
         if (!ModelState.IsValid)
         {
             var modelWithData = await _moldService.GetMoldForEditAsync(model.Id);

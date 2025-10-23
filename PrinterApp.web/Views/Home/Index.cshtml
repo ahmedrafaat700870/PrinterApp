@@ -1,90 +1,111 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer Localizer
+﻿@inject PrinterApp.Services.Interfaces.ILanguageService Lang
 
 @{
-    ViewData["Title"] = Localizer["Home"];
+    ViewData["Title"] = Lang.GetText("Home");
 }
 
 <div class="content-container">
-    <div class="text-center">
-        <h1 class="display-4">@Localizer["Welcome"]</h1>
-        <p class="lead">@Localizer["WelcomeMessage"]</p>
+    <div class="text-center" style="margin-bottom: 40px;">
+        <h1 class="display-4" style="color: var(--primary-color); margin-bottom: 20px;">
+            @Lang.GetText("Welcome")
+        </h1>
+        <p class="lead" style="color: var(--medium-gray); font-size: 1.2rem;">
+            @Lang.GetText("WelcomeMessage")
+        </p>
     </div>
 
-    @if (User.Identity.IsAuthenticated)
+    @if (User.Identity?.IsAuthenticated == true)
     {
         <div style="margin-top: 40px;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+            <div class="dashboard-grid">
+
+                <!-- Machines Card -->
+                <a asp-controller="Machines" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🖨️</div>
+                        <h3>@Lang.GetText("Machines")</h3>
+                        <p>@Lang.GetText("ManageMachines")</p>
+                    </div>
+                </a>
+
+                <!-- Mold Shapes Card -->
+                <a asp-controller="MoldShapes" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🔲</div>
+                        <h3>@Lang.GetText("MoldShapes")</h3>
+                        <p>@Lang.GetText("MoldShapeManagement")</p>
+                    </div>
+                </a>
+
+                <!-- Molds Card -->
+                <a asp-controller="Molds" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🔷</div>
+                        <h3>@Lang.GetText("Molds")</h3>
+                        <p>@Lang.GetText("MoldManagement")</p>
+                    </div>
+                </a>
 
                 <!-- Cores Card -->
-                <a asp-controller="Cores" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease; hover: transform: translateY(-5px);">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Cores"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageCores"]</p>
+                <a asp-controller="Cores" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🎯</div>
+                        <h3>@Lang.GetText("Cores")</h3>
+                        <p>@Lang.GetText("ManageCores")</p>
                     </div>
                 </a>
 
                 <!-- Cartons Card -->
-                <a asp-controller="Cartons" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Cartons"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageCartons"]</p>
+                <a asp-controller="Cartons" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">📦</div>
+                        <h3>@Lang.GetText("Cartons")</h3>
+                        <p>@Lang.GetText("ManageCartons")</p>
                     </div>
                 </a>
 
                 <!-- Knives Card -->
-                <a asp-controller="Knives" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🔪</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Knives"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageKnives"]</p>
+                <a asp-controller="Knives" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🔪</div>
+                        <h3>@Lang.GetText("Knives")</h3>
+                        <p>@Lang.GetText("ManageKnives")</p>
                     </div>
                 </a>
 
                 <!-- Suppliers Card -->
-                <a asp-controller="Suppliers" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">👥</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Suppliers"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageSuppliers"]</p>
+                <a asp-controller="Suppliers" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">👥</div>
+                        <h3>@Lang.GetText("Suppliers")</h3>
+                        <p>@Lang.GetText("ManageSuppliers")</p>
                     </div>
                 </a>
 
                 <!-- Raw Materials Card -->
-                <a asp-controller="RawMaterials" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["RawMaterials"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageRawMaterials"]</p>
+                <a asp-controller="RawMaterials" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">🧱</div>
+                        <h3>@Lang.GetText("RawMaterials")</h3>
+                        <p>@Lang.GetText("ManageRawMaterials")</p>
                     </div>
                 </a>
 
                 <!-- Products Card -->
-                <a asp-controller="Products" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Products"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageProducts"]</p>
+                <a asp-controller="Products" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">📦</div>
+                        <h3>@Lang.GetText("Products")</h3>
+                        <p>@Lang.GetText("ManageProducts")</p>
                     </div>
                 </a>
 
                 <!-- Manufacturing Additions Card -->
-                <a asp-controller="ManufacturingAdditions" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">⚙️</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Additions"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageAdditions"]</p>
-                    </div>
-                </a>
-
-                <!-- Machines Card -->
-                <a asp-controller="Machines" asp-action="Index" style="text-decoration: none;">
-                    <div class="card-custom" style="text-align: center; padding: 30px; cursor: pointer; transition: transform 0.3s ease;">
-                        <div style="font-size: 48px; margin-bottom: 15px;">🖨️</div>
-                        <h3 style="color: var(--primary-color); margin-bottom: 10px;">@Localizer["Machines"]</h3>
-                        <p style="color: var(--medium-gray); margin: 0;">@Localizer["ManageMachines"]</p>
+                <a asp-controller="ManufacturingAdditions" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon">⚙️</div>
+                        <h3>@Lang.GetText("Additions")</h3>
+                        <p>@Lang.GetText("ManageAdditions")</p>
                     </div>
                 </a>
 
@@ -93,18 +114,19 @@
     }
     else
     {
-        <div style="text-align: center; margin-top: 40px;">
-            <p>@Localizer["PleaseLoginMessage"]</p>
-            <a asp-area="Identity" asp-page="/Account/Login" class="btn-primary-custom">
-                @Localizer["Login"]
-            </a>
+        <div class="login-prompt">
+            <div class="card-custom" style="max-width: 500px; margin: 60px auto; text-align: center; padding: 40px;">
+                <div style="font-size: 64px; margin-bottom: 20px;">🔒</div>
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">
+                    @Lang.GetText("Login")
+                </h3>
+                <p style="color: var(--medium-gray); margin-bottom: 30px;">
+                    @Lang.GetText("PleaseLoginMessage")
+                </p>
+                <a asp-area="Identity" asp-page="/Account/Login" class="btn-primary-custom" style="padding: 12px 40px; font-size: 16px;">
+                    🔑 @Lang.GetText("Login")
+                </a>
+            </div>
         </div>
     }
 </div>
-
-<style>
-    .card-custom:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    }
-</style>

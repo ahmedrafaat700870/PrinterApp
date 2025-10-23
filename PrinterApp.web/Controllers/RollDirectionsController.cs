@@ -115,6 +115,8 @@ namespace PrinterApp.Web.Controllers
 
         public async Task<IActionResult> Edit(RollDirectionViewModel model)
         {
+            ModelState.Remove("DirectionImage");
+
             if (!ModelState.IsValid)
             {
                 return View(model);

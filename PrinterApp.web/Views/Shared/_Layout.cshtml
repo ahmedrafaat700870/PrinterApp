@@ -1,4 +1,4 @@
-﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResources> Localizer
+﻿@* @inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResources> Localizer
 @using Microsoft.AspNetCore.Localization
 
 @{
@@ -168,6 +168,230 @@
     <footer class="footer-custom">
         <div class="container-fluid">
             <p>&copy; 2024 Permission App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> *@
+
+
+
+
+
+@* @inject PrinterApp.Services.Implementations.ILanguageService Lang *@
+
+@{
+    var currentLanguage = Lang.GetCurrentLanguage();
+    var isRtl = Lang.GetCurrentLanguage() == "ar";
+}
+
+<!DOCTYPE html>
+<html lang="@currentLanguage" dir="@(isRtl ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Printer App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    @if (isRtl)
+    {
+        <link rel="stylesheet" href="~/css/rtl.css" asp-append-version="true" />
+    }
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    🖨️ Printer App
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                                🏠 @Lang.GetText("Home")
+                            </a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole("Admin") || User.HasClaim("Permission", "PERMISSIONS.Manage"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Permissions" asp-action="Index">
+                                        🛡️ @Lang.GetText("Permissions")
+                                    </a>
+                                </li>
+                            }
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="UserManagement" asp-action="Index">
+                                        👥 @Lang.GetText("Users")
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Settings" asp-action="Index">
+                                        ⚙️ @Lang.GetText("Settings")
+                                    </a>
+                                </li>
+                            }
+
+                            <!-- Dropdown Menu للماكينات والقوالب -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="machinesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    🖨️ @Lang.GetText("Machines") & @Lang.GetText("Molds")
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="machinesDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Machines" asp-action="Index">
+                                            🖨️ @Lang.GetText("Machines")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="MoldShapes" asp-action="Index">
+                                            🔷 @Lang.GetText("MoldShapes")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Molds" asp-action="Index">
+                                            🔲 @Lang.GetText("Molds")
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Dropdown Menu للمواد -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="materialsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    📦 @Lang.GetText("Materials")
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="materialsDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Cores" asp-action="Index">
+                                            🎯 @Lang.GetText("Cores")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Cartons" asp-action="Index">
+                                            📦 @Lang.GetText("Cartons")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Knives" asp-action="Index">
+                                            🔪 @Lang.GetText("Knives")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="RawMaterials" asp-action="Index">
+                                            🧱 @Lang.GetText("RawMaterials")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="RollDirections" asp-action="Index">
+                                            🔄 @Lang.GetText("RollDirections")
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <!-- Dropdown Menu للموردين والمنتجات -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="productsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    🏭 @Lang.GetText("Production")
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Suppliers" asp-action="Index">
+                                            👥 @Lang.GetText("Suppliers")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Products" asp-action="Index">
+                                            📦 @Lang.GetText("Products")
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="ManufacturingAdditions" asp-action="Index">
+                                            ⚙️ @Lang.GetText("Additions")
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <!-- Language Switcher -->
+                        <li class="nav-item">
+                            <div class="language-switcher">
+                                <form asp-controller="Home" asp-action="SetLanguage" method="post" style="display: inline;">
+                                    <input type="hidden" name="language" value="ar" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn-language @(currentLanguage == "ar" ? "active" : "")">
+                                        العربية
+                                    </button>
+                                </form>
+                                <form asp-controller="Home" asp-action="SetLanguage" method="post" style="display: inline;">
+                                    <input type="hidden" name="language" value="en" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn-language @(currentLanguage == "en" ? "active" : "")">
+                                        English
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link user-info">
+                                    👤 @Lang.GetText("Welcome"), @User.Identity.Name
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <span class="badge-admin">ADMIN</span>
+                                    }
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-link nav-link logout-btn">
+                                        🚪 @Lang.GetText("Logout")
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    🔐 @Lang.GetText("Login")
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">
+                                    📝 @Lang.GetText("Register")
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer class="footer-custom">
+        <div class="container-fluid">
+            <p>&copy; 2024 Printer App. @Lang.GetText("AllRightsReserved")</p>
         </div>
     </footer>
 

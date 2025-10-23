@@ -1,4 +1,4 @@
-﻿@model List<UserRoleViewModel>
+﻿@* @model List<UserRoleViewModel>
 
 @{
     ViewData["Title"] = "User Management";
@@ -70,6 +70,140 @@
             <div class="empty-state">
                 <div class="empty-state-icon">👥</div>
                 <h3 style="color: var(--medium-gray);">No Users Found</h3>
+            </div>
+        </div>
+    }
+</div> *@
+
+@model List<UserRoleViewModel>
+
+@{
+    ViewData["Title"] = Lang.GetText("UserManagement");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👥 @Lang.GetText("UserManagement")</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Statistics -->
+    @if (Model.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div style="padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--primary-color);">
+                            @Model.Count()
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("TotalUsers")
+                        </div>
+                    </div>
+                    @{
+                        var roleGroups = Model.GroupBy(u => u.Role).OrderByDescending(g => g.Count());
+                        var colors = new[] { "var(--success-color)", "var(--warning-color)", "var(--info-color)", "var(--error-color)" };
+                        var colorIndex = 0;
+                    }
+                    @foreach (var roleGroup in roleGroups)
+                    {
+                        <div style="text-align: center;">
+                            <div style="font-size: 28px; font-weight: bold; color: @colors[colorIndex % colors.Length];">
+                                @roleGroup.Count()
+                            </div>
+                            <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                                @roleGroup.Key
+                            </div>
+                        </div>
+                        colorIndex++;
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <div style="overflow-x: auto;">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">#</th>
+                            <th style="width: 25%;">@Lang.GetText("UserName")</th>
+                            <th style="width: 30%;">@Lang.GetText("Email")</th>
+                            <th style="width: 20%;">@Lang.GetText("CurrentRole")</th>
+                            <th style="text-align: center; width: 20%;">@Lang.GetText("Actions")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var index = 1;
+                        }
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span style="color: var(--medium-gray); font-weight: 500;">@index</span>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: bold; font-size: 16px;">
+                                            @user.FullName.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <strong style="color: var(--text-primary); font-size: 15px;">@user.FullName</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        <span style="color: var(--primary-color);">📧</span>
+                                        <a href="mailto:@user.Email" style="color: var(--text-primary); text-decoration: none;">@user.Email</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span style="background: var(--primary-gradient); color: var(--white); padding: 8px 16px; border-radius: var(--border-radius); font-weight: 500; display: inline-block;">
+                                        👤 @user.Role
+                                    </span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="action-buttons" style="justify-content: center;">
+                                        <a asp-action="AssignRole" asp-route-userId="@user.UserId" class="btn-warning-custom btn-sm-custom" title="@Lang.GetText("ChangeRole")">
+                                            👤 @Lang.GetText("ChangeRole")
+                                        </a>
+                                        <a asp-action="ManagePermissions" asp-route-userId="@user.UserId" class="btn-success-custom btn-sm-custom" title="@Lang.GetText("ManagePermissions")">
+                                            🔐 @Lang.GetText("Permissions")
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3 style="color: var(--medium-gray);">@Lang.GetText("NoUsersFound")</h3>
+                <p style="color: var(--medium-gray);">@Lang.GetText("NoUsersFoundDescription")</p>
             </div>
         </div>
     }

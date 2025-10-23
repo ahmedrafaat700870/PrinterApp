@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.RollDirectionViewModel
+﻿@* @model PrinterApp.Models.ViewModels.RollDirectionViewModel
 
 @{
     ViewData["Title"] = "Edit Roll Direction";
@@ -149,6 +149,184 @@
                 // Check file type
                 if (!file.type.match('image.*')) {
                     alert('Please select an image file');
+                    event.target.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImage() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            document.getElementById('imagePreview').src = '';
+        }
+    </script>
+} *@
+
+@model PrinterApp.Models.ViewModels.RollDirectionViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("EditRollDirection");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ @Lang.GetText("EditRollDirection")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>@Lang.GetText("RollDirectionInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="DirectionImage" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="DirectionNumber" class="form-label-custom">@Lang.GetText("DirectionNumber")</label>
+                    <input asp-for="DirectionNumber" type="number" class="form-control-custom" placeholder="@Lang.GetText("EnterDirectionNumber")" />
+                    <span asp-validation-for="DirectionNumber" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 @Lang.GetText("DirectionNumberMustBeUnique")
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label class="form-label-custom">@Lang.GetText("CurrentImage")</label>
+                    @if (!string.IsNullOrEmpty(Model.DirectionImage))
+                    {
+                        <div style="margin-bottom: 15px;">
+                            <img src="@Model.DirectionImage"
+                                 alt="@Lang.GetText("CurrentDirectionImage")"
+                                 style="width: 200px; height: 200px; object-fit: cover; border-radius: var(--border-radius); border: 2px solid var(--border-color);" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="margin-bottom: 15px; padding: 20px; background: var(--input-bg); border-radius: var(--border-radius); text-align: center; color: var(--medium-gray);">
+                            📷 @Lang.GetText("NoImageUploadedYet")
+                        </div>
+                    }
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="ImageFile" class="form-label-custom">@Lang.GetText("ChangeImageOptional")</label>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <input asp-for="ImageFile"
+                               type="file"
+                               class="form-control-custom"
+                               accept="image/*"
+                               id="imageInput"
+                               onchange="previewImage(event)" />
+                        <span asp-validation-for="ImageFile" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray);">
+                            📸 @Lang.GetText("LeaveEmptyToKeepCurrentImage")
+                        </small>
+
+                        <!-- New Image Preview -->
+                        <div id="imagePreviewContainer" style="display: none;">
+                            <label class="form-label-custom">@Lang.GetText("NewImagePreview"):</label>
+                            <div style="position: relative; width: 200px; height: 200px; border: 2px dashed var(--primary-color); border-radius: var(--border-radius); overflow: hidden;">
+                                <img id="imagePreview"
+                                     src=""
+                                     alt="@Lang.GetText("Preview")"
+                                     style="width: 100%; height: 100%; object-fit: cover;" />
+                                <button type="button"
+                                        onclick="clearImage()"
+                                        style="position: absolute; top: 10px; right: 10px; background: var(--error-color); color: var(--white); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center;">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom">@Lang.GetText("Description")</label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="@Lang.GetText("EnterDescriptionOptional")"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        @Lang.GetText("DirectionIsActive")
+                    </label>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>@Lang.GetText("Created"):</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>@Lang.GetText("LastModified"):</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const translations = {
+            fileSizeTooLarge: '@Lang.GetText("FileSizeTooLarge")',
+            pleaseSelectImageFile: '@Lang.GetText("PleaseSelectImageFile")'
+        };
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(translations.fileSizeTooLarge);
+                    event.target.value = '';
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.match('image.*')) {
+                    alert(translations.pleaseSelectImageFile);
                     event.target.value = '';
                     return;
                 }

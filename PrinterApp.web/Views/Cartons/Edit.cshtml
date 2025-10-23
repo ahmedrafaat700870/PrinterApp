@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.CartonViewModel
+﻿@* @model PrinterApp.Models.ViewModels.CartonViewModel
 
 @{
     ViewData["Title"] = "Edit Carton";
@@ -83,6 +83,115 @@
                     </button>
                     <a asp-action="Index" class="btn-secondary-custom">
                         Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Format carton factor input
+        const cartonFactorInput = document.querySelector('input[name="CartonFactor"]');
+        if (cartonFactorInput) {
+            cartonFactorInput.addEventListener('blur', function() {
+                if (this.value) {
+                    this.value = parseFloat(this.value).toFixed(4);
+                }
+            });
+        }
+    </script>
+} *@
+
+
+@model PrinterApp.Models.ViewModels.CartonViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("EditCarton");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ @Lang.GetText("EditCarton")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>📦 @Lang.GetText("CartonInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <div class="form-group-custom">
+                    <label asp-for="CartonName" class="form-label-custom">@Lang.GetText("CartonName")</label>
+                    <input asp-for="CartonName" class="form-control-custom" placeholder="@Lang.GetText("EnterCartonName")" />
+                    <span asp-validation-for="CartonName" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        💡 @Lang.GetText("CartonNameMustBeUnique")
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="CartonFactor" class="form-label-custom">@Lang.GetText("CartonFactor")</label>
+                    <input asp-for="CartonFactor" type="number" step="0.0001" class="form-control-custom" placeholder="@Lang.GetText("EnterCartonFactor")" />
+                    <span asp-validation-for="CartonFactor" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                        📊 @Lang.GetText("CartonFactorDescription")
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom">@Lang.GetText("Description")</label>
+                    <textarea asp-for="Description"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="@Lang.GetText("EnterDescriptionOptional")"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        @Lang.GetText("CartonIsActive")
+                    </label>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <strong>@Lang.GetText("Created"):</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>@Lang.GetText("LastModified"):</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
                     </a>
                 </div>
             </form>

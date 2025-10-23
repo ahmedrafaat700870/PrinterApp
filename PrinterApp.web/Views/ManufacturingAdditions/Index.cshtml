@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel>
+﻿@* @model IEnumerable<PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel>
 
 @{
     ViewData["Title"] = "Manufacturing Additions Management";
@@ -236,6 +236,289 @@
                 {
                     <a asp-action="Index" class="btn-secondary-custom" style="margin-top: 20px;">
                         🔄 Clear Search
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        let searchTimeout;
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    if (searchInput.value.length >= 1 || searchInput.value.length === 0) {
+                        searchForm.submit();
+                    }
+                }, 500);
+            });
+            searchInput.focus();
+        }
+
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                searchForm.submit();
+            });
+        }
+
+        // Keyboard shortcut (Ctrl+K to focus search)
+        document.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+                searchInput.select();
+            }
+        });
+    </script>
+} *@
+@model IEnumerable<PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel>
+
+@{
+    ViewData["Title"] = Lang.GetText("ManufacturingAdditionsManagement");
+    var currentFilter = ViewData["CurrentFilter"] as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>⚙️ @Lang.GetText("ManufacturingAdditionsManagement")</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ @Lang.GetText("AddNewAddition")
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Search Bar -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="Index" method="get" id="searchForm">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div style="flex: 1; position: relative;">
+                        <input type="text"
+                               name="searchTerm"
+                               id="searchInput"
+                               value="@currentFilter"
+                               class="form-control-custom"
+                               placeholder="🔍 @Lang.GetText("SearchAdditionsPlaceholder")"
+                               style="padding-right: 100px;" />
+
+                        @if (!string.IsNullOrEmpty(currentFilter))
+                        {
+                            <button type="button"
+                                    id="clearSearch"
+                                    style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--error-color); cursor: pointer; font-size: 20px; padding: 5px 10px;"
+                                    title="@Lang.GetText("ClearSearch")">
+                                ✕
+                            </button>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom" style="white-space: nowrap;">
+                        🔍 @Lang.GetText("Search")
+                    </button>
+
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <a asp-action="Index" class="btn-secondary-custom" style="white-space: nowrap;">
+                            🔄 @Lang.GetText("Reset")
+                        </a>
+                    }
+                </div>
+            </form>
+
+            @if (!string.IsNullOrEmpty(currentFilter))
+            {
+                <div style="margin-top: 15px; padding: 10px; background: var(--primary-light); color: var(--white); border-radius: var(--border-radius); display: flex; justify-content: space-between; align-items: center;">
+                    <span>
+                        🔍 @Lang.GetText("SearchingFor"): <strong>"@currentFilter"</strong> - @Lang.GetText("Found") <strong>@Model.Count()</strong> @Lang.GetText("Results")
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Statistics -->
+    @if (Model.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div style="padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--primary-color);">
+                            @Model.Count()
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("TotalAdditions")
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--success-color);">
+                            @Model.Count(a => a.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("ActiveAdditions")
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 28px; font-weight: bold; color: var(--error-color);">
+                            @Model.Count(a => !a.IsActive)
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 14px; margin-top: 5px;">
+                            @Lang.GetText("InactiveAdditions")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th style="width: 5%;">#</th>
+                        <th style="width: 40%;">@Lang.GetText("AdditionName")</th>
+                        <th style="width: 15%;">@Lang.GetText("CreatedDate")</th>
+                        <th style="width: 15%;">@Lang.GetText("LastModified")</th>
+                        <th style="width: 10%;">@Lang.GetText("Status")</th>
+                        <th style="text-align: center; width: 15%;">@Lang.GetText("Actions")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var counter = 1;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr style="@(item.IsActive ? "" : "opacity: 0.6; background-color: #f5f5f5;")">
+                            <td>
+                                <span style="background: var(--input-bg); color: var(--text-primary); padding: 5px 10px; border-radius: var(--border-radius-sm); font-weight: 500;">
+                                    @counter
+                                </span>
+                            </td>
+                            <td>
+                                <strong style="color: var(--text-primary); font-size: 16px;">
+                                    ⚙️ @item.AdditionName
+                                </strong>
+                            </td>
+                            <td>
+                                <span style="color: var(--medium-gray);">
+                                    @item.CreatedDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </td>
+                            <td>
+                                @if (item.LastModified.HasValue)
+                                {
+                                    <span style="color: var(--medium-gray);">
+                                        @item.LastModified.Value.ToString("MMM dd, yyyy")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="color: var(--medium-gray); font-style: italic;">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.IsActive)
+                                {
+                                    <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                        ✓ @Lang.GetText("Active")
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                        ✗ @Lang.GetText("Inactive")
+                                    </span>
+                                }
+                            </td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons" style="justify-content: center;">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-warning-custom btn-sm-custom" title="@Lang.GetText("Edit")">
+                                        ✏️
+                                    </a>
+
+                                    <form asp-action="ToggleStatus" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="@(item.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom" title="@(item.IsActive? Lang.GetText("Deactivate") : Lang.GetText("Activate"))">
+                                            @(item.IsActive ? "🔒" : "✓")
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                                onclick="return confirm('@Lang.GetText("DeleteAdditionConfirmation")')"
+                                                title="@Lang.GetText("Delete")">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        counter++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">⚙️</div>
+                <h3 style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>@Lang.GetText("NoResultsFound")</text>
+                    }
+                    else
+                    {
+                        <text>@Lang.GetText("NoAdditionsAvailable")</text>
+                    }
+                </h3>
+                <p style="color: var(--medium-gray);">
+                    @if (!string.IsNullOrEmpty(currentFilter))
+                    {
+                        <text>@Lang.GetText("TryAdjustingSearch")</text>
+                    }
+                    else
+                    {
+                        <text>@Lang.GetText("StartByAddingAddition")</text>
+                    }
+                </p>
+                @if (string.IsNullOrEmpty(currentFilter))
+                {
+                    <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                        ➕ @Lang.GetText("AddNewAddition")
+                    </a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn-secondary-custom" style="margin-top: 20px;">
+                        🔄 @Lang.GetText("ClearSearch")
                     </a>
                 }
             </div>

@@ -1,4 +1,4 @@
-﻿@model LoginViewModel
+﻿@* @model LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
@@ -53,6 +53,103 @@
                         <p style="color: var(--medium-gray);">
                             Don't have an account? 
                             <a asp-action="Register" class="btn-link-custom" style="display: inline;">Register here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html> *@
+
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("Login");
+    Layout = null;
+    var currentLanguage = Lang.GetCurrentLanguage();
+    var isRtl = Lang.GetCurrentLanguage() == "ar";
+}
+
+<!DOCTYPE html>
+<html lang="@currentLanguage" dir="@(isRtl ? "rtl" : "ltr")">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Printer App</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/custom-theme.css" asp-append-version="true" />
+    @if (isRtl)
+    {
+        <link rel="stylesheet" href="~/css/rtl.css" asp-append-version="true" />
+    }
+</head>
+<body>
+    <div class="auth-container">
+        <!-- Language Switcher at top -->
+        <div class="auth-language-switcher">
+            <form asp-controller="Home" asp-action="SetLanguage" method="post" style="display: inline;">
+                <input type="hidden" name="language" value="ar" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                <button type="submit" class="btn-language-auth @(currentLanguage == "ar" ? "active" : "")">
+                    العربية
+                </button>
+            </form>
+            <form asp-controller="Home" asp-action="SetLanguage" method="post" style="display: inline;">
+                <input type="hidden" name="language" value="en" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                <button type="submit" class="btn-language-auth @(currentLanguage == "en" ? "active" : "")">
+                    English
+                </button>
+            </form>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h2>🔐 @Lang.GetText("Login")</h2>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">@Lang.GetText("WelcomeBack")</p>
+            </div>
+            <div class="auth-card-body">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <form asp-action="Login" method="post">
+                    <div class="form-group-custom">
+                        <label asp-for="Email" class="form-label-custom">@Lang.GetText("Email")</label>
+                        <input asp-for="Email" class="form-control-custom" placeholder="@Lang.GetText("EnterEmail")" />
+                        <span asp-validation-for="Email" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Password" class="form-label-custom">@Lang.GetText("Password")</label>
+                        <input asp-for="Password" class="form-control-custom" placeholder="@Lang.GetText("EnterPassword")" />
+                        <span asp-validation-for="Password" class="text-danger-custom"></span>
+                    </div>
+
+                    <div class="form-check-custom">
+                        <input asp-for="RememberMe" class="form-check-input-custom" type="checkbox" />
+                        <label asp-for="RememberMe" class="form-check-label-custom">@Lang.GetText("RememberMe")</label>
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom btn-block-custom">
+                        @Lang.GetText("Login")
+                    </button>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: var(--medium-gray);">
+                            @Lang.GetText("DontHaveAccount")
+                            <a asp-action="Register" class="btn-link-custom" style="display: inline;">
+                                @Lang.GetText("RegisterHere")
+                            </a>
                         </p>
                     </div>
                 </form>

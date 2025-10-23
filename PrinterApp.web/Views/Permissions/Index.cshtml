@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PermissionViewModel>
+﻿@* @model IEnumerable<PermissionViewModel>
 
 @{
     ViewData["Title"] = "Permissions";
@@ -84,6 +84,110 @@
                 <p style="color: var(--medium-gray);">Create your first permission to get started</p>
                 <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
                     ➕ Create Permission
+                </a>
+            </div>
+        </div>
+    }
+</div> *@
+
+
+@model IEnumerable<PermissionViewModel>
+
+@{
+    ViewData["Title"] = Lang.GetText("Permissions");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>🛡️ @Lang.GetText("PermissionsManagement")</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ @Lang.GetText("CreateNewPermission")
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <table class="table-custom">
+                <thead>
+                    <tr>
+                        <th>@Lang.GetText("PermissionName")</th>
+                        <th>@Lang.GetText("Code")</th>
+                        <th>@Lang.GetText("Description")</th>
+                        <th>@Lang.GetText("CreatedDate")</th>
+                        <th style="text-align: center; width: 300px;">@Lang.GetText("Actions")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong style="color: var(--text-primary);">@item.Name</strong>
+                            </td>
+                            <td>
+                                <code style="background: var(--input-bg); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--text-secondary);">
+                                    @item.Code
+                                </code>
+                            </td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.Description))
+                                {
+                                    <span>@item.Description</span>
+                                }
+                                else
+                                {
+                                    <span style="color: var(--medium-gray); font-style: italic;">@Lang.GetText("NoDescription")</span>
+                                }
+                            </td>
+                            <td>@item.CreatedDate.ToString("MMM dd, yyyy")</td>
+                            <td style="text-align: center;">
+                                <div class="action-buttons" style="justify-content: center;">
+                                    <a asp-action="ManageRoles" asp-route-id="@item.Id" class="btn-success-custom btn-sm-custom" title="@Lang.GetText("ManageRoles")">
+                                        🎭 @Lang.GetText("Roles")
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn-warning-custom btn-sm-custom" title="@Lang.GetText("Edit")">
+                                        ✏️ @Lang.GetText("Edit")
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                                onclick="return confirm('@Lang.GetText("DeletePermissionConfirmation")')"
+                                                title="@Lang.GetText("Delete")">
+                                            🗑️ @Lang.GetText("Delete")
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">🛡️</div>
+                <h3 style="color: var(--medium-gray);">@Lang.GetText("NoPermissionsFound")</h3>
+                <p style="color: var(--medium-gray);">@Lang.GetText("CreateFirstPermissionToGetStarted")</p>
+                <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                    ➕ @Lang.GetText("CreatePermission")
                 </a>
             </div>
         </div>

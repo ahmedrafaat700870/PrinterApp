@@ -1,4 +1,4 @@
-﻿@model UserRoleViewModel
+﻿@* @model UserRoleViewModel
 
 @{
     ViewData["Title"] = "Assign Role";
@@ -55,4 +55,184 @@
             </form>
         </div>
     </div>
+</div> *@
+
+@model UserRoleViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("AssignRole");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👤 @Lang.GetText("AssignRoleToUser")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-gradient); display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: bold; font-size: 24px;">
+                    @Model.FullName.Substring(0, 1).ToUpper()
+                </div>
+                <div>
+                    <h2 style="margin: 0;">@Lang.GetText("User"): @Model.FullName</h2>
+                    <small style="color: var(--medium-gray);">@Lang.GetText("ManageUserRole")</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="AssignRole" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="userId" value="@Model.UserId" />
+
+                <!-- User Information Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Lang.GetText("UserInformation")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label class="form-label-custom">@Lang.GetText("Email")</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--primary-color); font-size: 16px;">📧</span>
+                            <input type="text" class="form-control-custom" value="@Model.Email" readonly style="padding-left: 40px; background: var(--input-bg); cursor: not-allowed;" />
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label class="form-label-custom">@Lang.GetText("CurrentRole")</label>
+                        <div style="position: relative;">
+                            <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--primary-color); font-size: 16px;">👤</span>
+                            <input type="text" class="form-control-custom" value="@Model.Role" readonly style="padding-left: 40px; background: var(--input-bg); cursor: not-allowed; font-weight: 600;" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Role Assignment Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        🎭 @Lang.GetText("RoleAssignment")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label class="form-label-custom">@Lang.GetText("SelectNewRole") <span style="color: var(--error-color);">*</span></label>
+                        <select name="role" class="form-control-custom" required>
+                            <option value="">-- @Lang.GetText("SelectRole") --</option>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role" selected="@(role == Model.Role)">
+                                    @if (role == "Admin")
+                                    {
+                                        <text>👑 @role</text>
+                                    }
+                                    else if (role == "Manager")
+                                    {
+                                        <text>👔 @role</text>
+                                    }
+                                    else if (role == "User")
+                                    {
+                                        <text>👤 @role</text>
+                                    }
+                                    else
+                                    {
+                                        <text>@role</text>
+                                    }
+                                </option>
+                            }
+                        </select>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 @Lang.GetText("SelectRoleHint")
+                        </small>
+                    </div>
+
+                    <!-- Role Descriptions -->
+                    <div style="margin-top: 20px; padding: 15px; background: var(--white); border-radius: var(--border-radius); border: 1px solid var(--border-color);">
+                        <h4 style="margin: 0 0 15px 0; color: var(--text-primary); font-size: 15px;">📚 @Lang.GetText("RoleDescriptions")</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                            <div style="display: flex; align-items: start; gap: 10px;">
+                                <span style="color: var(--warning-color); font-size: 18px;">👑</span>
+                                <div>
+                                    <strong style="color: var(--text-primary);">Admin:</strong>
+                                    <span style="color: var(--medium-gray);">@Lang.GetText("AdminRoleDescription")</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 10px;">
+                                <span style="color: var(--info-color); font-size: 18px;">👔</span>
+                                <div>
+                                    <strong style="color: var(--text-primary);">Manager:</strong>
+                                    <span style="color: var(--medium-gray);">@Lang.GetText("ManagerRoleDescription")</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: start; gap: 10px;">
+                                <span style="color: var(--success-color); font-size: 18px;">👤</span>
+                                <div>
+                                    <strong style="color: var(--text-primary);">User:</strong>
+                                    <span style="color: var(--medium-gray);">@Lang.GetText("UserRoleDescription")</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Notice -->
+                <div style="margin-top: 30px;">
+                    <div class="alert-custom alert-warning-custom">
+                        <div style="display: flex; align-items: start; gap: 10px;">
+                            <span style="font-size: 24px;">⚠️</span>
+                            <div>
+                                <strong>@Lang.GetText("ImportantNote"):</strong>
+                                <p style="margin: 5px 0 0 0;">@Lang.GetText("RoleChangeWarning")</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Add visual feedback for role selection
+        const roleSelect = document.querySelector('select[name="role"]');
+        if (roleSelect) {
+            roleSelect.addEventListener('change', function() {
+                if (this.value) {
+                    this.style.borderColor = 'var(--success-color)';
+                    this.style.background = 'var(--input-bg)';
+                } else {
+                    this.style.borderColor = '';
+                    this.style.background = '';
+                }
+            });
+        }
+
+        // Confirm role change
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const selectedRole = roleSelect.value;
+                const currentRole = '@Model.Role';
+
+                if (selectedRole && selectedRole !== currentRole) {
+                    const confirmMessage = '@Lang.GetText("ConfirmRoleChange")'.replace('{0}', selectedRole);
+                    if (!confirm(confirmMessage)) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    </script>
+}

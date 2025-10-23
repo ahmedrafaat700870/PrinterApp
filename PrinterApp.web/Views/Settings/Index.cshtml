@@ -1,4 +1,4 @@
-﻿@model SettingsViewModel
+﻿@* @model SettingsViewModel
 @inject Microsoft.Extensions.Localization.IStringLocalizer<SharedResources> Localizer
 
 @{
@@ -105,6 +105,180 @@
                     </button>
                     <a asp-controller="Home" asp-action="Index" class="btn-secondary-custom">
                         @Localizer["Cancel"]
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
+@model SettingsViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("SystemSettings");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>⚙️ @Lang.GetText("SystemSettings")</h2>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <form asp-action="Index" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="card-custom">
+            <div class="card-header-custom">
+                <h2>@Lang.GetText("GeneralSettings")</h2>
+            </div>
+            <div class="card-body-custom">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Application Settings Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        🏢 @Lang.GetText("ApplicationSettings")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="ApplicationName" class="form-label-custom">@Lang.GetText("ApplicationName")</label>
+                        <input asp-for="ApplicationName" class="form-control-custom" placeholder="@Lang.GetText("EnterApplicationName")" />
+                        <span asp-validation-for="ApplicationName" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Localization Settings Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        🌐 @Lang.GetText("LocalizationSettings")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="DefaultLanguage" class="form-label-custom">@Lang.GetText("Language")</label>
+                            <select asp-for="DefaultLanguage" class="form-control-custom">
+                                <option value="en">@Lang.GetText("English")</option>
+                                <option value="ar">@Lang.GetText("Arabic")</option>
+                            </select>
+                            <span asp-validation-for="DefaultLanguage" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Theme" class="form-label-custom">@Lang.GetText("Theme")</label>
+                            <select asp-for="Theme" class="form-control-custom">
+                                <option value="light">@Lang.GetText("Light")</option>
+                                <option value="dark">@Lang.GetText("Dark")</option>
+                            </select>
+                            <span asp-validation-for="Theme" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Display & Pagination Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--warning-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--warning-color); font-size: 18px;">
+                        📄 @Lang.GetText("DisplayAndPagination")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="ItemsPerPage" class="form-label-custom">@Lang.GetText("ItemsPerPage")</label>
+                        <input asp-for="ItemsPerPage" type="number" class="form-control-custom" min="5" max="100" placeholder="@Lang.GetText("EnterItemsPerPage")" />
+                        <span asp-validation-for="ItemsPerPage" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 @Lang.GetText("ItemsPerPageHint")
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Security & Session Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--error-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--error-color); font-size: 18px;">
+                        🔒 @Lang.GetText("SecurityAndSession")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="SessionTimeout" class="form-label-custom">@Lang.GetText("SessionTimeoutMinutes")</label>
+                        <input asp-for="SessionTimeout" type="number" class="form-control-custom" min="5" max="1440" placeholder="@Lang.GetText("EnterSessionTimeout")" />
+                        <span asp-validation-for="SessionTimeout" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 @Lang.GetText("SessionTimeoutHint")
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Date & Time Format Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--info-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--info-color); font-size: 18px;">
+                        📅 @Lang.GetText("DateAndTimeFormat")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="DateFormat" class="form-label-custom">@Lang.GetText("DateFormat")</label>
+                            <select asp-for="DateFormat" class="form-control-custom">
+                                <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+                                <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                                <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                            </select>
+                            <span asp-validation-for="DateFormat" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="TimeFormat" class="form-label-custom">@Lang.GetText("TimeFormat")</label>
+                            <select asp-for="TimeFormat" class="form-control-custom">
+                                <option value="HH:mm">@Lang.GetText("24Hour")</option>
+                                <option value="hh:mm tt">@Lang.GetText("12Hour")</option>
+                            </select>
+                            <span asp-validation-for="TimeFormat" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notifications Section -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-light);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-light); font-size: 18px;">
+                        📧 @Lang.GetText("NotificationSettings")
+                    </h3>
+
+                    <div class="form-check-custom">
+                        <input asp-for="EnableEmailNotifications" type="checkbox" class="form-check-input-custom" id="emailNotifications" />
+                        <label for="emailNotifications" class="form-check-label-custom">
+                            @Lang.GetText("EnableEmailNotifications")
+                        </label>
+                        <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                            @Lang.GetText("EmailNotificationsHint")
+                        </small>
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-controller="Home" asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
                     </a>
                 </div>
             </div>

@@ -15,8 +15,35 @@ using System.Globalization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews();//.AddViewLocalization().AddDataAnnotationsLocalization();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddDistributedMemoryCache();
+
+// Add Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
+/*builder.Services.AddLocalization(options => options.ResourcesPath = "Resources" ); 
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("ar")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("ar");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+});*/
 // Add DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,26 +70,12 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 // Add Localization
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 builder.Services.AddControllersWithViews()
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
 
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[]
-    {
-        new CultureInfo("en"),
-        new CultureInfo("ar")
-    };
 
-    options.DefaultRequestCulture = new RequestCulture("en");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-
-    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
-});
 
 // Add Authorization
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
@@ -88,7 +101,10 @@ builder.Services.AddScoped<IRawMaterialService, RawMaterialService>();
 builder.Services.AddScoped<IManufacturingAdditionService, ManufacturingAdditionService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMoldShapeService, MoldShapeService>();
-builder.Services.AddScoped<IMoldService, MoldService>(); 
+builder.Services.AddScoped<IMoldService, MoldService>();
+
+// language service
+builder.Services.AddSingleton<ILanguageService, LanguageService>();
 var app = builder.Build();
 
 // Seed Database with Roles and Permissions
@@ -109,14 +125,15 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 // Use Request Localization
-var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>();
-app.UseRequestLocalization(localizationOptions.Value);
+var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>()!.Value;
+app.UseRequestLocalization(localizationOptions);
+
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

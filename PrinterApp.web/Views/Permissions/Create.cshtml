@@ -1,4 +1,4 @@
-﻿@model PermissionViewModel
+﻿@* @model PermissionViewModel
 
 @{
     ViewData["Title"] = "Create Permission";
@@ -59,4 +59,103 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+} *@
+
+@model PermissionViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("CreatePermission");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ @Lang.GetText("CreateNewPermission")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>🛡️ @Lang.GetText("PermissionDetails")</h2>
+        </div>
+        <div class="card-body-custom">
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="validation-summary">
+                    <div asp-validation-summary="All"></div>
+                </div>
+            }
+
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group-custom">
+                    <label asp-for="Name" class="form-label-custom">@Lang.GetText("PermissionName")</label>
+                    <input asp-for="Name" class="form-control-custom" placeholder="@Lang.GetText("PermissionNamePlaceholder")" />
+                    <span asp-validation-for="Name" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Code" class="form-label-custom">@Lang.GetText("PermissionCode")</label>
+                    <input asp-for="Code" class="form-control-custom" placeholder="@Lang.GetText("PermissionCodePlaceholder")" style="text-transform: uppercase;" />
+                    <span asp-validation-for="Code" class="text-danger-custom"></span>
+                    <small style="color: var(--medium-gray); display: block; margin-top: 5px;">
+                        💡 @Lang.GetText("PermissionCodeHint")
+                    </small>
+                </div>
+
+                <div class="form-group-custom">
+                    <label asp-for="Description" class="form-label-custom">@Lang.GetText("Description")</label>
+                    <textarea asp-for="Description" class="form-control-custom" rows="4"
+                              placeholder="@Lang.GetText("PermissionDescriptionPlaceholder")"></textarea>
+                    <span asp-validation-for="Description" class="text-danger-custom"></span>
+                </div>
+
+                <!-- Info Box -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); border-left: 4px solid var(--info-color); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--info-color); font-size: 16px;">
+                        💡 @Lang.GetText("ImportantNotes")
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--medium-gray); line-height: 1.8;">
+                        <li>@Lang.GetText("PermissionNameShouldBeClear")</li>
+                        <li>@Lang.GetText("PermissionCodeMustBeUnique")</li>
+                        <li>@Lang.GetText("UseUppercaseForCode")</li>
+                        <li>@Lang.GetText("DescriptionHelpsUnderstandPermission")</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("CreatePermission")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-uppercase the code field
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeInput = document.querySelector('input[name="Code"]');
+            if (codeInput) {
+                codeInput.addEventListener('input', function(e) {
+                    e.target.value = e.target.value.toUpperCase().replace(/[^A-Z_]/g, '');
+                });
+
+                // Focus on name input
+                const nameInput = document.querySelector('input[name="Name"]');
+                if (nameInput) {
+                    nameInput.focus();
+                }
+            }
+        });
+    </script>
 }

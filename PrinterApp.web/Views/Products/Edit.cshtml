@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.ProductViewModel
+﻿@* @model PrinterApp.Models.ViewModels.ProductViewModel
 
 @{
     ViewData["Title"] = "Edit Product";
@@ -205,6 +205,225 @@
                     </button>
                     <a asp-action="Index" class="btn-secondary-custom">
                         Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} *@
+
+@model PrinterApp.Models.ViewModels.ProductViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("EditProduct");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ @Lang.GetText("EditProduct")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>📦 @Lang.GetText("ProductInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Lang.GetText("BasicInformation")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="ProductName" class="form-label-custom">@Lang.GetText("ProductName")</label>
+                        <input asp-for="ProductName" class="form-control-custom" placeholder="@Lang.GetText("EnterProductName")" />
+                        <span asp-validation-for="ProductName" class="text-danger-custom"></span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="SupplierId" class="form-label-custom">@Lang.GetText("Supplier")</label>
+                            <select asp-for="SupplierId" class="form-control-custom" id="supplierSelect">
+                                <option value="">-- @Lang.GetText("SelectSupplier") --</option>
+                                @if (Model.Suppliers != null)
+                                {
+                                    @foreach (var supplier in Model.Suppliers)
+                                    {
+                                        <option value="@supplier.Value" selected="@(supplier.Value == Model.SupplierId.ToString())">@supplier.Text</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="SupplierId" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="ProductCode" class="form-label-custom">@Lang.GetText("ProductCode")</label>
+                            <input asp-for="ProductCode" class="form-control-custom" placeholder="@Lang.GetText("ProductCode")" readonly style="background-color: #f5f5f5;" />
+                            <span asp-validation-for="ProductCode" class="text-danger-custom"></span>
+                            <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                                💡 @Lang.GetText("ProductCodeCannotBeChanged")
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Type & Raw Material -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        🎨 @Lang.GetText("ProductTypeAndMaterial")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label class="form-label-custom">@Lang.GetText("ProductType")</label>
+                            <div style="display: flex; gap: 20px; margin-top: 10px;">
+                                <div class="form-check-custom">
+                                    <input asp-for="IsPrinted" type="radio" value="true" class="form-check-input-custom" id="isPrintedTrue" />
+                                    <label for="isPrintedTrue" class="form-check-label-custom">
+                                        🖨️ @Lang.GetText("Printed")
+                                    </label>
+                                </div>
+                                <div class="form-check-custom">
+                                    <input asp-for="IsPrinted" type="radio" value="false" class="form-check-input-custom" id="isPrintedFalse" />
+                                    <label for="isPrintedFalse" class="form-check-label-custom">
+                                        📄 @Lang.GetText("NonPrinted")
+                                    </label>
+                                </div>
+                            </div>
+                            <span asp-validation-for="IsPrinted" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="RawMaterialId" class="form-label-custom">@Lang.GetText("RawMaterial")</label>
+                            <select asp-for="RawMaterialId" class="form-control-custom">
+                                <option value="">-- @Lang.GetText("SelectRawMaterial") --</option>
+                                @if (Model.RawMaterials != null)
+                                {
+                                    @foreach (var material in Model.RawMaterials)
+                                    {
+                                        <option value="@material.Value" selected="@(material.Value == Model.RawMaterialId.ToString())">@material.Text</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="RawMaterialId" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manufacturing Additions -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--warning-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--warning-color); font-size: 18px;">
+                        ⚙️ @Lang.GetText("ManufacturingAdditions")
+                    </h3>
+
+                    @if (Model.AvailableAdditions != null && Model.AvailableAdditions.Any())
+                    {
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                            @for (int i = 0; i < Model.AvailableAdditions.Count; i++)
+                            {
+                                <div class="form-check-custom" style="background: var(--white); padding: 12px; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);">
+                                    <input type="checkbox"
+                                           name="SelectedAdditionIds"
+                                           value="@Model.AvailableAdditions[i].Id"
+                                           class="form-check-input-custom"
+                                           id="addition_@Model.AvailableAdditions[i].Id"
+                                           checked="@Model.AvailableAdditions[i].IsSelected" />
+                                    <label for="addition_@Model.AvailableAdditions[i].Id" class="form-check-label-custom">
+                                        ⚙️ @Model.AvailableAdditions[i].Name
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <small style="color: var(--medium-gray); margin-top: 10px; display: block;">
+                            💡 @Lang.GetText("SelectManufacturingAdditionsHint")
+                        </small>
+                    }
+                    else
+                    {
+                        <div style="text-align: center; padding: 20px; color: var(--medium-gray);">
+                            <p>@Lang.GetText("NoManufacturingAdditionsAvailable")</p>
+                        </div>
+                    }
+                </div>
+
+                <!-- Description -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--info-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--info-color); font-size: 18px;">
+                        📝 @Lang.GetText("DescriptionOptional")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Description" class="form-label-custom">@Lang.GetText("Description")</label>
+                        <textarea asp-for="Description" class="form-control-custom" rows="4" placeholder="@Lang.GetText("ProductDescriptionPlaceholder")"></textarea>
+                        <span asp-validation-for="Description" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        ✓ @Lang.GetText("Status")
+                    </h3>
+
+                    <div class="form-check-custom">
+                        <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                        <label for="isActive" class="form-check-label-custom">
+                            @Lang.GetText("ProductIsActive")
+                        </label>
+                        <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                            @Lang.GetText("InactiveProductsNotAvailable")
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Dates Information -->
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; color: var(--medium-gray); font-size: 14px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 24px;">📅</span>
+                            <div>
+                                <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">@Lang.GetText("CreatedDate")</div>
+                                <div>@Model.CreatedDate.ToString("MMMM dd, yyyy") @Lang.GetText("At") @Model.CreatedDate.ToString("HH:mm")</div>
+                            </div>
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 24px;">🔄</span>
+                                <div>
+                                    <div style="font-weight: 500; color: var(--text-primary); margin-bottom: 3px;">@Lang.GetText("LastModified")</div>
+                                    <div>@Model.LastModified.Value.ToString("MMMM dd, yyyy") @Lang.GetText("At") @Model.LastModified.Value.ToString("HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
                     </a>
                 </div>
             </form>

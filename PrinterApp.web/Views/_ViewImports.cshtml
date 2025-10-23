@@ -1,7 +1,12 @@
-﻿@using PrinterApp.web
+﻿@using PrinterApp.Services.Interfaces
+@using PrinterApp.web
 @using PrinterApp.web.Models
 @using PrinterApp.Models.ViewModels
 @using PrinterApp.Models.Entities
 @using PrinterApp.Web.Resources
+@using PrinterApp.Web
+@using PrinterApp.Services
 
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@inject ILanguageService Lang

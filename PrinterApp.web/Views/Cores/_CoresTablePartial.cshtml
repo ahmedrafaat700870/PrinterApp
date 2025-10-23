@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PrinterApp.Models.ViewModels.CoreViewModel>
+﻿@* @model IEnumerable<PrinterApp.Models.ViewModels.CoreViewModel>
 
 @if (Model.Any())
 {
@@ -74,5 +74,84 @@ else
         <div class="empty-state-icon">🔍</div>
         <h3 style="color: var(--medium-gray);">No Cores Found</h3>
         <p style="color: var(--medium-gray);">Try adjusting your search criteria</p>
+    </div>
+} *@
+
+@model IEnumerable<PrinterApp.Models.ViewModels.CoreViewModel>
+
+@if (Model.Any())
+{
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>@Lang.GetText("CoreName")</th>
+                <th>@Lang.GetText("Coefficient")</th>
+                <th>@Lang.GetText("Width") (mm)</th>
+                <th>@Lang.GetText("Height") (mm)</th>
+                <th>@Lang.GetText("Status")</th>
+                <th>@Lang.GetText("CreatedDate")</th>
+                <th style="text-align: center; width: 250px;">@Lang.GetText("Actions")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr style="@(item.IsActive ? "" : "opacity: 0.6; background-color: #f5f5f5;")">
+                    <td>
+                        <strong style="color: var(--text-primary);">@item.CoreName</strong>
+                    </td>
+                    <td>
+                        <span style="background: var(--primary-light); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--white); font-weight: 500;">
+                            @item.CoreCoefficient.ToString("0.####")
+                        </span>
+                    </td>
+                    <td>@item.WidthCor.ToString("0.##") mm</td>
+                    <td>@item.HeightCor.ToString("0.##") mm</td>
+                    <td>
+                        @if (item.IsActive)
+                        {
+                            <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✓ @Lang.GetText("Active")
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✗ @Lang.GetText("Inactive")
+                            </span>
+                        }
+                    </td>
+                    <td>@item.CreatedDate.ToString("MMM dd, yyyy")</td>
+                    <td style="text-align: center;">
+                        <div class="action-buttons" style="justify-content: center;">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-warning-custom btn-sm-custom">
+                                ✏️ @Lang.GetText("Edit")
+                            </a>
+
+                            <form asp-action="ToggleStatus" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="@(item.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom" title="@(item.IsActive? Lang.GetText("Deactivate") : Lang.GetText("Activate"))">
+                                    @(item.IsActive ? "🔒 " + Lang.GetText("Deactivate") : "✓ " + Lang.GetText("Activate"))
+                                </button>
+                            </form>
+
+                            <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                        onclick="return confirm('@Lang.GetText("DeleteCoreConfirmation")')">
+                                    🗑️ @Lang.GetText("Delete")
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3 style="color: var(--medium-gray);">@Lang.GetText("NoResultsFound")</h3>
+        <p style="color: var(--medium-gray);">@Lang.GetText("TryAdjustingSearch")</p>
     </div>
 }

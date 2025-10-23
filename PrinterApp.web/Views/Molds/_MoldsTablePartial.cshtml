@@ -1,0 +1,238 @@
+﻿@* @model IEnumerable<PrinterApp.Models.ViewModels.MoldViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@if (Model.Any())
+{
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>@Localizer["MoldNumber"]</th>
+                <th>@Localizer["Machine"]</th>
+                <th>@Localizer["MoldShape"]</th>
+                <th style="text-align: center;">@Localizer["Width"]</th>
+                <th style="text-align: center;">@Localizer["Height"]</th>
+                <th style="text-align: center;">@Localizer["TotalEyes"]</th>
+                <th style="text-align: center;">@Localizer["PrintedSize"]</th>
+                <th style="text-align: center;">@Localizer["PlainSize"]</th>
+                <th>@Localizer["Status"]</th>
+                <th>@Localizer["CreatedDate"]</th>
+                <th style="text-align: center; width: 300px;">@Localizer["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mold in Model)
+            {
+                <tr style="@(mold.IsActive ? "" : "opacity: 0.6; background-color: #f5f5f5;")">
+                    <td>
+                        <strong style="color: var(--text-primary);">@mold.MoldNumber</strong>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">@mold.MachineName</div>
+                        <small style="color: var(--medium-gray);">@mold.MachineCode</small>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            @if (!string.IsNullOrEmpty(mold.ShapeImagePath))
+                            {
+                                <img src="@mold.ShapeImagePath"
+                                     alt="@mold.MoldShapeName"
+                                     style="width: 40px; height: 40px; object-fit: cover; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);" />
+                            }
+                            <span style="font-weight: 500;">@mold.MoldShapeName</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--primary-light); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--white); font-weight: 500;">
+                            @mold.Width
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--primary-light); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--white); font-weight: 500;">
+                            @mold.Height
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--success-color); color: var(--white); padding: 8px 16px; border-radius: var(--border-radius-sm); font-size: 16px; font-weight: 700;">
+                            👁️ @mold.TotalEyes
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; color: var(--info-color);">
+                            @mold.PrintedRawMaterialSize.ToString("N2")
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; color: var(--info-color);">
+                            @mold.PlainRawMaterialSize.ToString("N2")
+                        </span>
+                    </td>
+                    <td>
+                        @if (mold.IsActive)
+                        {
+                            <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✓ @Localizer["Active"]
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="background: var(--danger-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✗ @Localizer["Inactive"]
+                            </span>
+                        }
+                    </td>
+                    <td>@mold.CreatedDate.ToString("MMM dd, yyyy")</td>
+                    <td style="text-align: center;">
+                        <div class="action-buttons" style="justify-content: center;">
+                            <a asp-action="Edit" asp-route-id="@mold.Id" class="btn-warning-custom btn-sm-custom">
+                                ✏️ @Localizer["Edit"]
+                            </a>
+
+                            <form asp-action="ToggleStatus" asp-route-id="@mold.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="@(mold.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom">
+                                    @(mold.IsActive ? "🔒 " + Localizer["Deactivate"] : "✓ " + Localizer["Activate"])
+                                </button>
+                            </form>
+
+                            <form asp-action="Delete" asp-route-id="@mold.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                        onclick="return confirm('@Localizer["DeleteConfirmation"]')">
+                                    🗑️ @Localizer["Delete"]
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3 style="color: var(--medium-gray);">@Localizer["NoResultsFound"]</h3>
+        <p style="color: var(--medium-gray);">Try adjusting your search criteria</p>
+    </div>
+} *@
+
+@model IEnumerable<PrinterApp.Models.ViewModels.MoldViewModel>
+
+@if (Model.Any())
+{
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>@Lang.GetText("MoldNumber")</th>
+                <th>@Lang.GetText("Machine")</th>
+                <th>@Lang.GetText("MoldShape")</th>
+                <th style="text-align: center;">@Lang.GetText("Width")</th>
+                <th style="text-align: center;">@Lang.GetText("Height")</th>
+                <th style="text-align: center;">@Lang.GetText("TotalEyes")</th>
+                <th style="text-align: center;">@Lang.GetText("PrintedSize")</th>
+                <th style="text-align: center;">@Lang.GetText("PlainSize")</th>
+                <th>@Lang.GetText("Status")</th>
+                <th>@Lang.GetText("CreatedDate")</th>
+                <th style="text-align: center; width: 300px;">@Lang.GetText("Actions")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mold in Model)
+            {
+                <tr style="@(mold.IsActive ? "" : "opacity: 0.6; background-color: #f5f5f5;")">
+                    <td>
+                        <strong style="color: var(--text-primary);">@mold.MoldNumber</strong>
+                    </td>
+                    <td>
+                        <div style="font-weight: 500;">@mold.MachineName</div>
+                        <small style="color: var(--medium-gray);">@mold.MachineCode</small>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            @if (!string.IsNullOrEmpty(mold.ShapeImagePath))
+                            {
+                                <img src="@mold.ShapeImagePath"
+                                     alt="@mold.MoldShapeName"
+                                     style="width: 40px; height: 40px; object-fit: cover; border-radius: var(--border-radius-sm); border: 1px solid var(--border-color);" />
+                            }
+                            <span style="font-weight: 500;">@mold.MoldShapeName</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--primary-light); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--white); font-weight: 500;">
+                            @mold.Width
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--primary-light); padding: 5px 10px; border-radius: var(--border-radius-sm); color: var(--white); font-weight: 500;">
+                            @mold.Height
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="background: var(--success-color); color: var(--white); padding: 8px 16px; border-radius: var(--border-radius-sm); font-size: 16px; font-weight: 700;">
+                            👁️ @mold.TotalEyes
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; color: var(--info-color);">
+                            @mold.PrintedRawMaterialSize.ToString("N2")
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="font-weight: 600; color: var(--info-color);">
+                            @mold.PlainRawMaterialSize.ToString("N2")
+                        </span>
+                    </td>
+                    <td>
+                        @if (mold.IsActive)
+                        {
+                            <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✓ @Lang.GetText("Active")
+                            </span>
+                        }
+                        else
+                        {
+                            <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                ✗ @Lang.GetText("Inactive")
+                            </span>
+                        }
+                    </td>
+                    <td>@mold.CreatedDate.ToString("MMM dd, yyyy")</td>
+                    <td style="text-align: center;">
+                        <div class="action-buttons" style="justify-content: center;">
+                            <a asp-action="Edit" asp-route-id="@mold.Id" class="btn-warning-custom btn-sm-custom" title="@Lang.GetText("Edit")">
+                                ✏️ @Lang.GetText("Edit")
+                            </a>
+
+                            <form asp-action="ToggleStatus" asp-route-id="@mold.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="@(mold.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom" title="@(mold.IsActive? Lang.GetText("Deactivate") : Lang.GetText("Activate"))">
+                                    @(mold.IsActive ? "🔒 " + Lang.GetText("Deactivate") : "✓ " + Lang.GetText("Activate"))
+                                </button>
+                            </form>
+
+                            <form asp-action="Delete" asp-route-id="@mold.Id" method="post" style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-danger-custom btn-sm-custom"
+                                        onclick="return confirm('@Lang.GetText("DeleteMoldConfirmation")')"
+                                        title="@Lang.GetText("Delete")">
+                                    🗑️ @Lang.GetText("Delete")
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-state-icon">🔍</div>
+        <h3 style="color: var(--medium-gray);">@Lang.GetText("NoResultsFound")</h3>
+        <p style="color: var(--medium-gray);">@Lang.GetText("TryAdjustingSearch")</p>
+    </div>
+}

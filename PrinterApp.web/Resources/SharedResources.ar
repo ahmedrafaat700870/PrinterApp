@@ -1,0 +1,728 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+		<data name="Home" xml:space="preserve">
+    <value>الرئيسية</value>
+  </data>
+		<data name="Privacy" xml:space="preserve">
+    <value>الخصوصية</value>
+  </data>
+		<data name="Login" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+		<data name="Logout" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+		<data name="Register" xml:space="preserve">
+    <value>تسجيل جديد</value>
+  </data>
+		<data name="Email" xml:space="preserve">
+    <value>البريد الإلكتروني</value>
+  </data>
+		<data name="Password" xml:space="preserve">
+    <value>كلمة المرور</value>
+  </data>
+		<data name="RememberMe" xml:space="preserve">
+    <value>تذكرني</value>
+  </data>
+		<data name="ForgotPassword" xml:space="preserve">
+    <value>نسيت كلمة المرور؟</value>
+  </data>
+
+		<!-- Common -->
+		<data name="Save" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+		<data name="Cancel" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+		<data name="Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+		<data name="Edit" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+		<data name="Create" xml:space="preserve">
+    <value>إنشاء</value>
+  </data>
+		<data name="Search" xml:space="preserve">
+    <value>بحث</value>
+  </data>
+		<data name="Actions" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+		<data name="Status" xml:space="preserve">
+    <value>الحالة</value>
+  </data>
+		<data name="Active" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+		<data name="Inactive" xml:space="preserve">
+    <value>غير نشط</value>
+  </data>
+		<data name="IsActive" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+		<data name="CreatedDate" xml:space="preserve">
+    <value>تاريخ الإنشاء</value>
+  </data>
+		<data name="LastModified" xml:space="preserve">
+    <value>آخر تعديل</value>
+  </data>
+		<data name="Description" xml:space="preserve">
+    <value>الوصف</value>
+  </data>
+		<data name="BackToList" xml:space="preserve">
+    <value>العودة للقائمة</value>
+  </data>
+
+		<!-- Permissions -->
+		<data name="Permissions" xml:space="preserve">
+    <value>الصلاحيات</value>
+  </data>
+		<data name="PermissionManagement" xml:space="preserve">
+    <value>إدارة الصلاحيات</value>
+  </data>
+
+		<!-- Cores -->
+		<data name="Cores" xml:space="preserve">
+    <value>الكور</value>
+  </data>
+		<data name="CoreManagement" xml:space="preserve">
+    <value>إدارة الكور</value>
+  </data>
+		<data name="CoreName" xml:space="preserve">
+    <value>اسم الكور</value>
+  </data>
+		<data name="CoreSize" xml:space="preserve">
+    <value>مقاس الكور</value>
+  </data>
+
+		<!-- Cartons -->
+		<data name="Cartons" xml:space="preserve">
+    <value>الكراتين</value>
+  </data>
+		<data name="CartonManagement" xml:space="preserve">
+    <value>إدارة الكراتين</value>
+  </data>
+		<data name="CartonName" xml:space="preserve">
+    <value>اسم الكرتونة</value>
+  </data>
+		<data name="CartonSize" xml:space="preserve">
+    <value>مقاس الكرتونة</value>
+  </data>
+
+		<!-- Knives -->
+		<data name="Knives" xml:space="preserve">
+    <value>السكاكين</value>
+  </data>
+		<data name="KnifeManagement" xml:space="preserve">
+    <value>إدارة السكاكين</value>
+  </data>
+		<data name="KnifeName" xml:space="preserve">
+    <value>اسم السكينة</value>
+  </data>
+		<data name="KnifeCode" xml:space="preserve">
+    <value>كود السكينة</value>
+  </data>
+		<data name="Width" xml:space="preserve">
+    <value>العرض</value>
+  </data>
+		<data name="Height" xml:space="preserve">
+    <value>الطول</value>
+  </data>
+		<data name="TotalPrice" xml:space="preserve">
+    <value>السعر الإجمالي</value>
+  </data>
+		<data name="PricePerPiece" xml:space="preserve">
+    <value>سعر القطعة</value>
+  </data>
+		<data name="Quantity" xml:space="preserve">
+    <value>الكمية</value>
+  </data>
+
+		<!-- Suppliers -->
+		<data name="Suppliers" xml:space="preserve">
+    <value>الموردين</value>
+  </data>
+		<data name="SupplierManagement" xml:space="preserve">
+    <value>إدارة الموردين</value>
+  </data>
+		<data name="SupplierName" xml:space="preserve">
+    <value>اسم المورد</value>
+  </data>
+		<data name="SupplierCode" xml:space="preserve">
+    <value>كود المورد</value>
+  </data>
+		<data name="ContactPerson" xml:space="preserve">
+    <value>الشخص المسؤول</value>
+  </data>
+		<data name="PhoneNumber" xml:space="preserve">
+    <value>رقم الهاتف</value>
+  </data>
+		<data name="Address" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+
+		<!-- Raw Materials -->
+		<data name="RawMaterials" xml:space="preserve">
+    <value>المواد الخام</value>
+  </data>
+		<data name="RawMaterialManagement" xml:space="preserve">
+    <value>إدارة المواد الخام</value>
+  </data>
+		<data name="RawMaterialName" xml:space="preserve">
+    <value>اسم الخام</value>
+  </data>
+		<data name="AreaSquareMeters" xml:space="preserve">
+    <value>المساحة (م²)</value>
+  </data>
+		<data name="PricePerSquareMeter" xml:space="preserve">
+    <value>سعر المتر المربع</value>
+  </data>
+		<data name="PricePerLinearMeter" xml:space="preserve">
+    <value>سعر المتر الطولي</value>
+  </data>
+
+		<!-- Manufacturing Additions -->
+		<data name="ManufacturingAdditions" xml:space="preserve">
+    <value>إضافات التصنيع</value>
+  </data>
+		<data name="ManufacturingAdditionManagement" xml:space="preserve">
+    <value>إدارة إضافات التصنيع</value>
+  </data>
+		<data name="AdditionName" xml:space="preserve">
+    <value>اسم الإضافة</value>
+  </data>
+		<data name="Additions" xml:space="preserve">
+    <value>الإضافات</value>
+  </data>
+
+		<!-- Products -->
+		<data name="Products" xml:space="preserve">
+    <value>الأصناف</value>
+  </data>
+		<data name="ProductManagement" xml:space="preserve">
+    <value>إدارة الأصناف</value>
+  </data>
+		<data name="ProductName" xml:space="preserve">
+    <value>اسم الصنف</value>
+  </data>
+		<data name="ProductCode" xml:space="preserve">
+    <value>كود الصنف</value>
+  </data>
+		<data name="IsPrinted" xml:space="preserve">
+    <value>مطبوع</value>
+  </data>
+		<data name="Printed" xml:space="preserve">
+    <value>مطبوع</value>
+  </data>
+		<data name="NonPrinted" xml:space="preserve">
+    <value>غير مطبوع</value>
+  </data>
+		<data name="RawMaterial" xml:space="preserve">
+    <value>نوع الخام</value>
+  </data>
+		<data name="Supplier" xml:space="preserve">
+    <value>المورد</value>
+  </data>
+
+		<!-- Roll Directions -->
+		<data name="RollDirections" xml:space="preserve">
+    <value>اتجاهات اللف</value>
+  </data>
+		<data name="RollDirectionManagement" xml:space="preserve">
+    <value>إدارة اتجاهات اللف</value>
+  </data>
+		<data name="DirectionName" xml:space="preserve">
+    <value>اسم الاتجاه</value>
+  </data>
+
+		<!-- Machines -->
+		<data name="Machines" xml:space="preserve">
+    <value>الماكينات</value>
+  </data>
+		<data name="MachineManagement" xml:space="preserve">
+    <value>إدارة الماكينات</value>
+  </data>
+		<data name="MachineName" xml:space="preserve">
+    <value>اسم الماكينة</value>
+  </data>
+		<data name="MachineCode" xml:space="preserve">
+    <value>كود الماكينة</value>
+  </data>
+		<data name="MachineType" xml:space="preserve">
+    <value>نوع الماكينة</value>
+  </data>
+		<data name="Model" xml:space="preserve">
+    <value>الموديل</value>
+  </data>
+		<data name="SerialNumber" xml:space="preserve">
+    <value>الرقم التسلسلي</value>
+  </data>
+		<data name="Manufacturer" xml:space="preserve">
+    <value>الشركة المصنعة</value>
+  </data>
+		<data name="YearOfManufacture" xml:space="preserve">
+    <value>سنة الصنع</value>
+  </data>
+		<data name="PurchaseDate" xml:space="preserve">
+    <value>تاريخ الشراء</value>
+  </data>
+
+
+		<!-- Error Messages -->
+		<data name="CoreNameRequired" xml:space="preserve">
+  <value>اسم الكور مطلوب</value>
+</data>
+		<data name="CoreNameLength" xml:space="preserve">
+  <value>اسم الكور يجب ألا يتجاوز 100 حرف</value>
+</data>
+
+		<data name="CartonNameRequired" xml:space="preserve">
+  <value>اسم الكرتونة مطلوب</value>
+</data>
+		<data name="CartonNameLength" xml:space="preserve">
+  <value>اسم الكرتونة يجب ألا يتجاوز 100 حرف</value>
+</data>
+
+		<data name="KnifeNameRequired" xml:space="preserve">
+  <value>اسم السكينة مطلوب</value>
+</data>
+		<data name="KnifeNameLength" xml:space="preserve">
+  <value>اسم السكينة يجب ألا يتجاوز 100 حرف</value>
+</data>
+		<data name="KnifeCodeRequired" xml:space="preserve">
+  <value>كود السكينة مطلوب</value>
+</data>
+		<data name="KnifeCodeLength" xml:space="preserve">
+  <value>كود السكينة يجب ألا يتجاوز 50 حرف</value>
+</data>
+		<data name="WidthRequired" xml:space="preserve">
+  <value>العرض مطلوب</value>
+</data>
+		<data name="WidthRange" xml:space="preserve">
+  <value>العرض يجب أن يكون أكبر من صفر</value>
+</data>
+		<data name="HeightRequired" xml:space="preserve">
+  <value>الطول مطلوب</value>
+</data>
+		<data name="HeightRange" xml:space="preserve">
+  <value>الطول يجب أن يكون أكبر من صفر</value>
+</data>
+		<data name="QuantityRequired" xml:space="preserve">
+  <value>الكمية مطلوبة</value>
+</data>
+		<data name="QuantityRange" xml:space="preserve">
+  <value>الكمية يجب أن تكون على الأقل 1</value>
+</data>
+		<data name="TotalPriceRequired" xml:space="preserve">
+  <value>السعر الإجمالي مطلوب</value>
+</data>
+		<data name="TotalPriceRange" xml:space="preserve">
+  <value>السعر الإجمالي يجب أن يكون أكبر من صفر</value>
+</data>
+
+		<data name="SupplierNameRequired" xml:space="preserve">
+  <value>اسم المورد مطلوب</value>
+</data>
+		<data name="SupplierNameLength" xml:space="preserve">
+  <value>اسم المورد يجب ألا يتجاوز 200 حرف</value>
+</data>
+		<data name="SupplierCodeRequired" xml:space="preserve">
+  <value>كود المورد مطلوب</value>
+</data>
+		<data name="SupplierCodeLength" xml:space="preserve">
+  <value>كود المورد يجب ألا يتجاوز 50 حرف</value>
+</data>
+		<data name="InvalidPhoneNumber" xml:space="preserve">
+  <value>رقم الهاتف غير صحيح</value>
+</data>
+		<data name="InvalidEmail" xml:space="preserve">
+  <value>البريد الإلكتروني غير صحيح</value>
+</data>
+
+		<data name="RawMaterialNameRequired" xml:space="preserve">
+  <value>اسم الخام مطلوب</value>
+</data>
+		<data name="ProductNameRequired" xml:space="preserve">
+  <value>اسم الصنف مطلوب</value>
+</data>
+		<data name="ProductCodeRequired" xml:space="preserve">
+  <value>كود الصنف مطلوب</value>
+</data>
+		<data name="AdditionNameRequired" xml:space="preserve">
+  <value>اسم الإضافة مطلوب</value>
+</data>
+
+		<!-- Success Messages -->
+		<data name="CreatedSuccessfully" xml:space="preserve">
+  <value>تم الإنشاء بنجاح</value>
+</data>
+		<data name="UpdatedSuccessfully" xml:space="preserve">
+  <value>تم التحديث بنجاح</value>
+</data>
+		<data name="DeletedSuccessfully" xml:space="preserve">
+  <value>تم الحذف بنجاح</value>
+</data>
+		<data name="StatusUpdatedSuccessfully" xml:space="preserve">
+  <value>تم تحديث الحالة بنجاح</value>
+</data>
+
+		<!-- Common Phrases -->
+		<data name="NoDataAvailable" xml:space="preserve">
+  <value>لا توجد بيانات متاحة</value>
+</data>
+		<data name="NoResultsFound" xml:space="preserve">
+  <value>لم يتم العثور على نتائج</value>
+</data>
+		<data name="SearchPlaceholder" xml:space="preserve">
+  <value>ابحث هنا...</value>
+</data>
+		<data name="SelectOption" xml:space="preserve">
+  <value>-- اختر --</value>
+</data>
+		<data name="TotalRecords" xml:space="preserve">
+  <value>إجمالي السجلات</value>
+</data>
+		<data name="ActiveRecords" xml:space="preserve">
+  <value>السجلات النشطة</value>
+</data>
+		<data name="InactiveRecords" xml:space="preserve">
+  <value>السجلات غير النشطة</value>
+</data>
+		<data name="AreYouSure" xml:space="preserve">
+  <value>هل أنت متأكد؟</value>
+</data>
+		<data name="DeleteConfirmation" xml:space="preserve">
+  <value>هل أنت متأكد من حذف هذا العنصر؟</value>
+</data>
+		<data name="Yes" xml:space="preserve">
+  <value>نعم</value>
+</data>
+		<data name="No" xml:space="preserve">
+  <value>لا</value>
+</data>
+		<data name="Loading" xml:space="preserve">
+  <value>جاري التحميل...</value>
+</data>
+		<data name="PleaseWait" xml:space="preserve">
+  <value>الرجاء الانتظار...</value>
+</data>
+
+		<!-- Statistics -->
+		<data name="Statistics" xml:space="preserve">
+  <value>الإحصائيات</value>
+</data>
+		<data name="TotalProducts" xml:space="preserve">
+  <value>إجمالي الأصناف</value>
+</data>
+		<data name="PrintedProducts" xml:space="preserve">
+  <value>الأصناف المطبوعة</value>
+</data>
+		<data name="NonPrintedProducts" xml:space="preserve">
+  <value>الأصناف غير المطبوعة</value>
+</data>
+		<data name="TotalSuppliers" xml:space="preserve">
+  <value>إجمالي الموردين</value>
+</data>
+		<data name="TotalRawMaterials" xml:space="preserve">
+  <value>إجمالي المواد الخام</value>
+</data>
+		<data name="TotalAdditions" xml:space="preserve">
+  <value>إجمالي الإضافات</value>
+</data>
+
+		<!-- Product Related -->
+		<data name="ProductType" xml:space="preserve">
+  <value>نوع الصنف</value>
+</data>
+		<data name="SelectSupplier" xml:space="preserve">
+  <value>-- اختر المورد --</value>
+</data>
+		<data name="SelectRawMaterial" xml:space="preserve">
+  <value>-- اختر المادة الخام --</value>
+</data>
+		<data name="GenerateCode" xml:space="preserve">
+  <value>توليد الكود</value>
+</data>
+		<data name="CodeGenerated" xml:space="preserve">
+  <value>تم توليد الكود</value>
+</data>
+		<data name="Generating" xml:space="preserve">
+  <value>جاري التوليد...</value>
+</data>
+		<data name="SelectedAdditions" xml:space="preserve">
+  <value>الإضافات المختارة</value>
+</data>
+		<data name="NoAdditionsSelected" xml:space="preserve">
+  <value>لم يتم اختيار إضافات</value>
+</data>
+
+		<!-- Buttons -->
+		<data name="AddNew" xml:space="preserve">
+  <value>إضافة جديد</value>
+</data>
+		<data name="SaveChanges" xml:space="preserve">
+  <value>حفظ التغييرات</value>
+</data>
+		<data name="CreateNew" xml:space="preserve">
+  <value>إنشاء جديد</value>
+</data>
+		<data name="Update" xml:space="preserve">
+  <value>تحديث</value>
+</data>
+		<data name="Remove" xml:space="preserve">
+  <value>حذف</value>
+</data>
+		<data name="Activate" xml:space="preserve">
+  <value>تفعيل</value>
+</data>
+		<data name="Deactivate" xml:space="preserve">
+  <value>تعطيل</value>
+</data>
+		<data name="Reset" xml:space="preserve">
+  <value>إعادة تعيين</value>
+</data>
+		<data name="Clear" xml:space="preserve">
+  <value>مسح</value>
+</data>
+		<data name="Apply" xml:space="preserve">
+  <value>تطبيق</value>
+</data>
+		<data name="Close" xml:space="preserve">
+  <value>إغلاق</value>
+</data>
+
+		<!-- Navigation -->
+		<data name="Dashboard" xml:space="preserve">
+  <value>لوحة التحكم</value>
+</data>
+		<data name="Settings" xml:space="preserve">
+  <value>الإعدادات</value>
+</data>
+		<data name="Profile" xml:space="preserve">
+  <value>الملف الشخصي</value>
+</data>
+		<data name="Account" xml:space="preserve">
+  <value>الحساب</value>
+</data>
+		<data name="MyAccount" xml:space="preserve">
+  <value>حسابي</value>
+</data>
+
+		<!-- Time & Date -->
+		<data name="Today" xml:space="preserve">
+  <value>اليوم</value>
+</data>
+		<data name="Yesterday" xml:space="preserve">
+  <value>أمس</value>
+</data>
+		<data name="LastWeek" xml:space="preserve">
+  <value>الأسبوع الماضي</value>
+</data>
+		<data name="LastMonth" xml:space="preserve">
+  <value>الشهر الماضي</value>
+</data>
+		<data name="Date" xml:space="preserve">
+  <value>التاريخ</value>
+</data>
+		<data name="Time" xml:space="preserve">
+  <value>الوقت</value>
+</data>
+
+
+		<data name="Welcome" xml:space="preserve">
+  <value>مرحباً بك في تطبيق المطبعة</value>
+</data>
+		<data name="WelcomeMessage" xml:space="preserve">
+  <value>نظام إدارة شامل لعمليات المطبعة</value>
+</data>
+		<data name="ManageCores" xml:space="preserve">
+  <value>إدارة الكور والأبعاد</value>
+</data>
+		<data name="ManageCartons" xml:space="preserve">
+  <value>إدارة الكراتين والتغليف</value>
+</data>
+		<data name="ManageKnives" xml:space="preserve">
+  <value>إدارة السكاكين والأسعار</value>
+</data>
+		<data name="ManageSuppliers" xml:space="preserve">
+  <value>إدارة الموردين والاتصال</value>
+</data>
+		<data name="ManageRawMaterials" xml:space="preserve">
+  <value>إدارة المواد الخام والأسعار</value>
+</data>
+		<data name="ManageProducts" xml:space="preserve">
+  <value>إدارة الأصناف والتفاصيل</value>
+</data>
+		<data name="ManageAdditions" xml:space="preserve">
+  <value>إدارة إضافات التصنيع</value>
+</data>
+		<data name="ManageMachines" xml:space="preserve">
+  <value>إدارة الماكينات والصيانة</value>
+</data>
+		<data name="PleaseLoginMessage" xml:space="preserve">
+  <value>الرجاء تسجيل الدخول للوصول إلى النظام</value>
+</data>
+		<!-- Mold Shapes -->
+		<data name="MoldShapes" xml:space="preserve">
+  <value>أشكال القوالب</value>
+</data>
+		<data name="MoldShapeManagement" xml:space="preserve">
+  <value>إدارة أشكال القوالب</value>
+</data>
+		<data name="MoldShapeName" xml:space="preserve">
+  <value>اسم شكل القالب</value>
+</data>
+		<data name="ShapeImage" xml:space="preserve">
+  <value>صورة الشكل</value>
+</data>
+		<data name="ShapeImagePath" xml:space="preserve">
+  <value>صورة الشكل</value>
+</data>
+		<data name="MoldsCount" xml:space="preserve">
+  <value>عدد القوالب</value>
+</data>
+		<data name="MoldShapeNameRequired" xml:space="preserve">
+  <value>اسم شكل القالب مطلوب</value>
+</data>
+		<data name="MoldShapeNameLength" xml:space="preserve">
+  <value>اسم شكل القالب يجب ألا يتجاوز 100 حرف</value>
+</data>
+
+		<!-- Molds -->
+		<data name="Molds" xml:space="preserve">
+  <value>القوالب</value>
+</data>
+		<data name="MoldManagement" xml:space="preserve">
+  <value>إدارة القوالب</value>
+</data>
+		<data name="MoldNumber" xml:space="preserve">
+  <value>رقم القالب</value>
+</data>
+		<data name="MoldShape" xml:space="preserve">
+  <value>شكل القالب</value>
+</data>
+		<data name="TotalEyes" xml:space="preserve">
+  <value>إجمالي العيون</value>
+</data>
+		<data name="PrintedSize" xml:space="preserve">
+  <value>مقاس الخام المطبوع</value>
+</data>
+		<data name="PlainSize" xml:space="preserve">
+  <value>مقاس الخام السادة</value>
+</data>
+		<data name="MoldNumberRequired" xml:space="preserve">
+  <value>رقم القالب مطلوب</value>
+</data>
+		<data name="MoldNumberLength" xml:space="preserve">
+  <value>رقم القالب يجب ألا يتجاوز 50 حرف</value>
+</data>
+		<data name="MachineRequired" xml:space="preserve">
+  <value>الماكينة مطلوبة</value>
+</data>
+		<data name="MoldShapeRequired" xml:space="preserve">
+  <value>شكل القالب مطلوب</value>
+</data>
+		<data name="WidthRequired" xml:space="preserve">
+  <value>العرض مطلوب</value>
+</data>
+		<data name="WidthRange" xml:space="preserve">
+  <value>العرض يجب أن يكون بين 1 و 1000</value>
+</data>
+		<data name="HeightRequired" xml:space="preserve">
+  <value>الطول مطلوب</value>
+</data>
+		<data name="HeightRange" xml:space="preserve">
+  <value>الطول يجب أن يكون بين 1 و 1000</value>
+</data>
+		<data name="PrintedSizeRequired" xml:space="preserve">
+  <value>مقاس الخام المطبوع مطلوب</value>
+</data>
+		<data name="PrintedSizeRange" xml:space="preserve">
+  <value>مقاس الخام المطبوع يجب أن يكون أكبر من صفر</value>
+</data>
+		<data name="PlainSizeRequired" xml:space="preserve">
+  <value>مقاس الخام السادة مطلوب</value>
+</data>
+		<data name="PlainSizeRange" xml:space="preserve">
+  <value>مقاس الخام السادة يجب أن يكون أكبر من صفر</value>
+</data>
+		<data name="CalculateTotalEyes" xml:space="preserve">
+  <value>احسب إجمالي العيون</value>
+</data>
+		<data name="AutoCalculated" xml:space="preserve">
+  <value>يُحسب تلقائياً</value>
+</data>
+		<data name="SelectMachine" xml:space="preserve">
+  <value>-- اختر الماكينة --</value>
+</data>
+		<data name="SelectMoldShape" xml:space="preserve">
+  <value>-- اختر شكل القالب --</value>
+</data>
+		<data name="UploadImage" xml:space="preserve">
+  <value>رفع صورة</value>
+</data>
+		<data name="ChangeImage" xml:space="preserve">
+  <value>تغيير الصورة</value>
+</data>
+		<data name="CurrentImage" xml:space="preserve">
+  <value>الصورة الحالية</value>
+</data>
+		<data name="NoImageUploaded" xml:space="preserve">
+  <value>لم يتم رفع صورة</value>
+</data>
+		<data name="ImagePreview" xml:space="preserve">
+  <value>معاينة الصورة</value>
+</data>
+		<data name="Deactivate" xml:space="preserve">
+  <value>غير مفعل</value>
+</data>
+		<data name="Activate" xml:space="preserve">
+  <value>مفعل</value>
+</data>
+		<data name="Optional" xml:space="preserve">
+  <value>اختياري</value>
+</data>
+
+
+		<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+			<xsd:element name="root" msdata:IsDataSet="true">
+				<xsd:complexType>
+					<xsd:choice maxOccurs="unbounded">
+						<xsd:element name="data">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+									<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+								</xsd:sequence>
+								<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+								<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+								<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="resheader">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								</xsd:sequence>
+								<xsd:attribute name="name" type="xsd:string" use="required" />
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:choice>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+		<resheader name="resmimetype">
+			<value>text/microsoft-resx</value>
+		</resheader>
+		<resheader name="version">
+			<value>1.3</value>
+		</resheader>
+		<resheader name="reader">
+			<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+		</resheader>
+		<resheader name="writer">
+			<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+		</resheader>
+	</root>

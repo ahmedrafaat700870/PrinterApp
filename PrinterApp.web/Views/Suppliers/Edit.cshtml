@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.SupplierViewModel
+﻿@* @model PrinterApp.Models.ViewModels.SupplierViewModel
 
 @{
     ViewData["Title"] = "Edit Supplier";
@@ -165,6 +165,196 @@
                     </button>
                     <a asp-action="Index" class="btn-secondary-custom">
                         Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Phone number formatting
+        const phoneInput = document.querySelector('input[name="PhoneNumber"]');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                e.target.value = value;
+            });
+        }
+    </script>
+} *@
+
+@model PrinterApp.Models.ViewModels.SupplierViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("EditSupplier");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ @Lang.GetText("EditSupplier")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>👥 @Lang.GetText("SupplierInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="SupplierCode" />
+                <input type="hidden" asp-for="CreatedDate" />
+
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Supplier Code Display -->
+                <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; text-align: center;">
+                    <div style="color: var(--white); font-size: 14px; margin-bottom: 5px; opacity: 0.9;">
+                        @Lang.GetText("SupplierCodeCannotBeChanged")
+                    </div>
+                    <div style="color: var(--white); font-size: 36px; font-weight: bold; font-family: monospace;">
+                        #@Model.SupplierCode
+                    </div>
+                    <div style="color: var(--white); font-size: 12px; margin-top: 5px; opacity: 0.8;">
+                        🔒 @Lang.GetText("CodeIsPermanentAndUnique")
+                    </div>
+                </div>
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Lang.GetText("BasicInformation")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="SupplierName" class="form-label-custom">@Lang.GetText("SupplierName")</label>
+                        <input asp-for="SupplierName" class="form-control-custom" placeholder="@Lang.GetText("EnterSupplierName")" />
+                        <span asp-validation-for="SupplierName" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 @Lang.GetText("SupplierNameMustBeUnique")
+                        </small>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="CardNumber" class="form-label-custom">@Lang.GetText("CardNumber")</label>
+                            <input asp-for="CardNumber" class="form-control-custom" placeholder="@Lang.GetText("EnterCardNumberOptional")" />
+                            <span asp-validation-for="CardNumber" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="CommercialRegister" class="form-label-custom">@Lang.GetText("CommercialRegister")</label>
+                            <input asp-for="CommercialRegister" class="form-control-custom" placeholder="@Lang.GetText("EnterCommercialRegisterOptional")" />
+                            <span asp-validation-for="CommercialRegister" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--success-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--success-color); font-size: 18px;">
+                        📞 @Lang.GetText("ContactInformation")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="PhoneNumber" class="form-label-custom">@Lang.GetText("PhoneNumber")</label>
+                            <input asp-for="PhoneNumber" type="tel" class="form-control-custom" placeholder="@Lang.GetText("EnterPhoneNumber")" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Email" class="form-label-custom">@Lang.GetText("Email")</label>
+                            <input asp-for="Email" type="email" class="form-control-custom" placeholder="@Lang.GetText("EnterEmailOptional")" />
+                            <span asp-validation-for="Email" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--warning-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--warning-color); font-size: 18px;">
+                        📍 @Lang.GetText("LocationInformation")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div class="form-group-custom">
+                            <label asp-for="City" class="form-label-custom">@Lang.GetText("City")</label>
+                            <input asp-for="City" class="form-control-custom" placeholder="@Lang.GetText("EnterCityOptional")" />
+                            <span asp-validation-for="City" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="form-group-custom">
+                            <label asp-for="Country" class="form-label-custom">@Lang.GetText("Country")</label>
+                            <input asp-for="Country" class="form-control-custom" placeholder="@Lang.GetText("EnterCountryOptional")" />
+                            <span asp-validation-for="Country" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Address" class="form-label-custom">@Lang.GetText("Address")</label>
+                        <textarea asp-for="Address"
+                                  class="form-control-custom"
+                                  rows="3"
+                                  placeholder="@Lang.GetText("EnterFullAddressOptional")"
+                                  style="resize: vertical;"></textarea>
+                        <span asp-validation-for="Address" class="text-danger-custom"></span>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-group-custom">
+                    <label asp-for="Notes" class="form-label-custom">@Lang.GetText("Notes")</label>
+                    <textarea asp-for="Notes"
+                              class="form-control-custom"
+                              rows="3"
+                              placeholder="@Lang.GetText("EnterNotesOptional")"
+                              style="resize: vertical;"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger-custom"></span>
+                </div>
+
+                <div class="form-check-custom" style="margin-bottom: 20px;">
+                    <input asp-for="IsActive" type="checkbox" class="form-check-input-custom" id="isActive" />
+                    <label for="isActive" class="form-check-label-custom">
+                        @Lang.GetText("SupplierIsActive")
+                    </label>
+                    <small style="display: block; color: var(--medium-gray); margin-top: 5px; margin-left: 30px;">
+                        @Lang.GetText("InactiveSuppliersNotAvailable")
+                    </small>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; color: var(--medium-gray); font-size: 14px;">
+                        <div>
+                            <strong>@Lang.GetText("Created"):</strong> @Model.CreatedDate.ToString("MMM dd, yyyy HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>@Lang.GetText("LastModified"):</strong> @Model.LastModified.Value.ToString("MMM dd, yyyy HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("SaveChanges")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
                     </a>
                 </div>
             </form>

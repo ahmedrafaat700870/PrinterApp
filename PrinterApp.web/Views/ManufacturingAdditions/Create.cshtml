@@ -1,4 +1,4 @@
-﻿@model PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel
+﻿@* @model PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel
 
 @{
     ViewData["Title"] = "Create Manufacturing Addition";
@@ -70,6 +70,98 @@
                     </button>
                     <a asp-action="Index" class="btn-secondary-custom">
                         Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        // Auto-focus on addition name
+        document.addEventListener('DOMContentLoaded', function() {
+            const additionNameInput = document.querySelector('input[name="AdditionName"]');
+            if (additionNameInput) {
+                additionNameInput.focus();
+            }
+        });
+    </script>
+} *@
+
+@model PrinterApp.Models.ViewModels.ManufacturingAdditionViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("CreateManufacturingAddition");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>➕ @Lang.GetText("CreateNewManufacturingAddition")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h2>⚙️ @Lang.GetText("ManufacturingAdditionInformation")</h2>
+        </div>
+        <div class="card-body-custom">
+            <form asp-action="Create" method="post">
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="validation-summary">
+                        <div asp-validation-summary="All"></div>
+                    </div>
+                }
+
+                <!-- Basic Information -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px; border-left: 4px solid var(--primary-color);">
+                    <h3 style="margin: 0 0 20px 0; color: var(--primary-color); font-size: 18px;">
+                        📋 @Lang.GetText("BasicInformation")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="AdditionName" class="form-label-custom">@Lang.GetText("AdditionName")</label>
+                        <input asp-for="AdditionName" class="form-control-custom" placeholder="@Lang.GetText("EnterAdditionName")" />
+                        <span asp-validation-for="AdditionName" class="text-danger-custom"></span>
+                        <small style="color: var(--medium-gray); margin-top: 5px; display: block;">
+                            💡 @Lang.GetText("AdditionNameMustBeUnique")
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Examples -->
+                <div style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%); color: var(--white); padding: 20px; border-radius: var(--border-radius); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; font-size: 16px;">💡 @Lang.GetText("ExamplesOfManufacturingAdditions")</h4>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li><strong>@Lang.GetText("AdditionExample1")</strong></li>
+                        <li><strong>@Lang.GetText("AdditionExample2")</strong></li>
+                    </ul>
+                </div>
+
+                <!-- Tips -->
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); border-left: 4px solid var(--warning-color); margin-bottom: 20px;">
+                    <h4 style="margin: 0 0 10px 0; color: var(--warning-color); font-size: 16px;">
+                        ℹ️ @Lang.GetText("ImportantNotes")
+                    </h4>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--medium-gray); line-height: 1.8;">
+                        <li>@Lang.GetText("UseClearDescriptiveNames")</li>
+                        <li>@Lang.GetText("AdditionsEnhanceProductQuality")</li>
+                        <li>@Lang.GetText("CanActivateDeactivateAnytime")</li>
+                        <li>@Lang.GetText("InactiveAdditionsNotAvailable")</li>
+                    </ul>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 30px;">
+                    <button type="submit" class="btn-success-custom">
+                        💾 @Lang.GetText("CreateAddition")
+                    </button>
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        @Lang.GetText("Cancel")
                     </a>
                 </div>
             </form>
