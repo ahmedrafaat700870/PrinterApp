@@ -1,0 +1,91 @@
+@model PrinterApp.Models.ViewModels.CustomerViewModel
+
+@{
+    ViewData["Title"] = "تعديل العميل";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>✏️ تعديل العميل</h2>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn-secondary-custom">← عودة</a>
+    </div>
+
+    <div class="card-custom">
+        <div style="padding: 30px;">
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="alert-custom alert-error-custom"></div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📋 معلومات أساسية</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label asp-for="CustomerName" class="form-label"></label>
+                            <input asp-for="CustomerName" class="form-control-custom" />
+                            <span asp-validation-for="CustomerName" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="CustomerCode" class="form-label"></label>
+                            <input asp-for="CustomerCode" class="form-control-custom" />
+                            <span asp-validation-for="CustomerCode" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Phone" class="form-label"></label>
+                            <input asp-for="Phone" class="form-control-custom" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control-custom" type="email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📍 معلومات العنوان</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        <div class="form-group">
+                            <label asp-for="City" class="form-label"></label>
+                            <input asp-for="City" class="form-control-custom" />
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Governorate" class="form-label"></label>
+                            <input asp-for="Governorate" class="form-control-custom" />
+                        </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label asp-for="Address" class="form-label"></label>
+                            <textarea asp-for="Address" class="form-control-custom" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📝 ملاحظات</h4>
+                    <textarea asp-for="Notes" class="form-control-custom" rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input asp-for="IsActive" type="checkbox" style="width: 20px; height: 20px;" />
+                        <span>نشط</span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: flex-end; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn-secondary-custom">✗ إلغاء</a>
+                    <button type="submit" class="btn-primary-custom">✓ حفظ التعديلات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

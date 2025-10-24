@@ -1,0 +1,312 @@
+@model IEnumerable<PrinterApp.Models.ViewModels.OrderViewModel>
+
+@{
+    ViewData["Title"] = "إدارة الطلبات";
+    var currentFilter = ViewData["CurrentFilter"] as string;
+    var currentStatus = ViewData["CurrentStatus"] as string;
+    var currentStage = ViewData["CurrentStage"] as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>📋 إدارة الطلبات</h2>
+        <a asp-action="Create" class="btn-primary-custom">
+            ➕ طلب جديد
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Quick Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+        <a asp-action="Index" asp-route-status="" class="card-custom" style="text-decoration: none; padding: 20px; text-align: center; @(string.IsNullOrEmpty(currentStatus) ? "border: 2px solid var(--primary-color);" : "")">
+            <div style="font-size: 32px; font-weight: bold; color: var(--primary-color);">@Model.Count()</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">جميع الطلبات</div>
+        </a>
+        
+        <a asp-action="Index" asp-route-status="Pending" class="card-custom" style="text-decoration: none; padding: 20px; text-align: center; @(currentStatus == "Pending" ? "border: 2px solid var(--warning-color);" : "")">
+            <div style="font-size: 32px; font-weight: bold; color: var(--warning-color);">@Model.Count(o => o.Status == PrinterApp.Models.Entities.OrderStatus.Pending)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">معلق</div>
+        </a>
+        
+        <a asp-action="Index" asp-route-status="InManufacturing" class="card-custom" style="text-decoration: none; padding: 20px; text-align: center; @(currentStatus == "InManufacturing" ? "border: 2px solid var(--info-color);" : "")">
+            <div style="font-size: 32px; font-weight: bold; color: var(--info-color);">@Model.Count(o => o.Status == PrinterApp.Models.Entities.OrderStatus.InManufacturing)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">قيد التصنيع</div>
+        </a>
+        
+        <a asp-action="Index" asp-route-status="InPrinting" class="card-custom" style="text-decoration: none; padding: 20px; text-align: center; @(currentStatus == "InPrinting" ? "border: 2px solid var(--success-color);" : "")">
+            <div style="font-size: 32px; font-weight: bold; color: var(--success-color);">@Model.Count(o => o.Status == PrinterApp.Models.Entities.OrderStatus.InPrinting)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">قيد الطباعة</div>
+        </a>
+        
+        <a asp-action="Index" asp-route-status="Completed" class="card-custom" style="text-decoration: none; padding: 20px; text-align: center; @(currentStatus == "Completed" ? "border: 2px solid var(--success-color);" : "")">
+            <div style="font-size: 32px; font-weight: bold; color: var(--success-color);">@Model.Count(o => o.Status == PrinterApp.Models.Entities.OrderStatus.Completed)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">مكتمل</div>
+        </a>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="Index" method="get" id="searchForm">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 250px; position: relative;">
+                        <input type="text"
+                               name="searchTerm"
+                               id="searchInput"
+                               value="@currentFilter"
+                               class="form-control-custom"
+                               placeholder="🔍 بحث برقم الطلب، العميل، المنتج..."
+                               style="padding-right: 100px;" />
+
+                        @if (!string.IsNullOrEmpty(currentFilter))
+                        {
+                            <button type="button"
+                                    id="clearSearch"
+                                    style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--error-color); cursor: pointer; font-size: 20px; padding: 5px 10px;"
+                                    title="مسح البحث">
+                                ✕
+                            </button>
+                        }
+                    </div>
+
+                    <button type="submit" class="btn-primary-custom" style="white-space: nowrap;">
+                        🔍 بحث
+                    </button>
+
+                    @if (!string.IsNullOrEmpty(currentFilter) || !string.IsNullOrEmpty(currentStatus) || !string.IsNullOrEmpty(currentStage))
+                    {
+                        <a asp-action="Index" class="btn-secondary-custom" style="white-space: nowrap;">
+                            🔄 إعادة تعيين
+                        </a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <div style="overflow-x: auto;">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 10%;">رقم الطلب</th>
+                            <th style="width: 10%;">تاريخ الطلب</th>
+                            <th style="width: 15%;">العميل</th>
+                            <th style="width: 15%;">المنتج</th>
+                            <th style="width: 8%;">الكمية</th>
+                            <th style="width: 10%;">التسليم المتوقع</th>
+                            <th style="width: 10%;">الحالة</th>
+                            <th style="width: 10%;">المرحلة</th>
+                            <th style="text-align: center; width: 12%;">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr style="@(order.IsLate ? "background-color: #fff3cd;" : "")">
+                                <td>
+                                    <span style="background: var(--primary-light); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm); font-weight: bold; font-family: monospace;">
+                                        @order.OrderNumber
+                                    </span>
+                                </td>
+                                <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <strong>@order.CustomerName</strong>
+                                </td>
+                                <td>@order.ProductName</td>
+                                <td style="text-align: center;">
+                                    <span style="background: var(--info-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-weight: bold;">
+                                        @order.Quantity
+                                    </span>
+                                </td>
+                                <td>
+                                    @order.ExpectedDeliveryDate.ToString("dd/MM/yyyy")
+                                    @if (order.IsLate)
+                                    {
+                                        <span style="color: var(--error-color); font-weight: bold;">⚠️ متأخر</span>
+                                    }
+                                </td>
+                                <td>
+                                    @switch (order.Status)
+                                    {
+                                        case PrinterApp.Models.Entities.OrderStatus.Pending:
+                                            <span style="background: var(--warning-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                ⏳ معلق
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.UnderReview:
+                                            <span style="background: var(--info-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                📝 قيد المراجعة
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.InManufacturing:
+                                            <span style="background: var(--primary-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                ⚙️ قيد التصنيع
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.InPrinting:
+                                            <span style="background: var(--info-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                🖨️ قيد الطباعة
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.Completed:
+                                            <span style="background: var(--success-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                ✓ مكتمل
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.Cancelled:
+                                            <span style="background: var(--error-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                ✗ ملغي
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStatus.OnHold:
+                                            <span style="background: var(--medium-gray); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px; font-weight: 500;">
+                                                ⏸️ معلق مؤقتاً
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td>
+                                    @switch (order.Stage)
+                                    {
+                                        case PrinterApp.Models.Entities.OrderStage.Order:
+                                            <span style="background: var(--medium-gray); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px;">
+                                                1️⃣ طلب
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStage.Review:
+                                            <span style="background: var(--info-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px;">
+                                                2️⃣ مراجعة
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStage.Manufacturing:
+                                            <span style="background: var(--warning-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px;">
+                                                3️⃣ تصنيع
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStage.Printing:
+                                            <span style="background: var(--primary-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px;">
+                                                4️⃣ طباعة
+                                            </span>
+                                            break;
+                                        case PrinterApp.Models.Entities.OrderStage.Completed:
+                                            <span style="background: var(--success-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm); font-size: 12px;">
+                                                ✓ مكتمل
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="action-buttons" style="justify-content: center;">
+                                        <a asp-action="Details" asp-route-id="@order.Id" class="btn-primary-custom btn-sm-custom" title="التفاصيل">
+                                            👁️
+                                        </a>
+
+                                        @if (order.Stage == PrinterApp.Models.Entities.OrderStage.Order)
+                                        {
+                                            <a asp-action="Edit" asp-route-id="@order.Id" class="btn-warning-custom btn-sm-custom" title="تعديل">
+                                                ✏️
+                                            </a>
+                                            
+                                            @if (order.Status != PrinterApp.Models.Entities.OrderStatus.Cancelled)
+                                            {
+                                                <form asp-action="MoveToReview" asp-route-id="@order.Id" method="post" style="display:inline;">
+                                                    @Html.AntiForgeryToken()
+                                                    <button type="submit" class="btn-success-custom btn-sm-custom" title="نقل للمراجعة">
+                                                        ➡️
+                                                    </button>
+                                                </form>
+                                            }
+                                        }
+
+                                        @if (order.Status != PrinterApp.Models.Entities.OrderStatus.Completed && order.Status != PrinterApp.Models.Entities.OrderStatus.Cancelled)
+                                        {
+                                            <button type="button" class="btn-danger-custom btn-sm-custom" onclick="showCancelModal(@order.Id)" title="إلغاء">
+                                                🚫
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3 style="color: var(--medium-gray);">لا توجد طلبات</h3>
+                <p style="color: var(--medium-gray);">ابدأ بإضافة أول طلب</p>
+                <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">
+                    ➕ طلب جديد
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Cancel Order Modal -->
+<div id="cancelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="card-custom" style="max-width: 500px; margin: 50px auto;">
+        <div style="padding: 20px;">
+            <h3>إلغاء الطلب</h3>
+            <form id="cancelForm" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="cancelOrderId" name="id" />
+                <div style="margin: 20px 0;">
+                    <label class="form-label">سبب الإلغاء</label>
+                    <textarea name="reason" class="form-control-custom" rows="4" required placeholder="أدخل سبب إلغاء الطلب..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary-custom" onclick="closeCancelModal()">إلغاء</button>
+                    <button type="submit" class="btn-danger-custom">تأكيد الإلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showCancelModal(orderId) {
+            document.getElementById('cancelOrderId').value = orderId;
+            document.getElementById('cancelForm').action = '/Orders/Cancel/' + orderId;
+            document.getElementById('cancelModal').style.display = 'flex';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+        }
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+
+        if (clearSearchBtn) {
+            clearSearchBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                document.getElementById('searchForm').submit();
+            });
+        }
+    </script>
+}

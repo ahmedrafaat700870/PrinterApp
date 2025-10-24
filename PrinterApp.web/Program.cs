@@ -103,6 +103,28 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IMoldShapeService, MoldShapeService>();
 builder.Services.AddScoped<IMoldService, MoldService>();
 
+
+
+
+
+
+
+// إضافة الـ Services
+// File Upload Service
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+
+// Customer Service
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+// Order Services
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderAttachmentService, OrderAttachmentService>();
+builder.Services.AddScoped<IOrderManufacturingItemService, OrderManufacturingItemService>();
+builder.Services.AddScoped<IOrderTimelineService, OrderTimelineService>();
+
+
+
+
 // language service
 builder.Services.AddSingleton<ILanguageService, LanguageService>();
 var app = builder.Build();

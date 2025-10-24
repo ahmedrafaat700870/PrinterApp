@@ -1,0 +1,79 @@
+@model IEnumerable<PrinterApp.Models.ViewModels.OrderViewModel>
+
+@{
+    ViewData["Title"] = "طلبات المراجعة";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>📝 طلبات المراجعة - المرحلة الثانية</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            ← عودة للقائمة الرئيسية
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <div style="overflow-x: auto;">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>المنتج</th>
+                            <th>الكمية</th>
+                            <th>تاريخ الطلب</th>
+                            <th style="text-align: center;">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td><strong>@order.OrderNumber</strong></td>
+                                <td>@order.CustomerName</td>
+                                <td>@order.ProductName</td>
+                                <td style="text-align: center;">
+                                    <span style="background: var(--info-color); color: var(--white); padding: 5px 10px; border-radius: var(--border-radius-sm);">
+                                        @order.Quantity
+                                    </span>
+                                </td>
+                                <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                <td style="text-align: center;">
+                                    <a asp-action="Review" asp-route-id="@order.Id" class="btn-primary-custom btn-sm-custom">
+                                        📝 مراجعة
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <h3 style="color: var(--medium-gray);">لا توجد طلبات للمراجعة</h3>
+                <p style="color: var(--medium-gray);">جميع الطلبات قيد المعالجة</p>
+            </div>
+        </div>
+    }
+</div>

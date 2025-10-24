@@ -1,0 +1,119 @@
+@model PrinterApp.Models.ViewModels.CustomerViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل العميل";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👤 تفاصيل العميل</h2>
+        <div style="display: flex; gap: 10px;">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-warning-custom">✏️ تعديل</a>
+            <a asp-action="Index" class="btn-secondary-custom">← عودة</a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-custom alert-success-custom">✓ @TempData["SuccessMessage"]</div>
+    }
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <!-- Main Info -->
+        <div>
+            <div class="card-custom" style="margin-bottom: 20px;">
+                <div style="padding: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📋 معلومات العميل</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <strong>الاسم:</strong> @Model.CustomerName
+                        </div>
+                        <div>
+                            <strong>الكود:</strong> <span style="background: var(--primary-light); color: var(--white); padding: 3px 10px; border-radius: var(--border-radius-sm);">@Model.CustomerCode</span>
+                        </div>
+                        <div>
+                            <strong>الهاتف:</strong> 📞 @Model.Phone
+                        </div>
+                        <div>
+                            <strong>البريد:</strong> @(Model.Email ?? "-")
+                        </div>
+                        <div>
+                            <strong>المدينة:</strong> @(Model.City ?? "-")
+                        </div>
+                        <div>
+                            <strong>المحافظة:</strong> @(Model.Governorate ?? "-")
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.Address))
+                        {
+                            <div style="grid-column: 1 / -1;">
+                                <strong>العنوان:</strong> @Model.Address
+                            </div>
+                        }
+                        <div>
+                            <strong>الحالة:</strong>
+                            @if (Model.IsActive)
+                            {
+                                <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm);">✓ نشط</span>
+                            }
+                            else
+                            {
+                                <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm);">✗ غير نشط</span>
+                            }
+                        </div>
+                        <div>
+                            <strong>تاريخ الإضافة:</strong> @Model.CreatedDate.ToString("dd/MM/yyyy")
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.Notes))
+                    {
+                        <div style="margin-top: 20px; padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                            <strong>الملاحظات:</strong><br />
+                            @Model.Notes
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Orders Section - Placeholder for future implementation -->
+            @* TODO: Implement Orders navigation property in CustomerViewModel *@
+            @if (false)
+            {
+                <div class="card-custom">
+                    <div style="padding: 25px;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 20px;">📋 طلبات العميل</h4>
+                        <div style="overflow-x: auto;">
+                            <table class="table-custom">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>التاريخ</th>
+                                        <th>الكمية</th>
+                                        <th>الحالة</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; color: var(--medium-gray); padding: 30px;">
+                                            الطلبات متاحة قريباً
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar Stats -->
+        <div>
+            <div class="card-custom" style="position: sticky; top: 20px;">
+                <div style="padding: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📊 إحصائيات</h4>
+                    <p style="text-align: center; color: var(--medium-gray);">الإحصائيات متاحة قريباً</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

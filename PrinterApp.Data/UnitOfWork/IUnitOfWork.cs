@@ -22,7 +22,12 @@ namespace PrinterApp.Data.UnitOfWork
         IProductRepository Products { get; } 
         IProductAdditionRepository ProductAdditions { get; }
         IMoldShapeRepository MoldShapes { get; } 
-        IMoldRepository Molds { get; } 
+        IMoldRepository Molds { get; }
+        ICustomerRepository Customers { get; }
+        IOrderRepository Orders { get; }
+        IOrderAttachmentRepository OrderAttachments { get; }
+        IOrderManufacturingItemRepository OrderManufacturingItems { get; }
+        IOrderTimelineRepository OrderTimelines { get; }
         Task<int> CompleteAsync();
     }
 }

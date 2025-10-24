@@ -1,0 +1,203 @@
+@model PrinterApp.Models.ViewModels.PrintOrderViewModel
+
+@{
+    ViewData["Title"] = Lang.GetText("EditPrintOrder");
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>📋 @Lang.GetText("EditPrintOrder")</h2>
+        <a asp-action="Index" class="btn-secondary-custom">
+            🔙 @Lang.GetText("BackToList")
+        </a>
+    </div>
+
+    <div class="card-custom">
+        <div style="padding: 30px;">
+            <form asp-action="Edit" method="post">
+                @Html.AntiForgeryToken()
+                <input asp-for="Id" type="hidden" />
+                <div asp-validation-summary="ModelOnly" class="alert-custom alert-error-custom"></div>
+
+                <!-- Basic Information -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--primary-color); font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                        📋 @Lang.GetText("BasicInformation")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <!-- Order Number -->
+                        <div class="form-group-custom">
+                            <label asp-for="OrderNumber" class="form-label-custom">@Lang.GetText("OrderNumber")</label>
+                            <input asp-for="OrderNumber" class="form-control-custom" placeholder="@Lang.GetText("EnterOrderNumber")" />
+                            <span asp-validation-for="OrderNumber" class="text-error"></span>
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="form-group-custom">
+                            <label asp-for="Quantity" class="form-label-custom">@Lang.GetText("Quantity")</label>
+                            <input asp-for="Quantity" type="number" min="1" class="form-control-custom" placeholder="@Lang.GetText("EnterQuantity")" />
+                            <span asp-validation-for="Quantity" class="text-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Supplier and Product -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--primary-color); font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                        👥 @Lang.GetText("SupplierAndProduct")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <!-- Supplier -->
+                        <div class="form-group-custom">
+                            <label asp-for="SupplierId" class="form-label-custom">@Lang.GetText("Supplier")</label>
+                            <select asp-for="SupplierId" asp-items="Model.Suppliers" class="form-control-custom">
+                                <option value="">@Lang.GetText("SelectSupplier")</option>
+                            </select>
+                            <span asp-validation-for="SupplierId" class="text-error"></span>
+                        </div>
+
+                        <!-- Product -->
+                        <div class="form-group-custom">
+                            <label asp-for="ProductId" class="form-label-custom">@Lang.GetText("Product")</label>
+                            <select asp-for="ProductId" asp-items="Model.Products" class="form-control-custom">
+                                <option value="">@Lang.GetText("SelectProduct")</option>
+                            </select>
+                            <span asp-validation-for="ProductId" class="text-error"></span>
+                        </div>
+
+                        <!-- Roll Direction (Optional) -->
+                        <div class="form-group-custom">
+                            <label asp-for="RollDirectionId" class="form-label-custom">@Lang.GetText("RollDirection") (@Lang.GetText("Optional"))</label>
+                            <select asp-for="RollDirectionId" asp-items="Model.RollDirections" class="form-control-custom">
+                                <option value="">@Lang.GetText("SelectRollDirection")</option>
+                            </select>
+                            <span asp-validation-for="RollDirectionId" class="text-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dates -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--primary-color); font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                        📅 @Lang.GetText("Dates")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                        <!-- Order Date -->
+                        <div class="form-group-custom">
+                            <label asp-for="OrderDate" class="form-label-custom">@Lang.GetText("OrderDate")</label>
+                            <input asp-for="OrderDate" type="date" class="form-control-custom" />
+                            <span asp-validation-for="OrderDate" class="text-error"></span>
+                        </div>
+
+                        <!-- Expected Delivery Date -->
+                        <div class="form-group-custom">
+                            <label asp-for="ExpectedDeliveryDate" class="form-label-custom">@Lang.GetText("ExpectedDeliveryDate")</label>
+                            <input asp-for="ExpectedDeliveryDate" type="date" class="form-control-custom" />
+                            <span asp-validation-for="ExpectedDeliveryDate" class="text-error"></span>
+                        </div>
+
+                        <!-- Actual Delivery Date (Optional) -->
+                        <div class="form-group-custom">
+                            <label asp-for="ActualDeliveryDate" class="form-label-custom">@Lang.GetText("ActualDeliveryDate") (@Lang.GetText("Optional"))</label>
+                            <input asp-for="ActualDeliveryDate" type="date" class="form-control-custom" />
+                            <span asp-validation-for="ActualDeliveryDate" class="text-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status and Stage -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--primary-color); font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                        📊 @Lang.GetText("StatusAndStage")
+                    </h3>
+
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                        <!-- Status -->
+                        <div class="form-group-custom">
+                            <label asp-for="Status" class="form-label-custom">@Lang.GetText("Status")</label>
+                            <select asp-for="Status" class="form-control-custom">
+                                @foreach (OrderStatus status in Enum.GetValues(typeof(OrderStatus)))
+                                {
+                                    <option value="@((int)status)">@Lang.GetText(status.ToString())</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Status" class="text-error"></span>
+                        </div>
+
+                        <!-- Stage -->
+                        <div class="form-group-custom">
+                            <label asp-for="Stage" class="form-label-custom">@Lang.GetText("Stage")</label>
+                            <select asp-for="Stage" class="form-control-custom">
+                                @foreach (OrderStage stage in Enum.GetValues(typeof(OrderStage)))
+                                {
+                                    <option value="@((int)stage)">@Lang.GetText(stage.ToString())</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Stage" class="text-error"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: var(--primary-color); font-size: 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px;">
+                        📝 @Lang.GetText("Notes")
+                    </h3>
+
+                    <div class="form-group-custom">
+                        <label asp-for="Notes" class="form-label-custom">@Lang.GetText("Notes") (@Lang.GetText("Optional"))</label>
+                        <textarea asp-for="Notes" class="form-control-custom" rows="4" placeholder="@Lang.GetText("EnterNotesOptional")"></textarea>
+                        <span asp-validation-for="Notes" class="text-error"></span>
+                    </div>
+                </div>
+
+                <!-- Active Status -->
+                <div style="margin-bottom: 30px;">
+                    <div class="form-group-custom">
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 15px; background: var(--input-bg); border-radius: var(--border-radius);">
+                            <input asp-for="IsActive" type="checkbox" style="width: 20px; height: 20px; cursor: pointer;" />
+                            <label asp-for="IsActive" style="margin: 0; cursor: pointer; font-weight: 500;">
+                                @Lang.GetText("PrintOrderIsActive")
+                            </label>
+                        </div>
+                        <div style="color: var(--medium-gray); font-size: 13px; margin-top: 8px; padding-left: 30px;">
+                            @Lang.GetText("InactivePrintOrdersNotAvailable")
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metadata -->
+                <div style="background: var(--input-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 30px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; color: var(--medium-gray); font-size: 13px;">
+                        <div>
+                            <strong>@Lang.GetText("CreatedDate"):</strong> @Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")
+                        </div>
+                        @if (Model.LastModified.HasValue)
+                        {
+                            <div>
+                                <strong>@Lang.GetText("LastModified"):</strong> @Model.LastModified.Value.ToString("yyyy-MM-dd HH:mm")
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="display: flex; gap: 15px; justify-content: flex-end; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                    <a asp-action="Index" class="btn-secondary-custom">
+                        ❌ @Lang.GetText("Cancel")
+                    </a>
+                    <button type="submit" class="btn-primary-custom">
+                        ✓ @Lang.GetText("SaveChanges")
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

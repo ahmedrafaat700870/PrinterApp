@@ -1,0 +1,257 @@
+@model PrinterApp.Models.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+    var order = Model.Order;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>📋 تفاصيل الطلب - @order.OrderNumber</h2>
+        <div style="display: flex; gap: 10px;">
+            @if (order.Stage == PrinterApp.Models.Entities.OrderStage.Order && order.Status != PrinterApp.Models.Entities.OrderStatus.Cancelled)
+            {
+                <a asp-action="Edit" asp-route-id="@order.Id" class="btn-warning-custom">
+                    ✏️ تعديل
+                </a>
+            }
+            <a asp-action="Index" class="btn-secondary-custom">
+                ← عودة للقائمة
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Status Bar -->
+    <div class="card-custom" style="margin-bottom: 20px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);">
+        <div style="padding: 25px; color: var(--white);">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">حالة الطلب</div>
+                    <div style="font-size: 24px; font-weight: bold; margin-top: 5px;">
+                        @order.Status.GetDisplayName()
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">المرحلة الحالية</div>
+                    <div style="font-size: 24px; font-weight: bold; margin-top: 5px;">
+                        @order.Stage.GetDisplayName()
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">تاريخ الطلب</div>
+                    <div style="font-size: 24px; font-weight: bold; margin-top: 5px;">
+                        @order.OrderDate.ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 14px; opacity: 0.9;">التسليم المتوقع</div>
+                    <div style="font-size: 24px; font-weight: bold; margin-top: 5px;">
+                        @order.ExpectedDeliveryDate.ToString("dd/MM/yyyy")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+        <!-- Main Info -->
+        <div>
+            <!-- Basic Info -->
+            <div class="card-custom" style="margin-bottom: 20px;">
+                <div style="padding: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">📋 معلومات أساسية</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <strong>العميل:</strong> @order.CustomerName
+                        </div>
+                        <div>
+                            <strong>المورد:</strong> @order.SupplierName
+                        </div>
+                        <div>
+                            <strong>المنتج:</strong> @order.ProductName
+                        </div>
+                        <div>
+                            <strong>الكمية:</strong> <span style="background: var(--info-color); color: var(--white); padding: 3px 10px; border-radius: var(--border-radius-sm);">@order.Quantity</span>
+                        </div>
+                        <div>
+                            <strong>الطول:</strong> @order.Length سم
+                        </div>
+                        <div>
+                            <strong>العرض:</strong> @order.Width سم
+                        </div>
+                    </div>
+                    @if (!string.IsNullOrEmpty(order.OrderNotes))
+                    {
+                        <div style="margin-top: 15px; padding: 10px; background: var(--input-bg); border-radius: var(--border-radius);">
+                            <strong>الملاحظات:</strong> @order.OrderNotes
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Attachments -->
+            @if (Model.Attachments.Any())
+            {
+                <div class="card-custom" style="margin-bottom: 20px;">
+                    <div style="padding: 25px;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 20px;">📎 المرفقات (@Model.Attachments.Count)</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                            @foreach (var attachment in Model.Attachments)
+                            {
+                                <div style="padding: 15px; background: var(--input-bg); border-radius: var(--border-radius); text-align: center;">
+                                    <div style="font-size: 40px; margin-bottom: 10px;">
+                                        @(attachment.FileExtension == ".pdf" ? "📄" : 
+                                          attachment.FileExtension == ".jpg" || attachment.FileExtension == ".png" ? "🖼️" : "📎")
+                                    </div>
+                                    <div style="font-size: 13px; color: var(--text-primary); margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        @attachment.OriginalFileName
+                                    </div>
+                                    <div style="font-size: 11px; color: var(--medium-gray);">
+                                        @((attachment.FileSize / 1024.0).ToString("F2")) KB
+                                    </div>
+                                    <a href="/@attachment.FilePath" target="_blank" class="btn-primary-custom btn-sm-custom" style="margin-top: 10px; display: inline-block;">
+                                        👁️ عرض
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Manufacturing Items -->
+            @if (Model.ManufacturingItems.Any())
+            {
+                <div class="card-custom" style="margin-bottom: 20px;">
+                    <div style="padding: 25px;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 20px;">⚙️ عناصر التصنيع</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            @foreach (var item in Model.ManufacturingItems)
+                            {
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--input-bg); border-radius: var(--border-radius);">
+                                    <span>
+                                        @(item.IsCompleted ? "✓" : "○") @item.AdditionName
+                                    </span>
+                                    @if (item.IsCompleted)
+                                    {
+                                        <span style="color: var(--success-color); font-size: 12px;">
+                                            مكتمل - @item.CompletedDate?.ToString("dd/MM/yyyy HH:mm")
+                                        </span>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Timeline Sidebar -->
+        <div>
+            <div class="card-custom" style="position: sticky; top: 20px;">
+                <div style="padding: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 20px;">⏱️ المخطط الزمني</h4>
+                    <div style="position: relative;">
+                        @foreach (var timeline in Model.Timeline)
+                        {
+                            <div style="position: relative; padding-left: 30px; margin-bottom: 20px;">
+                                <div style="position: absolute; left: 0; width: 20px; height: 20px; background: var(--primary-color); border-radius: 50%; border: 3px solid var(--white);"></div>
+                                <div style="border-left: 2px solid var(--border-color); padding-left: 15px; padding-bottom: 10px; margin-left: 10px;">
+                                    <div style="font-weight: bold; color: var(--text-primary);">
+                                        @timeline.Action
+                                    </div>
+                                    <div style="font-size: 12px; color: var(--medium-gray); margin-top: 3px;">
+                                        @timeline.ActionDate.ToString("dd/MM/yyyy HH:mm")
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(timeline.ActionByName))
+                                    {
+                                        <div style="font-size: 12px; color: var(--medium-gray);">
+                                            بواسطة: @timeline.ActionByName
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(timeline.Notes))
+                                    {
+                                        <div style="font-size: 12px; color: var(--text-primary); margin-top: 5px; padding: 5px; background: var(--input-bg); border-radius: 5px;">
+                                            @timeline.Notes
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            @if (order.Status != PrinterApp.Models.Entities.OrderStatus.Completed && order.Status != PrinterApp.Models.Entities.OrderStatus.Cancelled)
+            {
+                <div class="card-custom" style="margin-top: 20px;">
+                    <div style="padding: 20px;">
+                        <h4 style="color: var(--primary-color); margin-bottom: 15px;">⚡ إجراءات سريعة</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            @if (order.Stage == PrinterApp.Models.Entities.OrderStage.Order)
+                            {
+                                <form asp-action="MoveToReview" asp-route-id="@order.Id" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn-success-custom" style="width: 100%;">
+                                        ➡️ نقل إلى مرحلة المراجعة
+                                    </button>
+                                </form>
+                            }
+                            
+                            <button type="button" class="btn-danger-custom" onclick="showCancelModal(@order.Id)">
+                                🚫 إلغاء الطلب
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Cancel Modal -->
+<div id="cancelModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div class="card-custom" style="max-width: 500px; margin: 50px auto;">
+        <div style="padding: 20px;">
+            <h3>إلغاء الطلب</h3>
+            <form asp-action="Cancel" asp-route-id="@order.Id" method="post">
+                @Html.AntiForgeryToken()
+                <div style="margin: 20px 0;">
+                    <label class="form-label">سبب الإلغاء</label>
+                    <textarea name="reason" class="form-control-custom" rows="4" required placeholder="أدخل سبب إلغاء الطلب..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-secondary-custom" onclick="closeCancelModal()">إلغاء</button>
+                    <button type="submit" class="btn-danger-custom">تأكيد الإلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showCancelModal(orderId) {
+            document.getElementById('cancelModal').style.display = 'flex';
+        }
+
+        function closeCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+        }
+    </script>
+}

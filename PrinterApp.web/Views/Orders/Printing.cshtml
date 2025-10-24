@@ -1,0 +1,114 @@
+@model PrinterApp.Models.ViewModels.OrderStage4ViewModel
+
+@{
+    ViewData["Title"] = "طباعة الطلب";
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>🖨️ طباعة الطلب - @Model.OrderNumber</h2>
+        <a asp-action="PrintingList" class="btn-secondary-custom">← عودة</a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">✓ @TempData["Success"]</div>
+    }
+
+    <div class="card-custom">
+        <div style="padding: 30px;">
+            <!-- Complete Order Info -->
+            <div style="background: var(--input-bg); padding: 25px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                <h4 style="color: var(--primary-color); margin-bottom: 20px;">📋 معلومات الطلب الكاملة</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <strong>العميل:</strong> @Model.CustomerName<br />
+                        <small style="color: var(--medium-gray);">📞 @Model.CustomerPhone</small>
+                    </div>
+                    <div><strong>المورد:</strong> @Model.SupplierName</div>
+                    <div><strong>المنتج:</strong> @Model.ProductName</div>
+                    <div><strong>الكمية:</strong> <span style="font-size: 18px; font-weight: bold; color: var(--primary-color);">@Model.Quantity</span></div>
+                    <div><strong>المقاس:</strong> @Model.Length × @Model.Width سم</div>
+                    <div><strong>نوع الخام:</strong> @Model.RawMaterialName</div>
+                    <div><strong>اتجاه الرول:</strong> @Model.RollDirectionNumber</div>
+                    <div><strong>الماكينة:</strong> @Model.MachineName</div>
+                    <div><strong>القلب:</strong> @Model.CoreName</div>
+                    <div><strong>السكينة:</strong> @Model.KnifeName</div>
+                    <div><strong>الكرتون:</strong> @(Model.CartonName ?? "غير محدد")</div>
+                    <div><strong>القالب:</strong> @(Model.MoldName ?? "غير محدد")</div>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            @if (!string.IsNullOrEmpty(Model.OrderNotes) || !string.IsNullOrEmpty(Model.ReviewNotes) || !string.IsNullOrEmpty(Model.ManufacturingNotes))
+            {
+                <div style="background: var(--input-bg); padding: 20px; border-radius: var(--border-radius); margin-bottom: 25px;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 15px;">📝 الملاحظات</h4>
+                    @if (!string.IsNullOrEmpty(Model.OrderNotes))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            <strong>ملاحظات الطلب:</strong> @Model.OrderNotes
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ReviewNotes))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            <strong>ملاحظات المراجعة:</strong> @Model.ReviewNotes
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.ManufacturingNotes))
+                    {
+                        <div style="margin-bottom: 10px;">
+                            <strong>ملاحظات التصنيع:</strong> @Model.ManufacturingNotes
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Printing Actions -->
+            <div style="background: var(--white); padding: 25px; border: 2px solid var(--primary-color); border-radius: var(--border-radius);">
+                <h4 style="color: var(--primary-color); margin-bottom: 20px;">🖨️ إجراءات الطباعة</h4>
+                
+                @if (!Model.PrintingStartDate.HasValue)
+                {
+                    <div style="text-align: center; padding: 30px;">
+                        <p style="font-size: 16px; margin-bottom: 20px;">هل تريد بدء الطباعة الآن؟</p>
+                        <form asp-action="StartPrinting" asp-route-id="@Model.Id" method="post">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn-success-custom" style="font-size: 18px; padding: 15px 40px;">
+                                ▶️ بدء الطباعة
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div style="padding: 20px; background: var(--success-color); color: var(--white); border-radius: var(--border-radius); margin-bottom: 20px; text-align: center;">
+                        <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">✓ الطباعة قيد التنفيذ</div>
+                        <div>بدأت في: @Model.PrintingStartDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+
+                    @if (!Model.PrintingEndDate.HasValue)
+                    {
+                        <div style="text-align: center; padding: 20px;">
+                            <p style="font-size: 16px; margin-bottom: 20px;">هل اكتملت عملية الطباعة؟</p>
+                            <form asp-action="CompletePrinting" asp-route-id="@Model.Id" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn-primary-custom" style="font-size: 18px; padding: 15px 40px;">
+                                    ✓ إكمال الطلب
+                                </button>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div style="padding: 20px; background: var(--success-color); color: var(--white); border-radius: var(--border-radius); text-align: center;">
+                            <div style="font-size: 20px; font-weight: bold;">🎉 تم إكمال الطلب بنجاح</div>
+                            <div style="margin-top: 5px;">انتهت في: @Model.PrintingEndDate.Value.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

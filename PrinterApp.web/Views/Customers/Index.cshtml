@@ -1,0 +1,120 @@
+@model IEnumerable<PrinterApp.Models.ViewModels.CustomerViewModel>
+
+@{
+    ViewData["Title"] = "إدارة العملاء";
+    var search = ViewBag.Search as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <h2>👥 إدارة العملاء</h2>
+        <a asp-action="Create" class="btn-primary-custom">➕ عميل جديد</a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert-custom alert-success-custom">✓ @TempData["SuccessMessage"]</div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-custom alert-error-custom">✗ @TempData["ErrorMessage"]</div>
+    }
+
+    <!-- Search -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="Index" method="get">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" name="search" value="@search" class="form-control-custom" placeholder="🔍 بحث بالاسم، الكود، الهاتف، البريد..." style="flex: 1;" />
+                    <button type="submit" class="btn-primary-custom">بحث</button>
+                    @if (!string.IsNullOrEmpty(search))
+                    {
+                        <a asp-action="Index" class="btn-secondary-custom">إعادة تعيين</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    @if (Model.Any())
+    {
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+            <div class="card-custom" style="padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: bold; color: var(--primary-color);">@Model.Count()</div>
+                <div style="color: var(--medium-gray); margin-top: 5px;">إجمالي العملاء</div>
+            </div>
+            <div class="card-custom" style="padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: bold; color: var(--success-color);">@Model.Count(c => c.IsActive)</div>
+                <div style="color: var(--medium-gray); margin-top: 5px;">عملاء نشطين</div>
+            </div>
+        </div>
+    }
+
+    <!-- Table -->
+    @if (Model.Any())
+    {
+        <div class="card-custom">
+            <div style="overflow-x: auto;">
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th>كود العميل</th>
+                            <th>اسم العميل</th>
+                            <th>الهاتف</th>
+                            <th>البريد</th>
+                            <th>المدينة</th>
+                            <th>الحالة</th>
+                            <th style="text-align: center;">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var customer in Model)
+                        {
+                            <tr style="@(!customer.IsActive ? "opacity: 0.6;" : "")">
+                                <td><strong>@customer.CustomerCode</strong></td>
+                                <td>@customer.CustomerName</td>
+                                <td>📞 @customer.Phone</td>
+                                <td>@(customer.Email ?? "-")</td>
+                                <td>@(customer.City ?? "-")</td>
+                                <td>
+                                    @if (customer.IsActive)
+                                    {
+                                        <span style="background: var(--success-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm);">✓ نشط</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="background: var(--error-color); color: var(--white); padding: 5px 12px; border-radius: var(--border-radius-sm);">✗ غير نشط</span>
+                                    }
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="action-buttons" style="justify-content: center;">
+                                        <a asp-action="Details" asp-route-id="@customer.Id" class="btn-primary-custom btn-sm-custom" title="التفاصيل">👁️</a>
+                                        <a asp-action="Edit" asp-route-id="@customer.Id" class="btn-warning-custom btn-sm-custom" title="تعديل">✏️</a>
+                                        <form asp-action="ToggleStatus" asp-route-id="@customer.Id" method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="@(customer.IsActive ? "btn-secondary-custom" : "btn-success-custom") btn-sm-custom">
+                                                @(customer.IsActive ? "🔒" : "✓")
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card-custom">
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3 style="color: var(--medium-gray);">لا توجد عملاء</h3>
+                <a asp-action="Create" class="btn-primary-custom" style="margin-top: 20px;">➕ إضافة عميل جديد</a>
+            </div>
+        </div>
+    }
+</div>

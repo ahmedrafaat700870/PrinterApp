@@ -109,6 +109,79 @@
                     </div>
                 </a>
 
+
+
+
+
+
+                <!-- =====================================================
+                الطلبات (Orders)
+                ===================================================== -->
+                <a asp-controller="Orders" asp-action="Index" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #4CAF50;">📦</div>
+                        <h3>الطلبات</h3>
+                        <p>إدارة جميع الطلبات والمراحل المختلفة</p>
+                    </div>
+                </a>
+
+                <!-- Create New Order -->
+                <a asp-controller="Orders" asp-action="Create" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #2196F3;">➕</div>
+                        <h3>طلب جديد</h3>
+                        <p>إنشاء طلب جديد في النظام</p>
+                    </div>
+                </a>
+
+                <!-- Review Orders -->
+                <a asp-controller="Orders" asp-action="ReviewList" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #00BCD4;">📋</div>
+                        <h3>طلبات المراجعة</h3>
+                        <p>مراجعة الطلبات الجديدة</p>
+                    </div>
+                </a>
+
+                <!-- Manufacturing Orders -->
+                <a asp-controller="Orders" asp-action="ManufacturingList" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #673AB7;">⚙️</div>
+                        <h3>طلبات التصنيع</h3>
+                        <p>متابعة عمليات التصنيع</p>
+                    </div>
+                </a>
+
+                <!-- Printing Orders -->
+                <a asp-controller="Orders" asp-action="PrintingList" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #607D8B;">🖨️</div>
+                        <h3>طلبات الطباعة</h3>
+                        <p>متابعة عمليات الطباعة</p>
+                    </div>
+                </a>
+
+                <!-- Order Statistics -->
+                <a asp-controller="Orders" asp-action="Statistics" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #FF9800;">📊</div>
+                        <h3>إحصائيات الطلبات</h3>
+                        <p>عرض التقارير والإحصائيات</p>
+                    </div>
+                </a>
+
+                <!-- Order Statistics -->
+                <a asp-controller="Orders" asp-action="Statistics" class="dashboard-card-link">
+                    <div class="dashboard-card">
+                        <div class="card-icon" style="color: #FF9800;">📊</div>
+                        <h3>عملاء</h3>
+                        <p>عرض واضافة وتعديل العملاء</p>
+                    </div>
+                </a>
+
+
+
+
             </div>
         </div>
     }

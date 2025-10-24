@@ -1,4 +1,5 @@
 ﻿using PrinterApp.Data.Repositories;
+using PrinterApp.Models.Entities;
 
 namespace PrinterApp.Data.UnitOfWork;
 
@@ -13,14 +14,25 @@ public class UnitOfWork : IUnitOfWork
     private IRollDirectionRepository _rollDirectionRepository;
     private IMachineRepository _machines;
     private ICartonRepository _cartons;
-    private IKnifeRepository _knives; 
+    private IKnifeRepository _knives;
     private ISupplierRepository _suppliers;
     private IRawMaterialRepository _rawMaterials;
     private IManufacturingAdditionRepository _manufacturingAdditions;
-    private IProductRepository _products; 
+    private IProductRepository _products;
     private IProductAdditionRepository _productAdditions;
-    private IMoldShapeRepository _moldShapes; 
+    private IMoldShapeRepository _moldShapes;
     private IMoldRepository _molds;
+    private IOrderRepository _order;
+
+
+    private ICustomerRepository _customer;
+    private IOrderManufacturingItemRepository _orderManufacturingItem;
+    private IOrderTimelineRepository _orderTimelineRepository;
+    private IOrderAttachmentRepository _orderAttachmentRepository;
+
+  
+
+
     public UnitOfWork(ApplicationDbContext context)
     {
         _context = context;
@@ -120,7 +132,7 @@ public class UnitOfWork : IUnitOfWork
         {
             if (_knives is null)
             {
-                _knives = new   KnifeRepository(_context);
+                _knives = new KnifeRepository(_context);
             }
             return _knives;
         }
@@ -142,7 +154,7 @@ public class UnitOfWork : IUnitOfWork
     {
         get
         {
-            if(_rawMaterials is null)       
+            if (_rawMaterials is null)
             {
                 _rawMaterials = new RawMaterialRepository(_context);
             }
@@ -196,7 +208,7 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public IMoldRepository Molds 
+    public IMoldRepository Molds
     {
         get
         {
@@ -207,6 +219,68 @@ public class UnitOfWork : IUnitOfWork
             return _molds;
         }
     }
+
+    public IOrderRepository Orders
+    {
+        get
+        {
+            if (_order is null)
+            {
+                _order = new OrderRepository(_context);
+            }
+            return _order;
+        }
+    }
+
+    public ICustomerRepository Customers
+    {
+        get
+        {
+            if (_customer is null)
+            {
+                _customer = new CustomerRepository(_context);
+            }
+            return _customer;
+        }
+    }
+
+    public IOrderAttachmentRepository OrderAttachments
+    {
+        get
+        {
+            if (_orderAttachmentRepository == null)
+            {
+                _orderAttachmentRepository = new OrderAttachmentRepository(_context);
+            }
+            return _orderAttachmentRepository;
+        }
+    }
+
+    public IOrderManufacturingItemRepository OrderManufacturingItems
+    {
+        get
+        {
+            if (_orderManufacturingItem == null)
+            {
+                _orderManufacturingItem = new OrderManufacturingItemRepository(_context);
+            }
+            return _orderManufacturingItem;
+        }
+    }
+
+    public IOrderTimelineRepository OrderTimelines
+    {
+        get
+        {
+            if (_orderTimelineRepository == null)
+            {
+                _orderTimelineRepository = new OrderTimelineRepository(_context);
+            }
+            return _orderTimelineRepository;
+
+        }
+    }
+
 
     public async Task<int> CompleteAsync()
     {
