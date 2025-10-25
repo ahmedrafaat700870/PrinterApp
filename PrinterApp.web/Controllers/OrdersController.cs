@@ -6,6 +6,7 @@ using PrinterApp.Data.UnitOfWork;
 using PrinterApp.Models.Entities;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -30,7 +31,7 @@ namespace PrinterApp.Web.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index(string searchTerm, string status, string stage)
+        public async Task<IActionResult> Index(string searchTerm, string status, string stage, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<OrderViewModel> orders;
 
@@ -48,14 +49,25 @@ namespace PrinterApp.Web.Controllers
             }
             else
             {
-                orders = await _orderService.GetActiveOrdersAsync();
+                orders = (await _orderService.GetAllOrdersAsync()).Where(x =>x.IsActive);
             }
+
+            // Apply pagination
+            var paginatedOrders = PaginatedList<OrderViewModel>.Create(orders, pageNumber, pageSize);
 
             ViewData["CurrentFilter"] = searchTerm;
             ViewData["CurrentStatus"] = status;
             ViewData["CurrentStage"] = stage;
+            
+            // Pagination data
+            ViewData["PageIndex"] = paginatedOrders.PageIndex;
+            ViewData["TotalPages"] = paginatedOrders.TotalPages;
+            ViewData["TotalCount"] = paginatedOrders.TotalCount;
+            ViewData["PageSize"] = paginatedOrders.PageSize;
+            ViewData["HasPreviousPage"] = paginatedOrders.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedOrders.HasNextPage;
 
-            return View(orders);
+            return View(paginatedOrders);
         }
 
         // GET: Orders/Details/5
@@ -341,7 +353,8 @@ namespace PrinterApp.Web.Controllers
         // GET: Orders/PrintingList - Stage 4 List
         public async Task<IActionResult> PrintingList()
         {
-            var orders = await _orderService.GetPrintingOrdersAsync();
+            var orders = (await _orderService.GetPrintingOrdersAsync()).OrderBy(o => o.Priority)
+                .ThenBy(o => o.ExpectedDeliveryDate);
             return View(orders);
         }
 

@@ -249,6 +249,8 @@
                 </table>
             </div>
         </div>
+
+        @await Html.PartialAsync("_Pagination", Model)
     }
     else
     {

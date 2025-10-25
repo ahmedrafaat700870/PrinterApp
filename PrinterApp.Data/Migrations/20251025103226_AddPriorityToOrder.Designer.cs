@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PrinterApp.Data;
 
@@ -11,9 +12,11 @@ using PrinterApp.Data;
 namespace PrinterApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251025103226_AddPriorityToOrder")]
+    partial class AddPriorityToOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("CartonName")
                         .IsUnique();
 
-                    b.ToTable("Cartons", (string)null);
+                    b.ToTable("Cartons");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Core", b =>
@@ -308,7 +311,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("CoreName")
                         .IsUnique();
 
-                    b.ToTable("Cores", (string)null);
+                    b.ToTable("Cores");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Customer", b =>
@@ -388,7 +391,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("Phone");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Knife", b =>
@@ -428,7 +431,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("KnifeName")
                         .IsUnique();
 
-                    b.ToTable("Knives", (string)null);
+                    b.ToTable("Knives");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Machine", b =>
@@ -478,7 +481,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("MachineName")
                         .IsUnique();
 
-                    b.ToTable("Machines", (string)null);
+                    b.ToTable("Machines");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.ManufacturingAddition", b =>
@@ -510,7 +513,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("AdditionName")
                         .IsUnique();
 
-                    b.ToTable("ManufacturingAdditions", (string)null);
+                    b.ToTable("ManufacturingAdditions");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Mold", b =>
@@ -574,7 +577,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("MoldShapeId");
 
-                    b.ToTable("Molds", (string)null);
+                    b.ToTable("Molds");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.MoldShape", b =>
@@ -616,7 +619,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("ShapeName")
                         .IsUnique();
 
-                    b.ToTable("MoldShapes", (string)null);
+                    b.ToTable("MoldShapes");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Order", b =>
@@ -782,7 +785,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.OrderAttachment", b =>
@@ -843,7 +846,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("UploadedDate");
 
-                    b.ToTable("OrderAttachments", (string)null);
+                    b.ToTable("OrderAttachments");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.OrderManufacturingItem", b =>
@@ -889,7 +892,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderManufacturingItems", (string)null);
+                    b.ToTable("OrderManufacturingItems");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.OrderTimeline", b =>
@@ -939,7 +942,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("Stage");
 
-                    b.ToTable("OrderTimelines", (string)null);
+                    b.ToTable("OrderTimelines");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Permission", b =>
@@ -976,7 +979,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Permissions", (string)null);
+                    b.ToTable("Permissions");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.PermissionRole", b =>
@@ -1008,7 +1011,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("PermissionId", "RoleName")
                         .IsUnique();
 
-                    b.ToTable("PermissionRoles", (string)null);
+                    b.ToTable("PermissionRoles");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Product", b =>
@@ -1065,7 +1068,7 @@ namespace PrinterApp.Data.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.ProductAddition", b =>
@@ -1092,7 +1095,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("ProductId", "ManufacturingAdditionId")
                         .IsUnique();
 
-                    b.ToTable("ProductAdditions", (string)null);
+                    b.ToTable("ProductAdditions");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.RawMaterial", b =>
@@ -1142,7 +1145,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("RawMaterialName")
                         .IsUnique();
 
-                    b.ToTable("RawMaterials", (string)null);
+                    b.ToTable("RawMaterials");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.RollDirection", b =>
@@ -1182,7 +1185,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("DirectionNumber")
                         .IsUnique();
 
-                    b.ToTable("RollDirections", (string)null);
+                    b.ToTable("RollDirections");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.Supplier", b =>
@@ -1262,7 +1265,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("SupplierName")
                         .IsUnique();
 
-                    b.ToTable("Suppliers", (string)null);
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.SystemSetting", b =>
@@ -1295,7 +1298,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.ToTable("SystemSettings", (string)null);
+                    b.ToTable("SystemSettings");
                 });
 
             modelBuilder.Entity("PrinterApp.Models.Entities.UserPermission", b =>
@@ -1328,7 +1331,7 @@ namespace PrinterApp.Data.Migrations
                     b.HasIndex("UserId", "PermissionId", "PermissionRoleId")
                         .IsUnique();
 
-                    b.ToTable("UserPermissions", (string)null);
+                    b.ToTable("UserPermissions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

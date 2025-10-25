@@ -64,5 +64,11 @@ namespace PrinterApp.Services.Interfaces
 
         // Timeline
         Task<IEnumerable<OrderTimelineViewModel>> GetOrderTimelineAsync(int orderId);
+
+        // Print Queue & Priority Management
+        Task<IEnumerable<PrintQueueViewModel>> GetPrintQueueOrderedByPriorityAsync();
+        Task<(bool Success, string[] Errors)> UpdatePrintOrderPriorityAsync(int orderId, int priority, string userId, string userName);
+        Task<(bool Success, string[] Errors)> ReorderPrintQueueAsync(Dictionary<int, int> orderPriorities, string userId, string userName);
+        Task<PrintQueueViewModel> GetPrintQueueItemAsync(int orderId);
     }
 }

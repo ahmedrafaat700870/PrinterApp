@@ -46,4 +46,17 @@ public class Repository<T> : IRepository<T> where T : class
     {
         _dbSet.Remove(entity);
     }
+
+    public Task<IEnumerable<T>> GetWithIncludesAsync(List<string> includeStrings = null)
+    {
+        IQueryable<T> query = _dbSet;
+        if (includeStrings != null)
+        {
+            foreach (var includeString in includeStrings)
+            {
+                query = query.Include(includeString);
+            }
+        }
+        return Task.FromResult((IEnumerable<T>)query);
+    }
 }

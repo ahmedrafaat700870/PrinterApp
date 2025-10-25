@@ -1,0 +1,252 @@
+@model PrinterApp.Models.ViewModels.PrintQueueViewModel
+
+<tr class="detail-row" id="details-@Model.Id" style="display: none;">
+    <td colspan="11" style="background: #f8f9fa; padding: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            <!-- Stage 1: Order Information -->
+            <div class="detail-section">
+                <h5 style="color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">
+                    📋 معلومات الطلب
+                </h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">المورد:</span>
+                        <span class="detail-value">@(Model.SupplierName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">نوع الخام:</span>
+                        <span class="detail-value">@(Model.RawMaterialName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">اتجاه الرول:</span>
+                        <span class="detail-value">
+                            @if (!string.IsNullOrEmpty(Model.RollDirectionImage))
+                            {
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <img src="@Model.RollDirectionImage" 
+                                         alt="Direction @Model.RollDirectionNumber" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 2px solid var(--border-color);" />
+                                    <span style="font-weight: bold; color: var(--primary-color);">@Model.RollDirectionNumber</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <span>@(Model.RollDirectionNumber ?? "غير محدد")</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">الطول:</span>
+                        <span class="detail-value">@Model.Length سم</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">العرض:</span>
+                        <span class="detail-value">@Model.Width سم</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">تاريخ الطلب:</span>
+                        <span class="detail-value">@Model.OrderDate.ToString("yyyy-MM-dd")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2: Review Information -->
+            <div class="detail-section">
+                <h5 style="color: var(--info-color); margin-bottom: 15px; border-bottom: 2px solid var(--info-color); padding-bottom: 5px;">
+                    🔍 معلومات المراجعة
+                </h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">الماكينة:</span>
+                        <span class="detail-value">@(Model.MachineName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">القلب (Core):</span>
+                        <span class="detail-value">@(Model.CoreName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">السكينة:</span>
+                        <span class="detail-value">@(Model.KnifeName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">الكرتون:</span>
+                        <span class="detail-value">@(Model.CartonName ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">القالب:</span>
+                        <span class="detail-value">@(Model.MoldNumber ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">راجع بواسطة:</span>
+                        <span class="detail-value">@(Model.ReviewedBy ?? "غير محدد")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4: Printing Information -->
+            <div class="detail-section">
+                <h5 style="color: var(--success-color); margin-bottom: 15px; border-bottom: 2px solid var(--success-color); padding-bottom: 5px;">
+                    🖨️ معلومات الطباعة
+                </h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">تاريخ بدء الطباعة:</span>
+                        <span class="detail-value">@(Model.PrintingStartDate?.ToString("yyyy-MM-dd HH:mm") ?? "لم تبدأ")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">طبع بواسطة:</span>
+                        <span class="detail-value">@(Model.PrintedBy ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">الحالة:</span>
+                        <span class="detail-value">
+                            <span class="@Model.StatusBadgeClass">@Model.StatusText</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Information -->
+            <div class="detail-section">
+                <h5 style="color: var(--warning-color); margin-bottom: 15px; border-bottom: 2px solid var(--warning-color); padding-bottom: 5px;">
+                    📝 معلومات التدقيق
+                </h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">تاريخ الإنشاء:</span>
+                        <span class="detail-value">@Model.CreatedDate.ToString("yyyy-MM-dd HH:mm")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">أنشئ بواسطة:</span>
+                        <span class="detail-value">@(Model.CreatedBy ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">آخر تعديل:</span>
+                        <span class="detail-value">@(Model.LastModified?.ToString("yyyy-MM-dd HH:mm") ?? "لا يوجد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">عدل بواسطة:</span>
+                        <span class="detail-value">@(Model.ModifiedBy ?? "غير محدد")</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">نشط:</span>
+                        <span class="detail-value">
+                            @if (Model.IsActive)
+                            {
+                                <span class="badge bg-success">✓ نشط</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">✗ غير نشط</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attachments and Manufacturing Items Count -->
+            <div class="detail-section">
+                <h5 style="color: var(--primary-color); margin-bottom: 15px; border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">
+                    📎 المرفقات والتصنيع
+                </h5>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">عدد المرفقات:</span>
+                        <span class="detail-value">
+                            @if (Model.AttachmentsCount > 0)
+                            {
+                                <span class="badge bg-info">@Model.AttachmentsCount مرفق</span>
+                                <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id" 
+                                   class="btn-sm btn-info" style="margin-right: 10px;">
+                                    عرض المرفقات
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">لا يوجد مرفقات</span>
+                            }
+                        </span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">عدد عناصر التصنيع:</span>
+                        <span class="detail-value">
+                            @if (Model.ManufacturingItemsCount > 0)
+                            {
+                                <span class="badge bg-info">@Model.ManufacturingItemsCount عنصر</span>
+                                <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id" 
+                                   class="btn-sm btn-info" style="margin-right: 10px;">
+                                    عرض العناصر
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">لا يوجد عناصر</span>
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center; border-top: 1px solid #dee2e6; padding-top: 15px;">
+            <a asp-controller="Orders" asp-action="Details" asp-route-id="@Model.Id" 
+               class="btn-primary-custom">
+                📄 عرض التفاصيل الكاملة
+            </a>
+            <a asp-action="PrintDetails" asp-route-id="@Model.Id" 
+               class="btn-secondary-custom">
+                🖨️ تفاصيل الطباعة
+            </a>
+        </div>
+    </td>
+</tr>
+
+<style>
+    .detail-section {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .detail-grid {
+        display: grid;
+        gap: 12px;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: bold;
+        color: var(--medium-gray);
+        min-width: 120px;
+    }
+
+    .detail-value {
+        text-align: left;
+        flex: 1;
+    }
+
+    .btn-sm {
+        padding: 4px 8px;
+        font-size: 12px;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        color: white;
+    }
+
+    .btn-info {
+        background: var(--info-color);
+    }
+</style>

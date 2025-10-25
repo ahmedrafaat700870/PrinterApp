@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace PrinterApp.Web.Controllers
 
         // GET: Machines
         [Authorize(Policy = "Permission.MACHINE.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<MachineViewModel> machines;
 
@@ -31,7 +32,15 @@ namespace PrinterApp.Web.Controllers
                 machines = await _machineService.GetAllMachinesAsync();
             }
 
-            return View(machines);
+            var paginatedMachines = PaginatedList<MachineViewModel>.Create(machines, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedMachines.PageIndex;
+            ViewData["TotalPages"] = paginatedMachines.TotalPages;
+            ViewData["TotalCount"] = paginatedMachines.TotalCount;
+            ViewData["PageSize"] = paginatedMachines.PageSize;
+            ViewData["HasPreviousPage"] = paginatedMachines.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedMachines.HasNextPage;
+
+            return View(paginatedMachines);
         }
 
         // GET: Machines/Create

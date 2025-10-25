@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace PrinterApp.Web.Controllers
 
         // GET: Cartons
         [Authorize(Policy = "Permission.CARTON.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<CartonViewModel> cartons;
 
@@ -31,7 +32,15 @@ namespace PrinterApp.Web.Controllers
                 cartons = await _cartonService.GetAllCartonsAsync();
             }
 
-            return View(cartons);
+            var paginatedCartons = PaginatedList<CartonViewModel>.Create(cartons, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedCartons.PageIndex;
+            ViewData["TotalPages"] = paginatedCartons.TotalPages;
+            ViewData["TotalCount"] = paginatedCartons.TotalCount;
+            ViewData["PageSize"] = paginatedCartons.PageSize;
+            ViewData["HasPreviousPage"] = paginatedCartons.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedCartons.HasNextPage;
+
+            return View(paginatedCartons);
         }
 
         // GET: Cartons/Create

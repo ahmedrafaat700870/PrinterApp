@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PrinterApp.Data;
 using PrinterApp.Models.Entities;
+using System.Linq.Expressions;
 
 namespace PrinterApp.Data.Repositories
 {
@@ -10,8 +11,10 @@ namespace PrinterApp.Data.Repositories
         {
         }
 
-        // ===== البحث والفلترة =====
 
+
+        // ===== البحث والفلترة =====
+        
         public async Task<Order> GetByOrderNumberAsync(string orderNumber)
         {
             return await _context.Orders
@@ -22,6 +25,7 @@ namespace PrinterApp.Data.Repositories
                 .Include(o => o.RawMaterial)
                 .FirstOrDefaultAsync(o => o.OrderNumber == orderNumber);
         }
+        
 
         public async Task<bool> OrderNumberExistsAsync(string orderNumber, int? excludeId = null)
         {

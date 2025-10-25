@@ -1,18 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Models.Entities;
 
 namespace PrinterApp.Web.Controllers
 {
     public class HomeController  : Controller
     {
         private readonly ILanguageService _languageService;
-        public HomeController(ILanguageService languageService)
+        private readonly IOrderService _orderService;
+        
+        public HomeController(ILanguageService languageService, IOrderService orderService)
         {
             _languageService = languageService;
+            _orderService = orderService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                // Get statistics
+                var allOrders = await _orderService.GetActiveOrdersAsync();
+                
+                ViewBag.TotalOrders = allOrders.Count();
+                ViewBag.PendingOrders = allOrders.Count(o => o.Status == OrderStatus.Pending);
+                ViewBag.InPrintingOrders = allOrders.Count(o => o.Stage == OrderStage.Printing);
+                ViewBag.CompletedOrders = allOrders.Count(o => o.Status == OrderStatus.Completed);
+                ViewBag.LateOrders = allOrders.Count(o => o.IsLate);
+                
+                // Print queue statistics
+                var printQueue = await _orderService.GetPrintQueueOrderedByPriorityAsync();
+                ViewBag.PrintQueueCount = printQueue.Count();
+                ViewBag.HighPriorityCount = printQueue.Count(o => o.Priority <= 5);
+            }
+            
             return View();
         }
         [HttpPost]

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace PrinterApp.Web.Controllers
 
         // GET: RawMaterials
         [Authorize(Policy = "Permission.RAWMATERIALS.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<RawMaterialViewModel> rawMaterials;
 
@@ -31,7 +32,15 @@ namespace PrinterApp.Web.Controllers
                 rawMaterials = await _rawMaterialService.GetAllRawMaterialsAsync();
             }
 
-            return View(rawMaterials);
+            var paginatedRawMaterials = PaginatedList<RawMaterialViewModel>.Create(rawMaterials, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedRawMaterials.PageIndex;
+            ViewData["TotalPages"] = paginatedRawMaterials.TotalPages;
+            ViewData["TotalCount"] = paginatedRawMaterials.TotalCount;
+            ViewData["PageSize"] = paginatedRawMaterials.PageSize;
+            ViewData["HasPreviousPage"] = paginatedRawMaterials.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedRawMaterials.HasNextPage;
+
+            return View(paginatedRawMaterials);
         }
 
         // GET: RawMaterials/Create

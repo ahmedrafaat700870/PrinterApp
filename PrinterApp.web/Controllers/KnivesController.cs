@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace PrinterApp.Web.Controllers
 
         // GET: Knives
         [Authorize(Policy = "Permission.KNIVE.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<KnifeViewModel> knives;
 
@@ -31,7 +32,15 @@ namespace PrinterApp.Web.Controllers
                 knives = await _knifeService.GetAllKnivesAsync();
             }
 
-            return View(knives);
+            var paginatedKnives = PaginatedList<KnifeViewModel>.Create(knives, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedKnives.PageIndex;
+            ViewData["TotalPages"] = paginatedKnives.TotalPages;
+            ViewData["TotalCount"] = paginatedKnives.TotalCount;
+            ViewData["PageSize"] = paginatedKnives.PageSize;
+            ViewData["HasPreviousPage"] = paginatedKnives.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedKnives.HasNextPage;
+
+            return View(paginatedKnives);
         }
 
         // GET: Knives/Create

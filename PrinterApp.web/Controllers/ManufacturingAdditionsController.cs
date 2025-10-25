@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers
 {
@@ -17,7 +18,7 @@ namespace PrinterApp.Web.Controllers
 
         // GET: ManufacturingAdditions
         [Authorize(Policy = "Permission.MANUFACTURINGADDITIONS.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<ManufacturingAdditionViewModel> additions;
 
@@ -31,7 +32,15 @@ namespace PrinterApp.Web.Controllers
                 additions = await _additionService.GetAllAdditionsAsync();
             }
 
-            return View(additions);
+            var paginatedAdditions = PaginatedList<ManufacturingAdditionViewModel>.Create(additions, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedAdditions.PageIndex;
+            ViewData["TotalPages"] = paginatedAdditions.TotalPages;
+            ViewData["TotalCount"] = paginatedAdditions.TotalCount;
+            ViewData["PageSize"] = paginatedAdditions.PageSize;
+            ViewData["HasPreviousPage"] = paginatedAdditions.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedAdditions.HasNextPage;
+
+            return View(paginatedAdditions);
         }
 
         // GET: ManufacturingAdditions/Create

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers;
 
@@ -16,7 +17,7 @@ public class MoldsController : Controller
     }
 
     // GET: Molds
-    public async Task<IActionResult> Index(string searchTerm)
+    public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
     {
         IEnumerable<MoldViewModel> molds;
 
@@ -30,7 +31,15 @@ public class MoldsController : Controller
             molds = await _moldService.GetAllMoldsAsync();
         }
 
-        return View(molds);
+        var paginatedMolds = PaginatedList<MoldViewModel>.Create(molds, pageNumber, pageSize);
+        ViewData["PageIndex"] = paginatedMolds.PageIndex;
+        ViewData["TotalPages"] = paginatedMolds.TotalPages;
+        ViewData["TotalCount"] = paginatedMolds.TotalCount;
+        ViewData["PageSize"] = paginatedMolds.PageSize;
+        ViewData["HasPreviousPage"] = paginatedMolds.HasPreviousPage;
+        ViewData["HasNextPage"] = paginatedMolds.HasNextPage;
+
+        return View(paginatedMolds);
     }
 
     // GET: Molds/Create

@@ -73,6 +73,10 @@ namespace PrinterApp.Models.ViewModels
         [Display(Name = "نشط")]
         public bool IsActive { get; set; } = true;
 
+        [Range(1, int.MaxValue, ErrorMessage = "الأولوية يجب أن تكون رقم موجب")]
+        [Display(Name = "أولوية الطباعة")]
+        public int Priority { get; set; } = 999;
+
         // قوائم منسدلة
         public SelectList Suppliers { get; set; }
         public SelectList Products { get; set; }

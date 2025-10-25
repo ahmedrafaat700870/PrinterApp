@@ -1,0 +1,637 @@
+@model PrinterApp.Models.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "تفاصيل الطلب";
+    var order = Model.Order;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <div>
+            <h2>📄 تفاصيل الطلب - @order.OrderNumber</h2>
+            <p style="color: var(--medium-gray); margin-top: 5px;">عرض تفاصيل وأولوية الطلب</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a asp-action="PrintQueue" class="btn-secondary-custom">
+                ← رجوع لقائمة الانتظار
+            </a>
+            <a asp-action="Index" class="btn-secondary-custom">
+                قائمة الطلبات
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Priority Section - For Managers -->
+    @if (User.HasClaim("Permission", "ORDERS.Manage"))
+    {
+        <div class="card-custom" style="margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h3 style="margin: 0 0 10px 0;">⭐ إدارة الأولوية</h3>
+                        <p style="margin: 0; opacity: 0.9;">الأولوية الحالية للطلب في قائمة الطباعة</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; font-weight: bold; margin-bottom: 10px;">
+                            @order.Priority
+                        </div>
+                        <button type="button" 
+                                class="btn-secondary-custom" 
+                                onclick="openEditPriorityModal()"
+                                style="background: white; color: var(--primary-color);">
+                            ✏️ تعديل الأولوية
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Order Info Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+        <div class="card-custom" style="padding: 20px;">
+            <div style="color: var(--medium-gray); margin-bottom: 5px;">المرحلة</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="@order.StageBadgeClass" style="font-size: 16px;">@order.StageText</span>
+            </div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px;">
+            <div style="color: var(--medium-gray); margin-bottom: 5px;">الحالة</div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="@order.StatusBadgeClass" style="font-size: 16px;">@order.StatusText</span>
+            </div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px;">
+            <div style="color: var(--medium-gray); margin-bottom: 5px;">تاريخ التسليم المتوقع</div>
+            <div style="font-size: 18px; font-weight: bold;">
+                @order.ExpectedDeliveryDate.ToString("yyyy-MM-dd")
+                @if (order.IsLate)
+                {
+                    <span style="color: var(--error-color);">⚠️ متأخر</span>
+                }
+            </div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px;">
+            <div style="color: var(--medium-gray); margin-bottom: 5px;">الأولوية</div>
+            <div style="font-size: 24px; font-weight: bold; color: var(--primary-color);">
+                #@order.Priority
+            </div>
+        </div>
+    </div>
+
+    <!-- Complete Order Information Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 20px;">
+        
+        <!-- Stage 1: Basic Order Information -->
+        <div class="card-custom">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h3>📋 معلومات الطلب الأساسية (المرحلة 1)</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">رقم الطلب</span>
+                        <span class="info-value" style="color: var(--primary-color); font-weight: bold;">@order.OrderNumber</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">تاريخ الطلب</span>
+                        <span class="info-value">@order.OrderDate.ToString("yyyy-MM-dd")</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">تاريخ التسليم المتوقع</span>
+                        <span class="info-value">
+                            @order.ExpectedDeliveryDate.ToString("yyyy-MM-dd")
+                            @if (order.IsLate)
+                            {
+                                <span class="badge bg-danger">⚠️ متأخر</span>
+                            }
+                        </span>
+                    </div>
+                    @if (order.ActualDeliveryDate.HasValue)
+                    {
+                        <div class="info-item">
+                            <span class="info-label">تاريخ التسليم الفعلي</span>
+                            <span class="info-value">@order.ActualDeliveryDate.Value.ToString("yyyy-MM-dd")</span>
+                        </div>
+                    }
+                    <div class="info-item">
+                        <span class="info-label">العميل</span>
+                        <span class="info-value">@order.CustomerName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">المورد</span>
+                        <span class="info-value">@order.SupplierName</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">المنتج</span>
+                        <span class="info-value">@order.ProductName</span>
+                    </div>
+                    
+                    @if (!string.IsNullOrEmpty(order.OrderNotes))
+                    {
+                        <div class="info-item" style="grid-column: 1 / -1;">
+                            <span class="info-label">ملاحظات الطلب</span>
+                            <div style="padding: 12px; background: var(--light-gray); border-radius: 5px; margin-top: 8px;">
+                                @order.OrderNotes
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Specifications & Materials -->
+        <div class="card-custom">
+            <div class="card-header" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <h3>📐 المواصفات والمواد</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">الكمية</span>
+                        <span class="info-value" style="font-size: 24px; color: var(--primary-color); font-weight: bold;">@order.Quantity</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">الطول</span>
+                        <span class="info-value">@order.Length سم</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">العرض</span>
+                        <span class="info-value">@order.Width سم</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">المساحة</span>
+                        <span class="info-value">@((order.Length * order.Width).ToString("F2")) سم²</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(order.RawMaterialName))
+                    {
+                        <div class="info-item">
+                            <span class="info-label">نوع الخام</span>
+                            <span class="info-value">@order.RawMaterialName</span>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(order.RollDirectionNumber))
+                    {
+                        <div class="info-item" style="grid-column: 1 / -1;">
+                            <span class="info-label">اتجاه الرول</span>
+                            <div style="margin-top: 10px;">
+                                @if (!string.IsNullOrEmpty(order.RollDirectionImage))
+                                {
+                                    <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--light-gray); border-radius: 8px;">
+                                        <img src="@order.RollDirectionImage" 
+                                             alt="Direction @order.RollDirectionNumber" 
+                                             style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 3px solid var(--primary-color); box-shadow: 0 4px 8px rgba(0,0,0,0.1);" />
+                                        <div>
+                                            <div style="font-size: 28px; font-weight: bold; color: var(--primary-color);">@order.RollDirectionNumber</div>
+                                            <div style="color: var(--medium-gray); font-size: 14px;">رقم الاتجاه</div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="info-value">@order.RollDirectionNumber</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stage 2: Review Information (if available) -->
+    @if (order.Stage >= PrinterApp.Models.Entities.OrderStage.Review)
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                <h3>🔍 معلومات المراجعة (المرحلة 2)</h3>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+                    <!-- Machine, Core, Knife, Carton, Mold details would be shown here -->
+                    <!-- These need to be added to OrderViewModel first -->
+                    <div class="info-item">
+                        <span class="info-label">الحالة</span>
+                        <span class="info-value">تمت المراجعة ✓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Manufacturing Items -->
+    @if (Model.ManufacturingItems != null && Model.ManufacturingItems.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                <h3>⚙️ عناصر التصنيع (@Model.ManufacturingItems.Count)</h3>
+            </div>
+            <div class="card-body">
+                <div style="overflow-x: auto;">
+                    <table class="table-custom">
+                        <thead>
+                            <tr>
+                                <th>الإضافة</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الإكمال</th>
+                                <th>أكمل بواسطة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.ManufacturingItems)
+                            {
+                                <tr>
+                                    <td style="font-weight: 500;">@item.AdditionName</td>
+                                    <td>
+                                        @if (item.IsCompleted)
+                                        {
+                                            <span class="badge bg-success">✓ مكتمل</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">⏳ قيد التنفيذ</span>
+                                        }
+                                    </td>
+                                    <td>@(item.CompletedDate?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                                    <td>@(item.CompletedByName ?? "-")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Audit Information -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div class="card-header" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white;">
+            <h3>📝 معلومات التدقيق والتتبع</h3>
+        </div>
+        <div class="card-body">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">تاريخ الإنشاء</span>
+                    <span class="info-value">@order.CreatedDate.ToString("yyyy-MM-dd HH:mm")</span>
+                </div>
+                @if (order.LastModified.HasValue)
+                {
+                    <div class="info-item">
+                        <span class="info-label">آخر تعديل</span>
+                        <span class="info-value">@order.LastModified.Value.ToString("yyyy-MM-dd HH:mm")</span>
+                    </div>
+                }
+                <div class="info-item">
+                    <span class="info-label">حالة النشاط</span>
+                    <span class="info-value">
+                        @if (order.IsActive)
+                        {
+                            <span class="badge bg-success">✓ نشط</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">✗ غير نشط</span>
+                        }
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">الأولوية</span>
+                    <span class="info-value">
+                        <span class="@(order.Priority <= 5 ? "badge bg-danger" : order.Priority <= 10 ? "badge bg-warning" : order.Priority <= 20 ? "badge bg-info" : "badge bg-secondary")" 
+                              style="font-size: 18px; padding: 8px 16px;">
+                            #@order.Priority
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline -->
+    @if (Model.Timeline != null && Model.Timeline.Any())
+    {
+        <div class="card-custom" style="margin-bottom: 20px;">
+            <div class="card-header">
+                <h3>📅 سجل الحركات</h3>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    @foreach (var item in Model.Timeline)
+                    {
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+                            <div class="timeline-content">
+                                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 5px;">
+                                    <strong>@item.Action</strong>
+                                    <span style="color: var(--medium-gray); font-size: 14px;">
+                                        @item.ActionDate.ToString("yyyy-MM-dd HH:mm")
+                                    </span>
+                                </div>
+                                @if (!string.IsNullOrEmpty(item.ActionByName))
+                                {
+                                    <div style="color: var(--medium-gray); font-size: 14px;">
+                                        بواسطة: @item.ActionByName
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(item.Notes))
+                                {
+                                    <div style="margin-top: 5px; padding: 10px; background: var(--light-gray); border-radius: 5px; font-size: 14px;">
+                                        @item.Notes
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Attachments -->
+    @if (Model.Attachments != null && Model.Attachments.Any())
+    {
+        <div class="card-custom">
+            <div class="card-header">
+                <h3>📎 المرفقات (@Model.AttachmentsCount)</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+                    @foreach (var attachment in Model.Attachments)
+                    {
+                        <div class="attachment-card">
+                            <div style="font-size: 32px; text-align: center; margin-bottom: 10px;">
+                                @if (attachment.FileExtension == ".pdf") { <text>📄</text> }
+                                else if (new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" }.Contains(attachment.FileExtension)) { <text>🖼️</text> }
+                                else if (new[] { ".doc", ".docx" }.Contains(attachment.FileExtension)) { <text>📝</text> }
+                                else if (new[] { ".xls", ".xlsx" }.Contains(attachment.FileExtension)) { <text>📊</text> }
+                                else { <text>📎</text> }
+                            </div>
+                            <div style="font-size: 14px; font-weight: bold; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis;" title="@attachment.OriginalFileName">
+                                @attachment.OriginalFileName
+                            </div>
+                            <div style="font-size: 12px; color: var(--medium-gray);">
+                                @((attachment.FileSize / 1024.0).ToString("F2")) KB
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Edit Priority Modal -->
+<div id="editPriorityModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3>✏️ تعديل أولوية الطلب</h3>
+            <button type="button" class="close-modal" onclick="closeEditPriorityModal()">✕</button>
+        </div>
+        <form asp-action="UpdatePriority" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="orderId" value="@order.Id" />
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="priority">رقم الأولوية</label>
+                    <input type="number" 
+                           id="priority" 
+                           name="priority" 
+                           class="form-control-custom" 
+                           value="@order.Priority" 
+                           min="1" 
+                           required 
+                           placeholder="أدخل رقم الأولوية" />
+                    <small style="color: var(--medium-gray); display: block; margin-top: 5px;">
+                        💡 الأرقام الأقل تعني أولوية أعلى (1 = أعلى أولوية، 2، 3...)
+                    </small>
+                </div>
+                
+                <div style="padding: 15px; background: var(--light-gray); border-radius: 5px; margin-top: 15px;">
+                    <strong>نطاقات الأولوية:</strong>
+                    <ul style="margin: 10px 0 0 20px; padding: 0;">
+                        <li><span class="badge bg-danger">1-5</span> عاجل جداً</li>
+                        <li><span class="badge bg-warning">6-10</span> عاجل</li>
+                        <li><span class="badge bg-info">11-20</span> متوسط</li>
+                        <li><span class="badge bg-secondary">21+</span> عادي</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary-custom" onclick="closeEditPriorityModal()">إلغاء</button>
+                <button type="submit" class="btn-primary-custom">💾 حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    
+    .info-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .info-label {
+        color: var(--medium-gray);
+        font-size: 14px;
+        font-weight: 500;
+    }
+    
+    .info-value {
+        font-weight: bold;
+        font-size: 16px;
+        color: var(--dark-color);
+    }
+    
+    .table-custom {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    
+    .table-custom thead {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .table-custom th,
+    .table-custom td {
+        padding: 12px;
+        text-align: right;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    
+    .table-custom tbody tr:hover {
+        background: var(--light-gray);
+    }
+    
+    .table-custom tfoot {
+        font-weight: bold;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-right: 30px;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding-bottom: 30px;
+    }
+    
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        right: -30px;
+        width: 12px;
+        height: 12px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        top: 5px;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        right: -24px;
+        top: 17px;
+        width: 2px;
+        height: calc(100% - 12px);
+        background: var(--light-gray);
+    }
+    
+    .timeline-item:last-child::before {
+        display: none;
+    }
+    
+    .timeline-content {
+        padding: 15px;
+        background: var(--light-gray);
+        border-radius: 5px;
+    }
+    
+    .attachment-card {
+        padding: 15px;
+        border: 1px solid var(--light-gray);
+        border-radius: 5px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .attachment-card:hover {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 10px;
+        width: 90%;
+        max-height: 90vh;
+        overflow: auto;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 20px;
+        border-top: 1px solid var(--light-gray);
+    }
+    
+    .close-modal {
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--medium-gray);
+    }
+    
+    .close-modal:hover {
+        color: var(--error-color);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        function openEditPriorityModal() {
+            document.getElementById('editPriorityModal').style.display = 'flex';
+            document.getElementById('priority').focus();
+        }
+        
+        function closeEditPriorityModal() {
+            document.getElementById('editPriorityModal').style.display = 'none';
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditPriorityModal();
+            }
+        });
+        
+        // Close modal on outside click
+        document.getElementById('editPriorityModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditPriorityModal();
+            }
+        });
+    </script>
+}

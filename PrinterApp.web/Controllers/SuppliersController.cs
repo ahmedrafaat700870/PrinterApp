@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Web.Controllers;
 
@@ -17,7 +18,7 @@ public class SuppliersController : Controller
 
     // GET: Suppliers
     [Authorize(Policy = "Permission.SUPPLIER.View")]
-    public async Task<IActionResult> Index(string searchTerm)
+    public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
     {
         IEnumerable<SupplierViewModel> suppliers;
 
@@ -31,7 +32,16 @@ public class SuppliersController : Controller
             suppliers = await _supplierService.GetAllSuppliersAsync();
         }
 
-        return View(suppliers);
+        var paginatedSuppliers = PaginatedList<SupplierViewModel>.Create(suppliers, pageNumber, pageSize);
+        
+        ViewData["PageIndex"] = paginatedSuppliers.PageIndex;
+        ViewData["TotalPages"] = paginatedSuppliers.TotalPages;
+        ViewData["TotalCount"] = paginatedSuppliers.TotalCount;
+        ViewData["PageSize"] = paginatedSuppliers.PageSize;
+        ViewData["HasPreviousPage"] = paginatedSuppliers.HasPreviousPage;
+        ViewData["HasNextPage"] = paginatedSuppliers.HasNextPage;
+
+        return View(paginatedSuppliers);
     }
 
     // GET: Suppliers/Create

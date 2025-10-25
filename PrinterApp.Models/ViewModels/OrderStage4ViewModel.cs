@@ -45,6 +45,9 @@ namespace PrinterApp.Models.ViewModels
         [Display(Name = "اتجاه الرول")]
         public string RollDirectionNumber { get; set; }
 
+        [Display(Name = "صورة اتجاه الرول")]
+        public string RollDirectionImage { get; set; }
+
         // معلومات المراجعة
         [Display(Name = "الماكينة")]
         public string MachineName { get; set; }

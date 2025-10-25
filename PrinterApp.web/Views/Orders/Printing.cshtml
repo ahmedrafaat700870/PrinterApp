@@ -30,7 +30,22 @@
                     <div><strong>الكمية:</strong> <span style="font-size: 18px; font-weight: bold; color: var(--primary-color);">@Model.Quantity</span></div>
                     <div><strong>المقاس:</strong> @Model.Length × @Model.Width سم</div>
                     <div><strong>نوع الخام:</strong> @Model.RawMaterialName</div>
-                    <div><strong>اتجاه الرول:</strong> @Model.RollDirectionNumber</div>
+                    <div>
+                        <strong>اتجاه الرول:</strong>
+                        @if (!string.IsNullOrEmpty(Model.RollDirectionImage))
+                        {
+                            <div style="display: inline-flex; align-items: center; gap: 10px; margin-top: 5px;">
+                                <img src="@Model.RollDirectionImage" 
+                                     alt="Direction @Model.RollDirectionNumber" 
+                                     style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px; border: 2px solid var(--border-color); vertical-align: middle;" />
+                                <span style="font-weight: bold; font-size: 18px; color: var(--primary-color);">@Model.RollDirectionNumber</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <span>@Model.RollDirectionNumber</span>
+                        }
+                    </div>
                     <div><strong>الماكينة:</strong> @Model.MachineName</div>
                     <div><strong>القلب:</strong> @Model.CoreName</div>
                     <div><strong>السكينة:</strong> @Model.KnifeName</div>

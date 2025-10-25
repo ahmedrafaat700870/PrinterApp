@@ -1,0 +1,589 @@
+@model IEnumerable<PrinterApp.Models.ViewModels.PrintQueueViewModel>
+
+@{
+    ViewData["Title"] = "قائمة انتظار الطباعة";
+    var currentFilter = ViewData["CurrentFilter"] as string;
+    var fromDate = ViewData["FromDate"] as string;
+    var toDate = ViewData["ToDate"] as string;
+}
+
+<div class="content-container">
+    <div class="page-header">
+        <div>
+            <h2>🖨️ قائمة انتظار الطباعة</h2>
+            <p style="color: var(--medium-gray); margin-top: 5px;">إدارة أولويات الطباعة للطلبات في مرحلة الطباعة - اسحب الطلبات لإعادة ترتيبها</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <a asp-action="Index" class="btn-secondary-custom">
+                ← رجوع للقائمة
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-custom alert-success-custom">
+            ✓ @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-custom alert-error-custom">
+            ✗ @TempData["Error"]
+        </div>
+    }
+
+    <!-- Quick Stats -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+        <div class="card-custom" style="padding: 20px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div style="font-size: 32px; font-weight: bold;">@Model.Count()</div>
+            <div style="margin-top: 5px; opacity: 0.9;">🖨️ طلبات الطباعة</div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: var(--error-color);">@Model.Count(o => o.Priority <= 5)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">⭐ أولوية عالية جداً</div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: var(--success-color);">@Model.Count(o => o.Status == PrinterApp.Models.Entities.OrderStatus.InPrinting)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">✓ قيد الطباعة الآن</div>
+        </div>
+        
+        <div class="card-custom" style="padding: 20px; text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: var(--error-color);">@Model.Count(o => o.IsLate)</div>
+            <div style="color: var(--medium-gray); margin-top: 5px;">⚠️ طلبات متأخرة</div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="card-custom" style="margin-bottom: 20px;">
+        <div style="padding: 20px;">
+            <form asp-action="PrintQueue" method="get" id="searchForm">
+                <div style="display: flex; gap: 10px; align-items: end; flex-wrap: wrap;">
+                    <!-- Search Input -->
+                    <div style="flex: 1; min-width: 250px;">
+                        <label for="searchInput" style="display: block; margin-bottom: 5px; font-weight: bold;">بحث</label>
+                        <div style="position: relative;">
+                            <input type="text"
+                                   name="searchTerm"
+                                   id="searchInput"
+                                   value="@currentFilter"
+                                   class="form-control-custom"
+                                   placeholder="🔍 بحث برقم الطلب، العميل، المنتج..."
+                                   style="padding-right: 100px;" />
+
+                            @if (!string.IsNullOrEmpty(currentFilter))
+                            {
+                                <button type="button"
+                                        id="clearSearch"
+                                        style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: var(--error-color); cursor: pointer; font-size: 20px; padding: 5px 10px;"
+                                        title="مسح البحث">
+                                    ✕
+                                </button>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- From Date -->
+                    <div style="min-width: 200px;">
+                        <label for="fromDate" style="display: block; margin-bottom: 5px; font-weight: bold;">من تاريخ التسليم</label>
+                        <input type="date"
+                               name="fromDate"
+                               id="fromDate"
+                               value="@fromDate"
+                               class="form-control-custom" />
+                    </div>
+
+                    <!-- To Date -->
+                    <div style="min-width: 200px;">
+                        <label for="toDate" style="display: block; margin-bottom: 5px; font-weight: bold;">إلى تاريخ التسليم</label>
+                        <input type="date"
+                               name="toDate"
+                               id="toDate"
+                               value="@toDate"
+                               class="form-control-custom" />
+                    </div>
+
+                    <!-- Buttons -->
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="btn-primary-custom" style="white-space: nowrap;">
+                            🔍 بحث
+                        </button>
+
+                        @if (!string.IsNullOrEmpty(currentFilter) || !string.IsNullOrEmpty(fromDate) || !string.IsNullOrEmpty(toDate))
+                        {
+                            <a asp-action="PrintQueue" class="btn-secondary-custom" style="white-space: nowrap;">
+                                🔄 إعادة تعيين
+                            </a>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Instructions -->
+    <div class="card-custom" style="margin-bottom: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+        <div style="padding: 15px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">💡</span>
+                <div>
+                    <strong>كيفية استخدام قائمة انتظار الطباعة:</strong>
+                    <ul style="margin: 10px 0 0 20px; padding: 0;">
+                        <li><strong>هذه القائمة تعرض فقط الطلبات في مرحلة الطباعة (Stage 4)</strong></li>
+                        <li>اسحب الطلبات لأعلى أو لأسفل لتغيير الأولوية</li>
+                        <li>أو انقر على رقم الأولوية لتعديله مباشرة</li>
+                        <li>الطلبات ذات الأولوية الأقل (1، 2، 3...) تُطبع أولاً</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders Table -->
+    <div class="card-custom">
+        <div class="table-container">
+            @if (Model.Any())
+            {
+                <table class="table-custom">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center;">↕️</th>
+                            <th style="width: 40px; text-align: center;">📋</th>
+                            <th style="width: 80px; text-align: center;">الأولوية</th>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>المنتج</th>
+                            <th style="text-align: center;">الكمية</th>
+                            <th style="text-align: center;">الحالة</th>
+                            <th style="text-align: center;">تاريخ التسليم</th>
+                            <th style="text-align: center; width: 150px;">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sortable-orders">
+                        @foreach (var order in Model)
+                        {
+                            <tr data-order-id="@order.Id" data-priority="@order.Priority" class="sortable-row @(order.IsLate ? "late-order" : "")" style="cursor: move;">
+                                <td style="text-align: center;">
+                                    <span style="font-size: 20px; color: var(--medium-gray);">⋮⋮</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <button type="button" 
+                                            class="btn-expand" 
+                                            onclick="toggleDetails(@order.Id)"
+                                            title="عرض/إخفاء التفاصيل">
+                                        <span id="icon-@order.Id">▶</span>
+                                    </button>
+                                </td>
+                                <td style="text-align: center;">
+                                    <div style="display: flex; align-items: center; justify-content: center; gap: 5px;">
+                                        <span class="@order.PriorityBadgeClass priority-badge" style="font-size: 16px; font-weight: bold; min-width: 40px;">
+                                            @order.Priority
+                                        </span>
+                                        <button type="button" 
+                                                class="btn-icon edit-priority-btn" 
+                                                data-order-id="@order.Id" 
+                                                data-current-priority="@order.Priority"
+                                                title="تعديل الأولوية">
+                                            ✏️
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>@order.OrderNumber</strong>
+                                </td>
+                                <td>@order.CustomerName</td>
+                                <td>@order.ProductName</td>
+                                <td style="text-align: center;">
+                                    <span class="badge bg-secondary">@order.Quantity</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span class="@order.StatusBadgeClass">@order.StatusText</span>
+                                </td>
+                                <td style="text-align: center;">
+                                    @order.ExpectedDeliveryDate.ToString("yyyy-MM-dd")
+                                    @if (order.IsLate)
+                                    {
+                                        <br />
+                                        <span style="color: var(--error-color); font-weight: bold;">⚠️ متأخر</span>
+                                    }
+                                </td>
+                                <td style="text-align: center;">
+                                    <a asp-action="PrintDetails" asp-route-id="@order.Id" class="btn-icon" title="التفاصيل">
+                                        👁️ عرض
+                                    </a>
+                                </td>
+                            </tr>
+                            @await Html.PartialAsync("_PrintQueueDetailed", order)
+                        }
+                    </tbody>
+                </table>
+                
+                <!-- Pagination -->
+                @await Html.PartialAsync("_Pagination", Model)
+            }
+            else
+            {
+                <div style="padding: 60px 20px; text-align: center; color: var(--medium-gray);">
+                    <div style="font-size: 64px; margin-bottom: 20px;">📭</div>
+                    <h3>لا توجد طلبات في قائمة الانتظار</h3>
+                    <p>لم يتم العثور على طلبات للطباعة حالياً</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Edit Priority Modal -->
+<div id="editPriorityModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3>✏️ تعديل الأولوية</h3>
+            <button type="button" class="close-modal" onclick="closeEditModal()">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="editPriorityForm">
+                <input type="hidden" id="editOrderId" />
+                <div class="form-group">
+                    <label for="editPriorityInput">رقم الأولوية</label>
+                    <input type="number" 
+                           id="editPriorityInput" 
+                           class="form-control-custom" 
+                           min="1" 
+                           required 
+                           placeholder="أدخل رقم الأولوية (1 = أعلى أولوية)" />
+                    <small style="color: var(--medium-gray); display: block; margin-top: 5px;">
+                        💡 الأرقام الأقل تعني أولوية أعلى (1، 2، 3...)
+                    </small>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary-custom" onclick="closeEditModal()">إلغاء</button>
+            <button type="button" class="btn-primary-custom" onclick="savePriority()">💾 حفظ</button>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
+    <div style="background: white; padding: 30px; border-radius: 10px; text-align: center;">
+        <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-color); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+        <p>جاري الحفظ...</p>
+    </div>
+</div>
+
+<style>
+    .late-order {
+        background-color: #fff5f5 !important;
+    }
+    
+    .sortable-row:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .btn-icon {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: all 0.3s;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .btn-icon:hover {
+        background-color: var(--light-gray);
+    }
+    
+    .btn-expand {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        padding: 5px;
+        transition: transform 0.3s;
+    }
+    
+    .btn-expand:hover {
+        color: var(--primary-color);
+    }
+    
+    .btn-expand.expanded {
+        transform: rotate(90deg);
+    }
+    
+    .priority-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    
+    .detail-row {
+        animation: slideDown 0.3s ease-out;
+    }
+    
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 10px;
+        width: 90%;
+        max-height: 90vh;
+        overflow: auto;
+    }
+    
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid var(--light-gray);
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 20px;
+        border-top: 1px solid var(--light-gray);
+    }
+    
+    .close-modal {
+        background: transparent;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--medium-gray);
+    }
+    
+    .close-modal:hover {
+        color: var(--error-color);
+    }
+    
+    @@keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>
+
+@section Scripts {
+    <!-- SortableJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    
+    <script>
+        // Toggle details row
+        function toggleDetails(orderId) {
+            const detailsRow = document.getElementById('details-' + orderId);
+            const icon = document.getElementById('icon-' + orderId);
+            const button = icon.parentElement;
+            
+            if (detailsRow.style.display === 'none' || detailsRow.style.display === '') {
+                detailsRow.style.display = 'table-row';
+                icon.textContent = '▼';
+                button.classList.add('expanded');
+            } else {
+                detailsRow.style.display = 'none';
+                icon.textContent = '▶';
+                button.classList.remove('expanded');
+            }
+        }
+
+        // Initialize Sortable
+        document.addEventListener('DOMContentLoaded', function() {
+            var tbody = document.getElementById('sortable-orders');
+            if (tbody) {
+                var sortable = Sortable.create(tbody, {
+                    animation: 150,
+                    handle: '.sortable-row',
+                    draggable: '.sortable-row',
+                    filter: '.detail-row',
+                    ghostClass: 'sortable-ghost',
+                    onEnd: function(evt) {
+                        saveReorderedQueue();
+                    }
+                });
+            }
+            
+            // Edit priority button handlers
+            document.querySelectorAll('.edit-priority-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    openEditModal(this.dataset.orderId, this.dataset.currentPriority);
+                });
+            });
+        });
+        
+        function saveReorderedQueue() {
+            const rows = document.querySelectorAll('#sortable-orders tr');
+            const orderPriorities = {};
+            
+            rows.forEach((row, index) => {
+                const orderId = parseInt(row.dataset.orderId);
+                const newPriority = index + 1; // Priority starts from 1
+                orderPriorities[orderId] = newPriority;
+                
+                // Update UI
+                const badge = row.querySelector('.priority-badge');
+                if (badge) {
+                    badge.textContent = newPriority;
+                    badge.className = getPriorityBadgeClass(newPriority);
+                }
+                row.dataset.priority = newPriority;
+            });
+            
+            showLoading();
+            
+            fetch('@Url.Action("ReorderQueue", "PrintOrders")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                },
+                body: JSON.stringify(orderPriorities)
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage(data.message || 'حدث خطأ أثناء الحفظ', 'error');
+                    location.reload(); // Reload to restore original order
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showMessage('حدث خطأ في الاتصال', 'error');
+                location.reload();
+            });
+        }
+        
+        function openEditModal(orderId, currentPriority) {
+            document.getElementById('editOrderId').value = orderId;
+            document.getElementById('editPriorityInput').value = currentPriority;
+            document.getElementById('editPriorityModal').style.display = 'flex';
+            document.getElementById('editPriorityInput').focus();
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editPriorityModal').style.display = 'none';
+        }
+        
+        function savePriority() {
+            const orderId = document.getElementById('editOrderId').value;
+            const priority = parseInt(document.getElementById('editPriorityInput').value);
+            
+            if (!priority || priority < 1) {
+                showMessage('يرجى إدخال رقم أولوية صحيح', 'error');
+                return;
+            }
+            
+            showLoading();
+            closeEditModal();
+            
+            fetch('@Url.Action("UpdatePriorityAjax", "PrintOrders")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `orderId=${orderId}&priority=${priority}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    // Reload to show updated order
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(data.message || 'حدث خطأ أثناء الحفظ', 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showMessage('حدث خطأ في الاتصال', 'error');
+            });
+        }
+        
+        function getPriorityBadgeClass(priority) {
+            if (priority <= 5) return 'badge bg-danger priority-badge';
+            if (priority <= 10) return 'badge bg-warning priority-badge';
+            if (priority <= 20) return 'badge bg-info priority-badge';
+            return 'badge bg-secondary priority-badge';
+        }
+        
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        function showMessage(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert-custom alert-${type === 'success' ? 'success' : 'error'}-custom`;
+            alertDiv.style.position = 'fixed';
+            alertDiv.style.top = '20px';
+            alertDiv.style.right = '20px';
+            alertDiv.style.zIndex = '10000';
+            alertDiv.textContent = (type === 'success' ? '✓ ' : '✗ ') + message;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeEditModal();
+            }
+        });
+        
+        // Close modal on outside click
+        document.getElementById('editPriorityModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+        
+        // Submit form on Enter
+        document.getElementById('editPriorityForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            savePriority();
+        });
+    </script>
+}

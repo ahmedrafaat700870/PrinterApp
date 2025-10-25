@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 
 namespace PrinterApp.Controllers
 {
@@ -15,7 +16,7 @@ namespace PrinterApp.Controllers
 
         // قائمة العملاء
         [HttpGet]
-        public async Task<IActionResult> Index(string search = null)
+        public async Task<IActionResult> Index(string search = null, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<CustomerViewModel> customers;
 
@@ -28,8 +29,19 @@ namespace PrinterApp.Controllers
                 customers = await _customerService.GetAllCustomersAsync();
             }
 
+            // Apply pagination
+            var paginatedCustomers = PaginatedList<CustomerViewModel>.Create(customers, pageNumber, pageSize);
+
             ViewBag.Search = search;
-            return View(customers);
+            ViewData["CurrentFilter"] = search;
+            ViewData["PageIndex"] = paginatedCustomers.PageIndex;
+            ViewData["TotalPages"] = paginatedCustomers.TotalPages;
+            ViewData["TotalCount"] = paginatedCustomers.TotalCount;
+            ViewData["PageSize"] = paginatedCustomers.PageSize;
+            ViewData["HasPreviousPage"] = paginatedCustomers.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedCustomers.HasNextPage;
+
+            return View(paginatedCustomers);
         }
 
         // تفاصيل العميل

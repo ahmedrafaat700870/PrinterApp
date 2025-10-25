@@ -19,7 +19,7 @@ public class CoresController : Controller
     // GET: Cores
 
     [Authorize(Policy = "Permission.CORE.View")]
-    public async Task<IActionResult> Index(string searchTerm)
+    public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
     {
         IEnumerable<CoreViewModel> cores;
 
@@ -33,7 +33,15 @@ public class CoresController : Controller
             cores = await _coreService.GetAllCoresAsync();
         }
 
-        return View(cores);
+        var paginatedCores = PaginatedList<CoreViewModel>.Create(cores, pageNumber, pageSize);
+        ViewData["PageIndex"] = paginatedCores.PageIndex;
+        ViewData["TotalPages"] = paginatedCores.TotalPages;
+        ViewData["TotalCount"] = paginatedCores.TotalCount;
+        ViewData["PageSize"] = paginatedCores.PageSize;
+        ViewData["HasPreviousPage"] = paginatedCores.HasPreviousPage;
+        ViewData["HasNextPage"] = paginatedCores.HasNextPage;
+
+        return View(paginatedCores);
     }
 
     // POST: Cores/Search (للـ AJAX)

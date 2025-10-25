@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using PrinterApp.Web.Models;
 using PrinterApp.Web.Helpers;
 
 namespace PrinterApp.Web.Controllers
@@ -19,7 +20,7 @@ namespace PrinterApp.Web.Controllers
         }
 
         [Authorize(Policy = "Permission.ROLEDIRECTION.View")]
-        public async Task<IActionResult> Index(string searchTerm)
+        public async Task<IActionResult> Index(string searchTerm, int pageNumber = 1, int pageSize = 25)
         {
             IEnumerable<RollDirectionViewModel> directions;
 
@@ -33,7 +34,15 @@ namespace PrinterApp.Web.Controllers
                 directions = await _rollDirectionService.GetAllDirectionsAsync();
             }
 
-            return View(directions);
+            var paginatedDirections = PaginatedList<RollDirectionViewModel>.Create(directions, pageNumber, pageSize);
+            ViewData["PageIndex"] = paginatedDirections.PageIndex;
+            ViewData["TotalPages"] = paginatedDirections.TotalPages;
+            ViewData["TotalCount"] = paginatedDirections.TotalCount;
+            ViewData["PageSize"] = paginatedDirections.PageSize;
+            ViewData["HasPreviousPage"] = paginatedDirections.HasPreviousPage;
+            ViewData["HasNextPage"] = paginatedDirections.HasNextPage;
+
+            return View(paginatedDirections);
         }
 
         [Authorize(Policy = "Permission.ROLEDIRECTION.Create")]

@@ -1,31 +1,19 @@
-﻿using PrinterApp.Models.Entities;
+using PrinterApp.Models.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace PrinterApp.Models.ViewModels
 {
-    public class OrderViewModel
+    public class PrintQueueViewModel
     {
         public int Id { get; set; }
+
+        [Display(Name = "الأولوية")]
+        public int Priority { get; set; }
 
         [Display(Name = "رقم الطلب")]
         public string OrderNumber { get; set; }
 
-        [Display(Name = "تاريخ الطلب")]
-        public DateTime OrderDate { get; set; }
-
-        [Display(Name = "تاريخ التسليم المتوقع")]
-        public DateTime ExpectedDeliveryDate { get; set; }
-
-        [Display(Name = "تاريخ التسليم الفعلي")]
-        public DateTime? ActualDeliveryDate { get; set; }
-
-        // ✅ إضافة الـ IDs المطلوبة للـ Edit
-        public int CustomerId { get; set; }
-        public int SupplierId { get; set; }
-        public int ProductId { get; set; }
-        public int? RollDirectionId { get; set; }
-        public int? RawMaterialId { get; set; }
-
+        // Stage 1 - Order Info
         [Display(Name = "العميل")]
         public string CustomerName { get; set; }
 
@@ -44,20 +32,47 @@ namespace PrinterApp.Models.ViewModels
         [Display(Name = "نوع الخام")]
         public string RawMaterialName { get; set; }
 
-        [Display(Name = "الكمية")]
-        public int Quantity { get; set; }
-
         [Display(Name = "الطول")]
         public decimal Length { get; set; }
 
         [Display(Name = "العرض")]
         public decimal Width { get; set; }
 
-        [Display(Name = "الحالة")]
-        public OrderStatus Status { get; set; }
+        [Display(Name = "الكمية")]
+        public int Quantity { get; set; }
 
-        [Display(Name = "المرحلة")]
-        public OrderStage Stage { get; set; }
+        // Stage 2 - Review Info
+        [Display(Name = "الماكينة")]
+        public string MachineName { get; set; }
+
+        [Display(Name = "القلب")]
+        public string CoreName { get; set; }
+
+        [Display(Name = "السكينة")]
+        public string KnifeName { get; set; }
+
+        [Display(Name = "الكرتون")]
+        public string CartonName { get; set; }
+
+        [Display(Name = "القالب")]
+        public string MoldNumber { get; set; }
+
+        [Display(Name = "راجع بواسطة")]
+        public string ReviewedBy { get; set; }
+
+        // Stage 4 - Printing Info
+        [Display(Name = "تاريخ بدء الطباعة")]
+        public DateTime? PrintingStartDate { get; set; }
+
+        [Display(Name = "طبع بواسطة")]
+        public string PrintedBy { get; set; }
+
+        // Dates
+        [Display(Name = "تاريخ الطلب")]
+        public DateTime OrderDate { get; set; }
+
+        [Display(Name = "تاريخ التسليم المتوقع")]
+        public DateTime ExpectedDeliveryDate { get; set; }
 
         [Display(Name = "تاريخ الإنشاء")]
         public DateTime CreatedDate { get; set; }
@@ -65,31 +80,35 @@ namespace PrinterApp.Models.ViewModels
         [Display(Name = "آخر تعديل")]
         public DateTime? LastModified { get; set; }
 
+        // Status
+        [Display(Name = "الحالة")]
+        public OrderStatus Status { get; set; }
+
+        [Display(Name = "المرحلة")]
+        public OrderStage Stage { get; set; }
+
         [Display(Name = "نشط")]
         public bool IsActive { get; set; }
 
         [Display(Name = "متأخر")]
         public bool IsLate { get; set; }
 
-        // ✅ إضافة OrderNotes
-        [Display(Name = "ملاحظات الطلب")]
-        public string? OrderNotes { get; set; }
+        // Audit
+        [Display(Name = "أنشئ بواسطة")]
+        public string CreatedBy { get; set; }
 
-        [Range(1, int.MaxValue, ErrorMessage = "الأولوية يجب أن تكون رقم موجب")]
-        [Display(Name = "أولوية الطباعة")]
-        public int Priority { get; set; } = 999;
+        [Display(Name = "عدل بواسطة")]
+        public string ModifiedBy { get; set; }
 
-        [Display(Name = "عدد المرفقات")]
+        // Counts
         public int AttachmentsCount { get; set; }
-
-        [Display(Name = "عدد عناصر التصنيع")]
         public int ManufacturingItemsCount { get; set; }
 
-        // للعرض
         public string StatusText => Status.GetDisplayName();
         public string StageText => Stage.GetDisplayName();
         public string StatusBadgeClass => GetStatusBadgeClass();
         public string StageBadgeClass => GetStageBadgeClass();
+        public string PriorityBadgeClass => GetPriorityBadgeClass();
 
         private string GetStatusBadgeClass()
         {
@@ -115,6 +134,17 @@ namespace PrinterApp.Models.ViewModels
                 OrderStage.Manufacturing => "badge bg-primary",
                 OrderStage.Printing => "badge bg-secondary",
                 OrderStage.Completed => "badge bg-success",
+                _ => "badge bg-secondary"
+            };
+        }
+
+        private string GetPriorityBadgeClass()
+        {
+            return Priority switch
+            {
+                <= 5 => "badge bg-danger",
+                <= 10 => "badge bg-warning",
+                <= 20 => "badge bg-info",
                 _ => "badge bg-secondary"
             };
         }

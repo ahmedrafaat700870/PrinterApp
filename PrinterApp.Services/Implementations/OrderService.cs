@@ -3,6 +3,7 @@ using PrinterApp.Data.UnitOfWork;
 using PrinterApp.Models.Entities;
 using PrinterApp.Models.ViewModels;
 using PrinterApp.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace PrinterApp.Services.Implementations
 {
@@ -20,6 +21,8 @@ namespace PrinterApp.Services.Implementations
         }
 
         // ===== العمليات الأساسية =====
+
+        
 
         public async Task<IEnumerable<OrderViewModel>> GetAllOrdersAsync()
         {
@@ -579,6 +582,7 @@ namespace PrinterApp.Services.Implementations
                 Quantity = order.Quantity,
                 RawMaterialName = order.RawMaterial?.RawMaterialName,
                 RollDirectionNumber = order.RollDirection?.DirectionNumber.ToString(),
+                RollDirectionImage = order.RollDirection?.DirectionImage,
                 MachineName = order.Machine?.MachineName,
                 CoreName = order.Core?.CoreName.ToString(),
                 KnifeName = order.Knife?.KnifeName.ToString(),
@@ -1152,6 +1156,9 @@ namespace PrinterApp.Services.Implementations
                 CustomerName = order.Customer?.CustomerName,
                 SupplierName = order.Supplier?.SupplierName,
                 ProductName = order.Product?.ProductName,
+                RollDirectionNumber = order.RollDirection?.DirectionNumber.ToString(),
+                RollDirectionImage = order.RollDirection?.DirectionImage,
+                RawMaterialName = order.RawMaterial?.RawMaterialName,
                 Quantity = order.Quantity,
                 Length = order.Length,
                 Width = order.Width,
@@ -1160,7 +1167,11 @@ namespace PrinterApp.Services.Implementations
                 CreatedDate = order.CreatedDate,
                 LastModified = order.LastModified,
                 IsActive = order.IsActive,
-                IsLate = order.ExpectedDeliveryDate < DateTime.Today && order.Stage != OrderStage.Completed
+                IsLate = order.ExpectedDeliveryDate < DateTime.Today && order.Stage != OrderStage.Completed,
+                Priority = order.Priority,
+                OrderNotes = order.OrderNotes,
+                AttachmentsCount = order.Attachments?.Count ?? 0,
+                ManufacturingItemsCount = order.ManufacturingItems?.Count ?? 0
             };
         }
 
@@ -1202,6 +1213,172 @@ namespace PrinterApp.Services.Implementations
                 Notes = timeline.Notes,
                 ActionDate = timeline.ActionDate,
                 ActionByName = timeline.ActionByName
+            };
+        }
+
+        // ===== Print Queue & Priority Management =====
+
+        public async Task<IEnumerable<PrintQueueViewModel>> GetPrintQueueOrderedByPriorityAsync()
+        {
+            var includes = new List<string>() { nameof(Customer) , nameof(Product) };
+            // Get only orders in Printing stage (Stage 4)
+            var orders = (await _unitOfWork.Orders.GetWithIncludesAsync(includes))
+                .Where(o => 
+                o.IsActive && 
+                o.Stage == OrderStage.Printing);
+
+            return orders
+                .OrderBy(o => o.Priority)
+                .ThenBy(o => o.ExpectedDeliveryDate)
+                .Select(MapToPrintQueueViewModel);
+        }
+
+        public async Task<PrintQueueViewModel> GetPrintQueueItemAsync(int orderId)
+        {
+            var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
+            return order != null ? MapToPrintQueueViewModel(order) : null;
+        }
+
+        public async Task<(bool Success, string[] Errors)> UpdatePrintOrderPriorityAsync(int orderId, int priority, string userId, string userName)
+        {
+            var errors = new List<string>();
+
+            if (priority < 1)
+            {
+                errors.Add("الأولوية يجب أن تكون رقم موجب");
+                return (false, errors.ToArray());
+            }
+
+            var order = await _unitOfWork.Orders.GetByIdAsync(orderId);
+            if (order == null)
+            {
+                errors.Add("الطلب غير موجود");
+                return (false, errors.ToArray());
+            }
+
+            var oldPriority = order.Priority;
+            order.Priority = priority;
+            order.LastModified = DateTime.Now;
+            order.ModifiedBy = userId;
+
+            _unitOfWork.Orders.Update(order);
+
+            var timeline = new OrderTimeline
+            {
+                OrderId = orderId,
+                Stage = order.Stage,
+                Status = order.Status,
+                Action = $"تم تغيير الأولوية من {oldPriority} إلى {priority}",
+                ActionDate = DateTime.Now,
+                ActionBy = userId,
+                ActionByName = userName
+            };
+
+            await _unitOfWork.OrderTimelines.AddAsync(timeline);
+
+            try
+            {
+                await _unitOfWork.CompleteAsync();
+                return (true, Array.Empty<string>());
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"حدث خطأ أثناء تحديث الأولوية: {ex.Message}");
+                return (false, errors.ToArray());
+            }
+        }
+
+        public async Task<(bool Success, string[] Errors)> ReorderPrintQueueAsync(Dictionary<int, int> orderPriorities, string userId, string userName)
+        {
+            var errors = new List<string>();
+
+            try
+            {
+                foreach (var kvp in orderPriorities)
+                {
+                    var order = await _unitOfWork.Orders.GetByIdAsync(kvp.Key);
+                    if (order != null)
+                    {
+                        order.Priority = kvp.Value;
+                        order.LastModified = DateTime.Now;
+                        order.ModifiedBy = userId;
+                        _unitOfWork.Orders.Update(order);
+                    }
+                }
+
+                var timeline = new OrderTimeline
+                {
+                    OrderId = orderPriorities.Keys.First(),
+                    Stage = OrderStage.Printing,
+                    Status = OrderStatus.InPrinting,
+                    Action = "تم إعادة ترتيب قائمة انتظار الطباعة",
+                    ActionDate = DateTime.Now,
+                    ActionBy = userId,
+                    ActionByName = userName
+                };
+
+                await _unitOfWork.OrderTimelines.AddAsync(timeline);
+                await _unitOfWork.CompleteAsync();
+
+                return (true, Array.Empty<string>());
+            }
+            catch (Exception ex)
+            {
+                errors.Add($"حدث خطأ أثناء إعادة الترتيب: {ex.Message}");
+                return (false, errors.ToArray());
+            }
+        }
+
+        private PrintQueueViewModel MapToPrintQueueViewModel(Order order)
+        {
+            return new PrintQueueViewModel
+            {
+                Id = order.Id,
+                Priority = order.Priority,
+                OrderNumber = order.OrderNumber,
+                
+                // Stage 1 - Order Info
+                CustomerName = order.Customer?.CustomerName,
+                SupplierName = order.Supplier?.SupplierName,
+                ProductName = order.Product?.ProductName,
+                RollDirectionNumber = order.RollDirection?.DirectionNumber.ToString(),
+                RollDirectionImage = order.RollDirection?.DirectionImage,
+                RawMaterialName = order.RawMaterial?.RawMaterialName,
+                Length = order.Length,
+                Width = order.Width,
+                Quantity = order.Quantity,
+                
+                // Stage 2 - Review Info
+                MachineName = order.Machine?.MachineName,
+                CoreName = order.Core?.CoreName,
+                KnifeName = order.Knife?.KnifeName,
+                CartonName = order.Carton?.CartonName,
+                MoldNumber = order.Mold?.MoldNumber,
+                ReviewedBy = order.ReviewedBy,
+                
+                // Stage 4 - Printing Info
+                PrintingStartDate = order.PrintingStartDate,
+                PrintedBy = order.PrintedBy,
+                
+                // Dates
+                OrderDate = order.OrderDate,
+                ExpectedDeliveryDate = order.ExpectedDeliveryDate,
+                CreatedDate = order.CreatedDate,
+                LastModified = order.LastModified,
+                
+                // Status
+                Status = order.Status,
+                Stage = order.Stage,
+                IsActive = order.IsActive,
+                IsLate = order.ExpectedDeliveryDate < DateTime.Today && order.Stage != OrderStage.Completed,
+                
+                // Audit
+                CreatedBy = order.CreatedBy,
+                ModifiedBy = order.ModifiedBy,
+                
+                // Counts
+                AttachmentsCount = order.Attachments?.Count ?? 0,
+                ManufacturingItemsCount = order.ManufacturingItems?.Count ?? 0
             };
         }
     }
