@@ -98,8 +98,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         {
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.Notes).HasMaxLength(500);
-            entity.Property(e => e.CompletedBy).HasMaxLength(450);
+            entity.Property(e => e.Notes).HasMaxLength(500).IsRequired(false);
+            entity.Property(e => e.CompletedBy).HasMaxLength(450).IsRequired(false);
             entity.Property(e => e.IsCompleted).IsRequired().HasDefaultValue(false);
 
             // العلاقات

@@ -227,7 +227,12 @@ namespace PrinterApp.Web.Controllers
         public async Task<IActionResult> Review(OrderStage2ViewModel model)
         {
             RemoveStage2ModelStateKeys();
-
+            ModelState.Remove(nameof(OrderStage2ViewModel.Cores));
+            ModelState.Remove(nameof(OrderStage2ViewModel.Molds));
+            ModelState.Remove(nameof(OrderStage2ViewModel.Knives));
+            ModelState.Remove(nameof(OrderStage2ViewModel.Cartons));
+            ModelState.Remove(nameof(OrderStage2ViewModel.Machines));
+            ModelState.Remove(nameof(OrderStage2ViewModel.ManufacturingAdditions));
             if (!ModelState.IsValid)
             {
                 await LoadReviewDropdowns();

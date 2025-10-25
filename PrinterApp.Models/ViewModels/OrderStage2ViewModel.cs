@@ -31,20 +31,16 @@ namespace PrinterApp.Models.ViewModels
         [Display(Name = "نوع الخام")]
         public string RawMaterialName { get; set; }
 
-        // بيانات المراجعة
-        [Required(ErrorMessage = "الماكينة مطلوبة")]
+        // بيانات المراجعة (اختيارية)
         [Display(Name = "الماكينة")]
         public int? MachineId { get; set; }
 
-        [Required(ErrorMessage = "القلب (Core) مطلوب")]
         [Display(Name = "القلب (Core)")]
         public int? CoreId { get; set; }
 
-        [Required(ErrorMessage = "السكينة مطلوبة")]
         [Display(Name = "السكينة")]
         public int? KnifeId { get; set; }
 
-        [Required(ErrorMessage = "الكرتون مطلوب")]
         [Display(Name = "الكرتون")]
         public int? CartonId { get; set; }
 

@@ -35,24 +35,24 @@
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
                         <div class="form-group">
                             <label asp-for="MachineId" class="form-label"></label>
-                            <select asp-for="MachineId" class="form-control-custom" asp-items="ViewBag.Machines" required>
-                                <option value="">-- اختر الماكينة --</option>
+                            <select asp-for="MachineId" class="form-control-custom" asp-items="ViewBag.Machines">
+                                <option value="">-- اختر الماكينة (اختياري) --</option>
                             </select>
                             <span asp-validation-for="MachineId" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
                             <label asp-for="CoreId" class="form-label"></label>
-                            <select asp-for="CoreId" class="form-control-custom" asp-items="ViewBag.Cores" required>
-                                <option value="">-- اختر القلب --</option>
+                            <select asp-for="CoreId" class="form-control-custom" asp-items="ViewBag.Cores">
+                                <option value="">-- اختر القلب (اختياري) --</option>
                             </select>
                             <span asp-validation-for="CoreId" class="text-danger"></span>
                         </div>
 
                         <div class="form-group">
                             <label asp-for="KnifeId" class="form-label"></label>
-                            <select asp-for="KnifeId" class="form-control-custom" asp-items="ViewBag.Knives" required>
-                                <option value="">-- اختر السكينة --</option>
+                            <select asp-for="KnifeId" class="form-control-custom" asp-items="ViewBag.Knives">
+                                <option value="">-- اختر السكينة (اختياري) --</option>
                             </select>
                             <span asp-validation-for="KnifeId" class="text-danger"></span>
                         </div>
@@ -103,17 +103,17 @@
             </form>
 
             <!-- Move to Manufacturing -->
-            @if (Model.MachineId.HasValue && Model.CoreId.HasValue && Model.KnifeId.HasValue)
-            {
-                <form asp-action="MoveToManufacturing" asp-route-id="@Model.Id" method="post" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
-                    @Html.AntiForgeryToken()
-                    <div style="text-align: center;">
-                        <button type="submit" class="btn-success-custom" style="font-size: 16px; padding: 12px 30px;">
-                            ➡️ نقل إلى مرحلة التصنيع
-                        </button>
-                    </div>
-                </form>
-            }
+            <form asp-action="MoveToManufacturing" asp-route-id="@Model.Id" method="post" style="margin-top: 20px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+                @Html.AntiForgeryToken()
+                <div style="text-align: center;">
+                    <button type="submit" class="btn-success-custom" style="font-size: 16px; padding: 12px 30px;">
+                        ➡️ نقل إلى مرحلة التصنيع
+                    </button>
+                    <p style="color: var(--medium-gray); font-size: 12px; margin-top: 10px;">
+                        يمكنك حفظ المراجعة أولاً أو الانتقال للتصنيع مباشرة
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 </div>

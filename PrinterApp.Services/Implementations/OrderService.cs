@@ -320,6 +320,7 @@ namespace PrinterApp.Services.Implementations
                     {
                         var manufacturingItem = new OrderManufacturingItem
                         {
+                            
                             OrderId = order.Id,
                             ManufacturingAdditionId = additionId,
                             IsCompleted = false,
@@ -369,13 +370,8 @@ namespace PrinterApp.Services.Implementations
                 return (false, errors.ToArray());
             }
 
-            // التحقق من اكتمال بيانات المراجعة
-            if (!order.MachineId.HasValue || !order.CoreId.HasValue || !order.KnifeId.HasValue)
-            {
-                errors.Add("يجب استكمال بيانات المراجعة قبل الانتقال للتصنيع");
-                return (false, errors.ToArray());
-            }
-
+            // بيانات المراجعة اختيارية - يمكن الانتقال للتصنيع بدونها
+            
             try
             {
                 order.Stage = OrderStage.Manufacturing;
